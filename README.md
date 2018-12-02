@@ -1,6 +1,6 @@
 # bacchus
 
-Project Bacchus
+[WIP] いろんなお酒の記録ができるようになるFlutter Appです
 
 ## Getting Started
 
