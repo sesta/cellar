@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:multi_image_picker/multi_image_picker.dart';
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -28,10 +30,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  void _getImageList() async {
+    var resultList = await MultiImagePicker.pickImages(
+      maxImages: 10,
+    );
+
+    print(resultList);
   }
 
   @override
@@ -55,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _getImageList,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
