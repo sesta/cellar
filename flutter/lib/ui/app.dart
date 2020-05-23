@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,6 +15,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(title: 'Bacchus Top'),
+      navigatorObservers: [
+        FirebaseAnalyticsObserver(analytics: analytics),
+      ],
     );
   }
 }
