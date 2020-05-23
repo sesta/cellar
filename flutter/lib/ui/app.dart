@@ -1,8 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class MyApp extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
@@ -39,7 +42,25 @@ class _MyHomePageState extends State<MyHomePage> {
       maxImages: 10,
     );
 
-    print(resultList);
+    // TODO: 画像の容量をどうにかする
+    // TODO: 画像の内容をチェックする
+    ByteData byteData = await resultList[0].getByteData();
+    List<int> imageData = byteData.buffer.asUint8List();
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+    final StorageReference storageReference = FirebaseStorage().ref().child('upload_images').child('image_$timestamp');
+    final StorageUploadTask uploadTask = storageReference.putData(
+      imageData,
+      StorageMetadata(
+        contentType: "image/jpeg",
+      )
+    );
+    StorageTaskSnapshot snapshot = await uploadTask.onComplete;
+
+    if (snapshot.error == null) {
+      print(await snapshot.ref.getDownloadURL());
+    } else {
+      print('error: $snapshot.error');
+    }
   }
 
   @override
