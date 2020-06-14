@@ -43,12 +43,15 @@ class _MyHomePageState extends State<MyHomePage> {
       maxImages: 10,
     );
 
+    const String BASE_IMAGE_PATH =  'post_images';
+
     // TODO: 画像の容量をどうにかする
     // TODO: 画像の内容をチェックする
     ByteData byteData = await resultList[0].getByteData();
     List<int> imageData = byteData.buffer.asUint8List();
     int timestamp = DateTime.now().millisecondsSinceEpoch;
-    final StorageReference storageReference = FirebaseStorage().ref().child('upload_images').child('image_$timestamp');
+    final String imageName = 'image_$timestamp';
+    final StorageReference storageReference = FirebaseStorage().ref().child('$BASE_IMAGE_PATH/$imageName');
     final StorageUploadTask uploadTask = storageReference.putData(
       imageData,
       StorageMetadata(
@@ -58,11 +61,11 @@ class _MyHomePageState extends State<MyHomePage> {
     StorageTaskSnapshot snapshot = await uploadTask.onComplete;
 
     if (snapshot.error == null) {
-      String url = await snapshot.ref.getDownloadURL();
+      print('upload success');
       Firestore.instance.collection('posts').document()
         .setData({
-          'timestapm': timestamp,
-          'imagePath': url,
+          'timestamp': timestamp,
+          'imagePath': '$BASE_IMAGE_PATH/$imageName',
         });
     } else {
       print('error: $snapshot.error');
