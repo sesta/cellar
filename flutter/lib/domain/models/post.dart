@@ -1,35 +1,33 @@
 import 'dart:typed_data';
 
+import 'package:bacchus/repository/provider/firestore.dart';
+import 'package:bacchus/repository/provider/storage.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 const String BASE_IMAGE_PATH =  'post_images';
 
-void uploadImages(List<Asset> images) async {
+void post(List<Asset> images) async {
+  // TODO: 複数画像の対応する
   // TODO: 画像の容量をどうにかする
   // TODO: 画像の内容をチェックする
   ByteData byteData = await images[0].getByteData();
   List<int> imageData = byteData.buffer.asUint8List();
   int timestamp = DateTime.now().millisecondsSinceEpoch;
   final String imageName = 'image_$timestamp';
-  final StorageReference storageReference = FirebaseStorage().ref().child('$BASE_IMAGE_PATH/$imageName');
-  final StorageUploadTask uploadTask = storageReference.putData(
-      imageData,
-      StorageMetadata(
-        contentType: "image/jpeg",
-      )
+  final int error = await uploadData(
+    BASE_IMAGE_PATH,
+    imageName,
+    imageData,
+    'image/jpeg',
   );
-  StorageTaskSnapshot snapshot = await uploadTask.onComplete;
 
-  if (snapshot.error == null) {
+  if (error == null) {
     print('upload success');
-    Firestore.instance.collection('posts').document()
-        .setData({
+    addDate('posts', {
       'timestamp': timestamp,
       'imagePath': '$BASE_IMAGE_PATH/$imageName',
     });
   } else {
-    print('error: $snapshot.error');
+    print('error: $error');
   }
 }

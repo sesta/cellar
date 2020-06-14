@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
       maxImages: 10,
     );
 
-    uploadImages(resultList);
+    post(resultList);
   }
 
   @override

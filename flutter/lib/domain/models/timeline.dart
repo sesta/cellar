@@ -1,17 +1,15 @@
 import 'dart:async';
 
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bacchus/repository/provider/firestore.dart';
+import 'package:bacchus/repository/provider/storage.dart';
 
 Future<List<String>> getTimelineImageUrls() async {
-  final imagePaths = [];
-  final posts = await Firestore.instance.collection('posts').getDocuments();
-  posts.documents.forEach((doc) => imagePaths.add(doc['imagePath']));
-
   final List<String> imageUrls = [];
-  await Future.forEach(imagePaths, (path) async {
-    final StorageReference storageReference = FirebaseStorage().ref().child(path);
-    final imageUrl = await storageReference.getDownloadURL();
+  final posts = await getAll('posts');
+  await Future.forEach(posts, (post) async {
+    final path = post['imagePath'];
+    print(path);
+    final imageUrl = await getDataUrl(path);
     imageUrls.add(imageUrl);
   });
 
