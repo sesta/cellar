@@ -43,11 +43,18 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    final StorageReference storageReference = FirebaseStorage().ref().child('post_images/image_1592094238094');
-    storageReference.getDownloadURL().then((url) {
-      print(url);
-      setState(() {
-        imageUrl = url;
+
+    Firestore.instance.collection('posts').getDocuments().then((posts) {
+      final imagePaths = [];
+      posts.documents.forEach((doc) => imagePaths.add(doc['imagePath']));
+      print(imagePaths);
+
+      final StorageReference storageReference = FirebaseStorage().ref().child(imagePaths.last);
+      storageReference.getDownloadURL().then((url) {
+        print(url);
+        setState(() {
+          imageUrl = url;
+        });
       });
     });
   }
@@ -97,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             imageUrl == null ?
-              null :
+              Text('Download中') :
               Image(
                 image: NetworkImage(imageUrl),
               )
