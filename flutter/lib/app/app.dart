@@ -4,7 +4,7 @@ import 'package:firebase_analytics/observer.dart';
 
 import 'package:bacchus/app/pages/home.dart';
 
-class MyApp extends StatelessWidget {
+class Bacchus extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
 
   @override
