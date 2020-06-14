@@ -38,24 +38,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String imageUrl;
+  List<String> imageUrls = [];
 
   @override
   void initState() {
     super.initState();
 
-    Firestore.instance.collection('posts').getDocuments().then((posts) {
-      final imagePaths = [];
-      posts.documents.forEach((doc) => imagePaths.add(doc['imagePath']));
-      print(imagePaths);
+    _getImageUrls();
+  }
 
-      final StorageReference storageReference = FirebaseStorage().ref().child(imagePaths.last);
-      storageReference.getDownloadURL().then((url) {
-        print(url);
-        setState(() {
-          imageUrl = url;
-        });
-      });
+  void _getImageUrls() async {
+    final imagePaths = [];
+
+    final posts = await Firestore.instance.collection('posts').getDocuments();
+    posts.documents.forEach((doc) => imagePaths.add(doc['imagePath']));
+
+    final List<String> imageUrlsDraft = [];
+    imagePaths.forEach((path) async {
+      final StorageReference storageReference = FirebaseStorage().ref().child(path);
+      final imageUrl = await storageReference.getDownloadURL();
+      imageUrlsDraft.add(imageUrl);
+    });
+
+    setState(() {
+      imageUrls = imageUrlsDraft;
     });
   }
 
@@ -99,18 +105,26 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            imageUrl == null ?
-              Text('Download中') :
-              Image(
-                image: NetworkImage(imageUrl),
-              )
-          ],
-        ),
-      ),
+      body: imageUrls.length == 0 ?
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Download中')
+            ]
+          )
+        ) :
+        GridView.count(
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          crossAxisCount: 2,
+          children: imageUrls.map<Widget>((url) {
+            return Image(
+              image: NetworkImage(url),
+            );
+          }).toList(),
+        )
+      ,
       floatingActionButton: FloatingActionButton(
         onPressed: _getImageList,
         tooltip: 'Increment',
