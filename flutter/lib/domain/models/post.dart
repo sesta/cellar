@@ -21,13 +21,14 @@ void post(List<Asset> images) async {
     'image/jpeg',
   );
 
-  if (error == null) {
-    print('upload success');
-    addDate('posts', {
-      'timestamp': timestamp,
-      'imagePath': '$BASE_IMAGE_PATH/$imageName',
-    });
-  } else {
+  if (error != null) {
     print('error: $error');
+    return ;
   }
+
+  print('upload success');
+  addDate('posts', {
+    'timestamp': timestamp,
+    'imagePath': '$BASE_IMAGE_PATH/$imageName',
+  });
 }
