@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final List<String> imageUrlsDraft = [];
     imagePaths.forEach((path) async {
-      final StorageReference storageReference = FirebaseStorage().ref().child(imagePaths.last);
+      final StorageReference storageReference = FirebaseStorage().ref().child(path);
       final imageUrl = await storageReference.getDownloadURL();
       imageUrlsDraft.add(imageUrl);
     });
@@ -105,18 +105,26 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            imageUrls.length == 0 ?
-              Text('Download中') :
-              Image(
-                image: NetworkImage(imageUrls.first),
-              )
-          ],
-        ),
-      ),
+      body: imageUrls.length == 0 ?
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Download中')
+            ]
+          )
+        ) :
+        GridView.count(
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          crossAxisCount: 2,
+          children: imageUrls.map<Widget>((url) {
+            return Image(
+              image: NetworkImage(url),
+            );
+          }).toList(),
+        )
+      ,
       floatingActionButton: FloatingActionButton(
         onPressed: _getImageList,
         tooltip: 'Increment',
