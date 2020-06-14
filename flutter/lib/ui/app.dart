@@ -6,6 +6,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyApp extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
@@ -37,17 +38,41 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String imageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Firestore.instance.collection('posts').getDocuments().then((posts) {
+      final imagePaths = [];
+      posts.documents.forEach((doc) => imagePaths.add(doc['imagePath']));
+      print(imagePaths);
+
+      final StorageReference storageReference = FirebaseStorage().ref().child(imagePaths.last);
+      storageReference.getDownloadURL().then((url) {
+        print(url);
+        setState(() {
+          imageUrl = url;
+        });
+      });
+    });
+  }
+
   void _getImageList() async {
     var resultList = await MultiImagePicker.pickImages(
       maxImages: 10,
     );
+
+    const String BASE_IMAGE_PATH =  'post_images';
 
     // TODO: 画像の容量をどうにかする
     // TODO: 画像の内容をチェックする
     ByteData byteData = await resultList[0].getByteData();
     List<int> imageData = byteData.buffer.asUint8List();
     int timestamp = DateTime.now().millisecondsSinceEpoch;
-    final StorageReference storageReference = FirebaseStorage().ref().child('upload_images').child('image_$timestamp');
+    final String imageName = 'image_$timestamp';
+    final StorageReference storageReference = FirebaseStorage().ref().child('$BASE_IMAGE_PATH/$imageName');
     final StorageUploadTask uploadTask = storageReference.putData(
       imageData,
       StorageMetadata(
@@ -57,7 +82,12 @@ class _MyHomePageState extends State<MyHomePage> {
     StorageTaskSnapshot snapshot = await uploadTask.onComplete;
 
     if (snapshot.error == null) {
-      print(await snapshot.ref.getDownloadURL());
+      print('upload success');
+      Firestore.instance.collection('posts').document()
+        .setData({
+          'timestamp': timestamp,
+          'imagePath': '$BASE_IMAGE_PATH/$imageName',
+        });
     } else {
       print('error: $snapshot.error');
     }
@@ -73,9 +103,11 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              '画像を選択できるだけ',
-            ),
+            imageUrl == null ?
+              Text('Download中') :
+              Image(
+                image: NetworkImage(imageUrl),
+              )
           ],
         ),
       ),
