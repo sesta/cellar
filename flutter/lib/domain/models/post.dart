@@ -15,7 +15,6 @@ const int THUMB_WIDTH_SIZE = 640;
 void post(List<Asset> images) async {
   final int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-  // TODO: 画像の内容をチェックする
   // TODO: 識別子にタイムスタンプ以外も追加する
   final String thumbImageName = 'image-$timestamp/thumb';
   await uploadImage(images.first, thumbImageName, THUMB_WIDTH_SIZE);
