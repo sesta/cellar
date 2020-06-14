@@ -6,6 +6,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyApp extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
@@ -57,7 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
     StorageTaskSnapshot snapshot = await uploadTask.onComplete;
 
     if (snapshot.error == null) {
-      print(await snapshot.ref.getDownloadURL());
+      String url = await snapshot.ref.getDownloadURL();
+      Firestore.instance.collection('posts').document()
+        .setData({
+          'timestapm': timestamp,
+          'imagePath': url,
+        });
     } else {
       print('error: $snapshot.error');
     }
