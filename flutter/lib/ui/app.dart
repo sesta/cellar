@@ -38,6 +38,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String imageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    final StorageReference storageReference = FirebaseStorage().ref().child('post_images/image_1592094238094');
+    storageReference.getDownloadURL().then((url) {
+      print(url);
+      setState(() {
+        imageUrl = url;
+      });
+    });
+  }
+
   void _getImageList() async {
     var resultList = await MultiImagePicker.pickImages(
       maxImages: 10,
@@ -82,9 +96,11 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              '画像を選択できるだけ',
-            ),
+            imageUrl == null ?
+              null :
+              Image(
+                image: NetworkImage(imageUrl),
+              )
           ],
         ),
       ),
