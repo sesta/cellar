@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bacchus/repository/provider/auth.dart';
+import 'package:bacchus/domain/entities/user.dart';
 
 class SignInPage extends StatefulWidget {
   SignInPage({Key key, this.setUser}) : super(key: key);
@@ -13,7 +14,9 @@ class SignInPage extends StatefulWidget {
 
 class _SignInState extends State<SignInPage> {
   void _checkSignIn() async {
-    final user = await signIn();
+    final firebaseUser = await signIn();
+    final user = User(firebaseUser.uid, firebaseUser.displayName);
+
     widget.setUser(user);
     Navigator.of(context).pushReplacementNamed('/home');
   }

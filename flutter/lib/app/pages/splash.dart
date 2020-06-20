@@ -20,7 +20,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _checkSignIn() async {
-    final user = await signIn();
+    final user = await getSignInUser();
     if (user == null) {
       Navigator.of(context).pushReplacementNamed('/signIn');
 
