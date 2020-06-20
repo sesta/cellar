@@ -36,10 +36,13 @@ class _BacchusState extends State<Bacchus> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(title: 'Home'),
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
+      initialRoute: '/',
+      routes: <String, WidgetBuilder> {
+        '/': (BuildContext context) => HomePage(title: 'Home'),
+      },
     );
   }
 }
