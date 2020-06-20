@@ -4,6 +4,7 @@ import 'package:firebase_analytics/observer.dart';
 
 import 'package:bacchus/app/pages/home.dart';
 import 'package:bacchus/app/pages/post.dart';
+import 'package:bacchus/app/pages/sign_in.dart';
 import 'package:bacchus/domain/entities/user.dart';
 import 'package:bacchus/repository/provider/auth.dart';
 
@@ -30,6 +31,12 @@ class _BacchusState extends State<Bacchus> {
     });
   }
 
+  void _setUser(User user) {
+    setState(() {
+      this.user = user;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,9 +47,10 @@ class _BacchusState extends State<Bacchus> {
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
-      initialRoute: '/',
+      initialRoute: user == null ? '/signIn' : '/home',
       routes: <String, WidgetBuilder> {
-        '/': (BuildContext context) => HomePage(title: 'Home'),
+        '/signIn': (BuildContext context) => SignInPage(setUser: _setUser),
+        '/home': (BuildContext context) => HomePage(title: 'Home'),
         '/post': (BuildContext context) => PostPage(user: user),
       },
     );
