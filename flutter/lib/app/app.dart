@@ -8,12 +8,20 @@ import 'package:firebase_analytics/observer.dart';
 
 import 'package:bacchus/app/pages/home.dart';
 
-class Bacchus extends StatelessWidget {
+class Bacchus extends StatefulWidget {
+  Bacchus({Key key}) : super(key: key);
+
+  @override
+  _BacchusState createState() => _BacchusState();
+}
+
+class _BacchusState extends State<Bacchus> {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final String userId = null;
 
-  Future<FirebaseUser> _handleSignIn() async {
+  Future<String> _signIn() async {
     GoogleSignInAccount googleCurrentUser = _googleSignIn.currentUser;
     try {
       if (googleCurrentUser == null) googleCurrentUser = await _googleSignIn.signInSilently();
@@ -26,19 +34,31 @@ class Bacchus extends StatelessWidget {
         idToken: googleAuth.idToken,
       );
       final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
-      print("signed in " + user.displayName);
+      print(user.displayName);
+      print(user.uid);
+      print(user.email);
 
-      return user;
+      return user.uid;
     } catch (e) {
       print(e);
       return null;
     }
   }
 
+
+  @override
+  void initState() {
+    super.initState();
+
+    _signIn().then((userId) {
+      setState(() {
+        userId = userId;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    _handleSignIn();
-
     return MaterialApp(
       title: 'Bacchus',
       theme: ThemeData(
