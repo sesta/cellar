@@ -5,13 +5,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 Future<int> uploadData(
   String path,
-  String dataName,
   Uint8List data,
   String contentType,
 ) async {
   final StorageReference storageReference = FirebaseStorage()
     .ref()
-    .child('$path/$dataName');
+    .child(path);
   final StorageUploadTask uploadTask = storageReference
     .putData(
       data,

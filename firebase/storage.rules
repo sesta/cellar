@@ -1,8 +1,9 @@
-// TODO: もっとセキュリティを厳しくする
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write;
+    match /post_images/{userId}/{multiSegment=**}  {
+      allow get: if request.auth != null;
+      allow create: if request.auth.uid == userId;
     }
   }
 }
+

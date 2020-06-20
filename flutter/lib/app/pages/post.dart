@@ -15,11 +15,20 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
   void _getImageList() async {
-    var resultList = await MultiImagePicker.pickImages(
-      maxImages: 10,
-    );
+    List<Asset> resultList;
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 10,
+      );
+    } catch (e) {
+      return ;
+    }
 
-    await post(resultList);
+    if (resultList == null || resultList.length == 0) {
+      return ;
+    }
+
+    await post(widget.user.id, resultList);
     Navigator.of(context).pop(true);
   }
 

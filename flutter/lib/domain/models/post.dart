@@ -8,30 +8,31 @@ import 'package:bacchus/conf.dart';
 import 'package:bacchus/domain/entities/sake.dart';
 import 'package:bacchus/repository/provider/storage.dart';
 
-void post(List<Asset> images) async {
+Future<void> post(String userId, List<Asset> images) async {
   final nowDatetime = DateTime.now();
+  final imageDirectory = '$BASE_IMAGE_PATH/$userId/${nowDatetime.millisecondsSinceEpoch}';
 
   // TODO: 識別子にタイムスタンプ以外も追加する
-  final String thumbImageName = 'image-${nowDatetime.millisecondsSinceEpoch}/thumb';
-  await uploadImage(images.first, thumbImageName, THUMB_WIDTH_SIZE);
+  final String thumbImagePath = '$imageDirectory/thumb';
+  await uploadImage(images.first, thumbImagePath, THUMB_WIDTH_SIZE);
 
   final List<String> imagePaths = [];
   for (int index = 0 ; index < images.length ; index++) {
-    final String originalImageName = 'image-${nowDatetime.millisecondsSinceEpoch}/original-$index';
-    await uploadImage(images[index], originalImageName, ORIGINAL_WIDTH_SIZE);
-    imagePaths.add('$BASE_IMAGE_PATH/$originalImageName');
+    final String originalImagePath = '$imageDirectory/original-$index';
+    await uploadImage(images[index], originalImagePath, ORIGINAL_WIDTH_SIZE);
+    imagePaths.add(originalImagePath);
   }
 
   final sake = Sake(
     'tmpName',
-    '$BASE_IMAGE_PATH/$thumbImageName',
+    thumbImagePath,
     imagePaths,
     nowDatetime,
   );
   sake.addStore();
 }
 
-Future<void> uploadImage(Asset image, String imageName, int expectWidthSize) async {
+Future<void> uploadImage(Asset image, String path, int expectWidthSize) async {
   double resizeRate = min(expectWidthSize / image.originalWidth, 1);
   ByteData byteData = await image.getThumbByteData(
     (image.originalWidth * resizeRate).round(),
@@ -39,8 +40,7 @@ Future<void> uploadImage(Asset image, String imageName, int expectWidthSize) asy
   );
   List<int> imageData = byteData.buffer.asUint8List();
   final int error = await uploadData(
-    BASE_IMAGE_PATH,
-    imageName,
+    path,
     imageData,
     'image/jpeg',
   );
@@ -49,6 +49,6 @@ Future<void> uploadImage(Asset image, String imageName, int expectWidthSize) asy
     throw new Exception('アップロードに失敗しました: error: $error');
   }
 
-  print('Upload Success: $imageName');
+  print('Upload Success: $path');
 }
 
