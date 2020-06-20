@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 final firestoreInstance = Firestore.instance;
 
-Future<void> addDate(String documentName, Object data) async {
+Future<void> addData(String documentName, Object data) async {
   await firestoreInstance
     .collection(documentName)
     .document()
