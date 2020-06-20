@@ -20,7 +20,7 @@ class _PostPageState extends State<PostPage> {
     );
 
     await post(resultList);
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(true);
   }
 
   @override

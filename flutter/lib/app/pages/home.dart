@@ -26,6 +26,18 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _movePostPage() async {
+    final isPosted = await Navigator.of(context).pushNamed('/post');
+
+    if (isPosted != null) {
+      getTimelineImageUrls().then((urls) {
+        setState(() {
+          imageUrls = urls;
+        });
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +55,7 @@ class _HomePageState extends State<HomePage> {
       ) :
       ImageGrid(imageUrls: imageUrls),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).pushNamed('/post'),
+        onPressed: _movePostPage,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
