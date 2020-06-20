@@ -26,10 +26,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _getImageList() async {
-    Navigator.of(context).pushNamed('/post');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +43,7 @@ class _HomePageState extends State<HomePage> {
       ) :
       ImageGrid(imageUrls: imageUrls),
       floatingActionButton: FloatingActionButton(
-        onPressed: _getImageList,
+        onPressed: () => Navigator.of(context).pushNamed('/post'),
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),

@@ -19,7 +19,8 @@ class _PostPageState extends State<PostPage> {
       maxImages: 10,
     );
 
-    post(resultList);
+    await post(resultList);
+    Navigator.of(context).pop();
   }
 
   @override
