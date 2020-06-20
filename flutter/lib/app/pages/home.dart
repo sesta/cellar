@@ -1,8 +1,7 @@
-import 'package:bacchus/app/widget/image_grid.dart';
-import 'package:bacchus/domain/models/post.dart';
-import 'package:bacchus/domain/models/timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+
+import 'package:bacchus/app/widget/image_grid.dart';
+import 'package:bacchus/domain/models/timeline.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -28,11 +27,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _getImageList() async {
-    var resultList = await MultiImagePicker.pickImages(
-      maxImages: 10,
-    );
-
-    post(resultList);
+    Navigator.of(context).pushNamed('/post');
   }
 
   @override

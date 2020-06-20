@@ -3,6 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 
 import 'package:bacchus/app/pages/home.dart';
+import 'package:bacchus/app/pages/post.dart';
 import 'package:bacchus/domain/entities/user.dart';
 import 'package:bacchus/repository/provider/auth.dart';
 
@@ -42,6 +43,7 @@ class _BacchusState extends State<Bacchus> {
       initialRoute: '/',
       routes: <String, WidgetBuilder> {
         '/': (BuildContext context) => HomePage(title: 'Home'),
+        '/post': (BuildContext context) => PostPage(user: user),
       },
     );
   }
