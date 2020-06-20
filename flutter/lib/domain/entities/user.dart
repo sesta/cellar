@@ -5,7 +5,7 @@ class User {
   User(
       this.id,
       this.name,
-  ) {}
+  );
 
   @override
   String toString() {
