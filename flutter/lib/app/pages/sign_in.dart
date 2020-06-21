@@ -16,6 +16,7 @@ class _SignInState extends State<SignInPage> {
   void _checkSignIn() async {
     final firebaseUser = await signIn();
     final user = User(firebaseUser.uid, firebaseUser.displayName);
+    await user.addStore();
 
     widget.setUser(user);
     Navigator.of(context).pushReplacementNamed('/home');

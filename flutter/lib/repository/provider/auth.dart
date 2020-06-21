@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:bacchus/domain/entities/user.dart';
+import 'package:bacchus/repository/provider/firestore.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn();
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -20,9 +21,12 @@ Future<User> getSignInUser() async {
     }
 
     final firebaseUser = await getFirebaseUser(googleCurrentUser);
+    final rawUser = await getDocument('users', firebaseUser.uid);
+    if (rawUser == null) {
+      return null;
+    }
 
-    // TOOD: ユーザー情報をstoreから取得する
-    return User(firebaseUser.uid, firebaseUser.displayName);
+    return User(firebaseUser.uid, rawUser['name']);
   } catch (e) {
     print(e);
     return null;
