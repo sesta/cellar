@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 
+import 'package:bacchus/app/pages/splash.dart';
 import 'package:bacchus/app/pages/home.dart';
 import 'package:bacchus/app/pages/post.dart';
+import 'package:bacchus/app/pages/sign_in.dart';
 import 'package:bacchus/domain/entities/user.dart';
-import 'package:bacchus/repository/provider/auth.dart';
 
 class Bacchus extends StatefulWidget {
   Bacchus({Key key}) : super(key: key);
@@ -18,15 +19,9 @@ class _BacchusState extends State<Bacchus> {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   User user;
 
-  @override
-  void initState() {
-    super.initState();
-
-    signIn().then((user) {
-      print(user.toString());
-      setState(() {
-        this.user = user;
-      });
+  void _setUser(User user) {
+    setState(() {
+      this.user = user;
     });
   }
 
@@ -40,10 +35,12 @@ class _BacchusState extends State<Bacchus> {
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
-      initialRoute: '/',
+      initialRoute: '/splash',
       routes: <String, WidgetBuilder> {
-        '/': (BuildContext context) => HomePage(title: 'Home'),
+        '/splash': (BuildContext context) => SplashPage(setUser: _setUser),
+        '/home': (BuildContext context) => HomePage(title: 'Home'),
         '/post': (BuildContext context) => PostPage(user: user),
+        '/signIn': (BuildContext context) => SignInPage(setUser: _setUser),
       },
     );
   }

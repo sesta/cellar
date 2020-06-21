@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:bacchus/repository/provider/firestore.dart';
+
 class User {
   String id;
   String name;
@@ -6,6 +10,12 @@ class User {
       this.id,
       this.name,
   );
+
+  Future<void> addStore() async {
+    addData('users', {
+      'name': name,
+    }, id);
+  }
 
   @override
   String toString() {

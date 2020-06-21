@@ -7,6 +7,7 @@ Future<List<String>> getTimelineImageUrls() async {
   final List<String> imageUrls = [];
   final rawData = await getAll('sakes');
   final sakes = rawData.map((data) => Sake(
+    data['userId'],
     data['name'],
     data['thumbImagePath'],
     data['imagePaths'].cast<String>(),

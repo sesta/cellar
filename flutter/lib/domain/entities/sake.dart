@@ -2,6 +2,7 @@ import 'package:bacchus/repository/provider/firestore.dart';
 import 'package:bacchus/repository/provider/storage.dart';
 
 class Sake {
+  String userId;
   String name;
   String thumbImagePath;
   List<String> imagePaths;
@@ -9,6 +10,7 @@ class Sake {
   String _thumbImageUrl = '';
 
   Sake(
+      this.userId,
       this.name,
       this.thumbImagePath,
       this.imagePaths,
@@ -26,6 +28,7 @@ class Sake {
 
   addStore() {
     addData('sakes', {
+      'userId': userId,
       'name': name,
       'thumbImagePath': thumbImagePath,
       'imagePaths': imagePaths,
