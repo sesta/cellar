@@ -4,6 +4,7 @@ import 'package:firebase_analytics/observer.dart';
 
 import 'package:bacchus/app/pages/splash.dart';
 import 'package:bacchus/app/pages/home.dart';
+import 'package:bacchus/app/pages/sake.dart';
 import 'package:bacchus/app/pages/post.dart';
 import 'package:bacchus/app/pages/sign_in.dart';
 import 'package:bacchus/domain/entities/user.dart';
@@ -39,6 +40,7 @@ class _BacchusState extends State<Bacchus> {
       routes: <String, WidgetBuilder> {
         '/splash': (BuildContext context) => SplashPage(setUser: _setUser),
         '/home': (BuildContext context) => HomePage(title: 'Home'),
+        '/sake': (BuildContext context) => SakePage(),
         '/post': (BuildContext context) => PostPage(user: user),
         '/signIn': (BuildContext context) => SignInPage(setUser: _setUser),
       },

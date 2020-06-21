@@ -11,8 +11,14 @@ class ImageGrid extends StatelessWidget {
       mainAxisSpacing: 10,
       crossAxisCount: 2,
       children: imageUrls.map<Widget>((url) {
-        return Image(
-          image: NetworkImage(url),
+        return Hero(
+          tag: url,
+          child: FlatButton(
+            child: Image(
+              image: NetworkImage(url),
+            ),
+            onPressed: () => Navigator.of(context).pushNamed('/sake', arguments: url),
+          )
         );
       }).toList(),
     );
