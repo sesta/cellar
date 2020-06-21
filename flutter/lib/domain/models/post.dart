@@ -24,6 +24,7 @@ Future<void> post(String userId, List<Asset> images) async {
   }
 
   final sake = Sake(
+    userId,
     'tmpName',
     thumbImagePath,
     imagePaths,
