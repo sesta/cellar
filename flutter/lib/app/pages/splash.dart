@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:bacchus/app/pages/home.dart';
 import 'package:bacchus/repository/provider/auth.dart';
 
 class SplashPage extends StatefulWidget {
@@ -28,7 +29,15 @@ class _SplashPageState extends State<SplashPage> {
     }
 
     widget.setUser(user);
-    Navigator.of(context).pushReplacementNamed('/home');
+    Navigator.pushReplacement(
+      context,
+      SlidePageRoute(
+        page: HomePage(title: 'Home'),
+        settings: RouteSettings(
+          name: '/second',
+        ),
+      ),
+    );
   }
 
   @override
@@ -44,4 +53,34 @@ class _SplashPageState extends State<SplashPage> {
         )
     );
   }
+}
+
+// TODO: いい感じのトランジションを研究する
+class SlidePageRoute extends PageRouteBuilder {
+  final Widget page;
+  final RouteSettings settings;
+
+  SlidePageRoute({this.page, this.settings}) : super(
+    pageBuilder: (
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+    ) {
+      return page;
+    },
+    transitionsBuilder: (
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget page,
+    ) {
+      return SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0, 0),
+          end: Offset.zero,
+        ).animate(animation),
+        child: page,
+      );
+    },
+  );
 }
