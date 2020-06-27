@@ -16,7 +16,15 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
+  List<Asset> imageAssets = [];
   List<List<int>> images = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getImageList();
+  }
 
   void _getImageList() async {
     List<Asset> resultList;
@@ -39,6 +47,7 @@ class _PostPageState extends State<PostPage> {
     });
 
     setState(() {
+      this.imageAssets = resultList;
       this.images = images;
     });
   }
@@ -48,7 +57,7 @@ class _PostPageState extends State<PostPage> {
       return;
     }
 
-    // await post(widget.user.id, images);
+    await post(widget.user.id, imageAssets);
     Navigator.of(context).pop(true);
   }
 
@@ -68,7 +77,7 @@ class _PostPageState extends State<PostPage> {
             }).toList(),
           ) : Text('12'),
           FlatButton(
-            onPressed: _getImageList,
+            onPressed: _postSake,
             child: Text('投稿する'),
           ),
         ]
