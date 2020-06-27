@@ -7,7 +7,7 @@ class Sake {
   String thumbImagePath;
   List<String> imagePaths;
   DateTime updateDatetime;
-  String _thumbImageUrl = '';
+  String thumbImageUrl;
 
   Sake(
       this.userId,
@@ -17,13 +17,8 @@ class Sake {
       this.updateDatetime,
   );
 
-  get thumbImageUrl async {
-    if (_thumbImageUrl != '') {
-      return _thumbImageUrl;
-    }
-
-    _thumbImageUrl = await getDataUrl(thumbImagePath);
-    return _thumbImageUrl;
+  init() async {
+    thumbImageUrl = await getDataUrl(thumbImagePath);
   }
 
   addStore() {
