@@ -39,7 +39,7 @@ class _SplashPageState extends State<SplashPage> {
     Navigator.pushReplacement(
       context,
       FadeInRoute(
-        widget: HomePage(title: 'Home'),
+        widget: HomePage(),
         opaque: true,
       ),
     );

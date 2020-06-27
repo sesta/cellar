@@ -6,9 +6,7 @@ import 'package:bacchus/domain/models/timeline.dart';
 import 'package:bacchus/app/widget/sake_grid.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -44,7 +42,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Bacchus'),
+        centerTitle: false,
+        elevation: 0,
       ),
       body: sakes.length == 0 ?
         Center(
