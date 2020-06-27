@@ -71,7 +71,7 @@ class _PostPageState extends State<PostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('酒の投稿'),
+        title: Text('お酒の記録'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -90,7 +90,7 @@ class _PostPageState extends State<PostPage> {
             RaisedButton(
               onPressed: _postSake,
               child: Text('投稿する'),
-              color: Colors.blue, // TODO: 色を統一する
+              color: Theme.of(context).primaryColorDark,
               textColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
