@@ -48,14 +48,10 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('スプラッシュ'),
-                ]
-            )
-        )
+      backgroundColor: Theme.of(context).primaryColor,
+      body: Center(
+        child: Text('いい感じのロゴ'),
+      )
     );
   }
 }
