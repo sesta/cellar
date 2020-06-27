@@ -47,13 +47,16 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
       ),
       body: sakes.length == 0 ?
-        Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('Download中')
-                ]
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(40),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+              ),
             )
+          ],
         ) :
         SakeGrid(sakes: sakes),
       floatingActionButton: FloatingActionButton(
