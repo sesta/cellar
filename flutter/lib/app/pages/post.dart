@@ -19,6 +19,8 @@ class _PostPageState extends State<PostPage> {
   List<Asset> imageAssets = [];
   List<List<int>> images = [];
 
+  final nameController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +59,11 @@ class _PostPageState extends State<PostPage> {
       return;
     }
 
-    await post(widget.user.id, imageAssets);
+    if (nameController.text == '') {
+      return;
+    }
+
+    await post(widget.user.id, imageAssets, nameController.text);
     Navigator.of(context).pop(true);
   }
 
@@ -69,7 +75,10 @@ class _PostPageState extends State<PostPage> {
       ),
       body: Column(
         children: [
-          images.length > 0 ? ImagePreview(images: images) : Text('12'),
+          images.length > 0 ? ImagePreview(images: images) : Text('画像を読み込み中'),
+          TextField(
+            controller: nameController,
+          ),
           FlatButton(
             onPressed: _postSake,
             child: Text('投稿する'),
