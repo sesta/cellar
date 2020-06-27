@@ -19,18 +19,44 @@ class SakeGrid extends StatelessWidget {
         return Hero(
           tag: sake.thumbImageUrl,
           child: GestureDetector(
-            child: Material(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              clipBehavior: Clip.antiAlias,
-              child: Image(
-                image: NetworkImage(sake.thumbImageUrl),
-                fit: BoxFit.cover,
-              ),
-            ),
+            child: GridItem(name: sake.name, imageUrl: sake.thumbImageUrl),
             onTap: () => Navigator.of(context).pushNamed('/sake', arguments: sake.thumbImageUrl),
           ),
         );
       }).toList(),
+    );
+  }
+}
+
+class GridItem extends StatelessWidget {
+  GridItem({
+    Key key,
+    this.name,
+    this.imageUrl,
+  });
+  final String name;
+  final String imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridTile(
+      footer: Material(
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))),
+        clipBehavior: Clip.antiAlias,
+        child: GridTileBar(
+          backgroundColor: Colors.black45,
+          title: Text(name)
+        ),
+      ),
+      child: Material(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        clipBehavior: Clip.antiAlias,
+        child: Image(
+          image: NetworkImage(imageUrl),
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 }
