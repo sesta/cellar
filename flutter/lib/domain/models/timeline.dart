@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:bacchus/domain/entities/sake.dart';
 import 'package:bacchus/repository/provider/firestore.dart';
 
-Future<List<String>> getTimelineImageUrls() async {
-  final List<String> imageUrls = [];
+Future<List<Sake>> getTimelineImageUrls() async {
   final rawData = await getAll('sakes');
   final sakes = rawData.map((data) => Sake(
     data['userId'],
@@ -15,9 +14,8 @@ Future<List<String>> getTimelineImageUrls() async {
   )).toList();
 
   await Future.forEach(sakes, (sake) async {
-    final imageUrl = await sake.thumbImageUrl;
-    imageUrls.add(imageUrl);
+    await sake.init();
   });
 
-  return imageUrls;
+  return sakes;
 }

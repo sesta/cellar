@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:bacchus/app/widget/image_grid.dart';
+import 'package:bacchus/domain/entities/sake.dart';
 import 'package:bacchus/domain/models/timeline.dart';
+
+import 'package:bacchus/app/widget/sake_grid.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -13,15 +15,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> imageUrls = [];
+  List<Sake> sakes = [];
 
   @override
   void initState() {
     super.initState();
 
-    getTimelineImageUrls().then((urls) {
+    getTimelineImageUrls().then((sakes) {
       setState(() {
-        imageUrls = urls;
+        this.sakes = sakes;
       });
     });
   }
@@ -30,9 +32,9 @@ class _HomePageState extends State<HomePage> {
     final isPosted = await Navigator.of(context).pushNamed('/post');
 
     if (isPosted != null) {
-      getTimelineImageUrls().then((urls) {
+      getTimelineImageUrls().then((sakes) {
         setState(() {
-          imageUrls = urls;
+          this.sakes = sakes;
         });
       });
     }
@@ -44,16 +46,16 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: imageUrls.length == 0 ?
-      Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Download中')
-              ]
-          )
-      ) :
-      ImageGrid(imageUrls: imageUrls),
+      body: sakes.length == 0 ?
+        Center(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Download中')
+                ]
+            )
+        ) :
+        SakeGrid(sakes: sakes),
       floatingActionButton: FloatingActionButton(
         onPressed: _movePostPage,
         tooltip: 'Increment',
