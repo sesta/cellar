@@ -30,7 +30,7 @@ class _PostPageState extends State<PostPage> {
     List<Asset> resultList;
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 10,
+        maxImages: 5,
       );
     } catch (e) {
       return ;
@@ -69,19 +69,43 @@ class _PostPageState extends State<PostPage> {
       ),
       body: Column(
         children: [
-          images.length > 0 ? Column(
-            children: images.map<Widget>((List<int> image) {
-              return Image(
-                image: MemoryImage(image),
-              );
-            }).toList(),
-          ) : Text('12'),
+          images.length > 0 ? ImagePreview(images: images) : Text('12'),
           FlatButton(
             onPressed: _postSake,
             child: Text('投稿する'),
           ),
         ]
       ),
+    );
+  }
+}
+
+class ImagePreview extends StatelessWidget {
+  ImagePreview({
+    Key key,
+    this.images,
+  });
+  final List<List<int>> images;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      shrinkWrap: true,
+      crossAxisCount: 5,
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+      padding: EdgeInsets.all(8),
+      childAspectRatio: 1,
+      children: images.map<Widget>((image) {
+        return Material(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          clipBehavior: Clip.antiAlias,
+          child: Image(
+            image: MemoryImage(image),
+            fit: BoxFit.cover,
+          ),
+        );
+      }).toList(),
     );
   }
 }
