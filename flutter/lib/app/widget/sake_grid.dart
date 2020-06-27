@@ -12,7 +12,7 @@ class SakeGrid extends StatelessWidget {
       crossAxisCount: 2,
       crossAxisSpacing: 8,
       mainAxisSpacing: 8,
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(16),
       childAspectRatio: 1,
       children: sakes.map<Widget>((sake) {
         return Hero(
