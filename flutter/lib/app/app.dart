@@ -31,7 +31,7 @@ class _BacchusState extends State<Bacchus> {
     return MaterialApp(
       title: 'Bacchus',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.brown,
       ),
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
@@ -39,7 +39,7 @@ class _BacchusState extends State<Bacchus> {
       initialRoute: '/splash',
       routes: <String, WidgetBuilder> {
         '/splash': (BuildContext context) => SplashPage(setUser: _setUser),
-        '/home': (BuildContext context) => HomePage(title: 'Home'),
+        '/home': (BuildContext context) => HomePage(),
         '/sake': (BuildContext context) => SakePage(),
         '/post': (BuildContext context) => PostPage(user: user),
         '/signIn': (BuildContext context) => SignInPage(setUser: _setUser),

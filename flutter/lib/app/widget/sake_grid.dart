@@ -19,7 +19,7 @@ class SakeGrid extends StatelessWidget {
           tag: sake.thumbImageUrl,
           child: GestureDetector(
             child: GridItem(name: sake.name, imageUrl: sake.thumbImageUrl),
-            onTap: () => Navigator.of(context).pushNamed('/sake', arguments: sake.thumbImageUrl),
+            onTap: () => Navigator.of(context).pushNamed('/sake', arguments: sake),
           ),
         );
       }).toList(),

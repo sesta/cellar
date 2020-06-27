@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
 
+import 'package:bacchus/domain/entities/sake.dart';
+
 class SakePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final String url = ModalRoute.of(context).settings.arguments;
+    final Sake sake = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text('酒の詳細'),
-        ),
-        body: Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Hero(
-                    tag: url,
-                    child: Image(
-                      image: NetworkImage(url),
-                    ),
-                  )
-                ]
-            )
-        )
+      body: Column(
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              Hero(
+                tag: sake.thumbImageUrl,
+                child: Image(
+                  image: NetworkImage(sake.thumbImageUrl),
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.close, color: Colors.white),
+                padding: EdgeInsets.only(top: 24),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+          Text(sake.name)
+        ]
+      )
     );
   }
 }
