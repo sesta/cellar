@@ -80,32 +80,71 @@ class _PostPageState extends State<PostPage> {
   }
 }
 
-class ImagePreview extends StatelessWidget {
+class ImagePreview extends StatefulWidget {
   ImagePreview({
     Key key,
     this.images,
-  });
+  }) : super(key: key);
+
   final List<List<int>> images;
 
   @override
+  _ImagePreviewState createState() => _ImagePreviewState();
+}
+
+class _ImagePreviewState extends State<ImagePreview> {
+  List<int> bigImage;
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      this.bigImage = widget.images[0];
+    });
+  }
+
+  _updateIndex(image) {
+    setState(() {
+      this.bigImage = image;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      shrinkWrap: true,
-      crossAxisCount: 5,
-      crossAxisSpacing: 8,
-      mainAxisSpacing: 8,
-      padding: EdgeInsets.all(8),
-      childAspectRatio: 1,
-      children: images.map<Widget>((image) {
-        return Material(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          clipBehavior: Clip.antiAlias,
+    return Column(
+      children: [
+        AspectRatio(
+          aspectRatio: 1,
           child: Image(
-            image: MemoryImage(image),
+            image: MemoryImage(bigImage),
             fit: BoxFit.cover,
           ),
-        );
-      }).toList(),
+        ),
+        GridView.count(
+          shrinkWrap: true,
+          crossAxisCount: 5,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+          padding: EdgeInsets.all(8),
+          childAspectRatio: 1,
+          children: widget.images.map<Widget>((image) {
+            return GestureDetector(
+              child: Material(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                clipBehavior: Clip.antiAlias,
+                child: Image(
+                  image: MemoryImage(image),
+                  fit: BoxFit.cover,
+                  color: Color.fromRGBO(255, 255, 255, image == bigImage ? 0.76 : 1),
+                  colorBlendMode: BlendMode.modulate,
+                ),
+              ),
+              onTap: () => _updateIndex(image),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 }
