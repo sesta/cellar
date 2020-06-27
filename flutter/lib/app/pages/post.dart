@@ -73,17 +73,31 @@ class _PostPageState extends State<PostPage> {
       appBar: AppBar(
         title: Text('酒の投稿'),
       ),
-      body: Column(
-        children: [
-          images.length > 0 ? ImagePreview(images: images) : Text('画像を読み込み中'),
-          TextField(
-            controller: nameController,
-          ),
-          FlatButton(
-            onPressed: _postSake,
-            child: Text('投稿する'),
-          ),
-        ]
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            images.length > 0 ? ImagePreview(images: images) : Text('画像を読み込み中'),
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'お酒の名前',
+                ),
+              ),
+            ),
+            RaisedButton(
+              onPressed: _postSake,
+              child: Text('投稿する'),
+              color: Colors.blue, // TODO: 色を統一する
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ]
+        ),
       ),
     );
   }
