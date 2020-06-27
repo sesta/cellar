@@ -8,7 +8,6 @@ class SakeGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(sakes);
     return GridView.count(
       crossAxisCount: 2,
       crossAxisSpacing: 8,
