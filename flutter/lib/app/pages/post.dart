@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
@@ -14,6 +16,8 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
+  List<List<int>> images = [];
+
   void _getImageList() async {
     List<Asset> resultList;
     try {
@@ -28,7 +32,23 @@ class _PostPageState extends State<PostPage> {
       return ;
     }
 
-    await post(widget.user.id, resultList);
+    List<List<int>> images = [];
+    await Future.forEach(resultList, (Asset result) async {
+      final data = await result.getByteData();
+      images.add(data.buffer.asUint8List());
+    });
+
+    setState(() {
+      this.images = images;
+    });
+  }
+
+  void _postSake() async {
+    if (images.length == 0) {
+      return;
+    }
+
+    // await post(widget.user.id, images);
     Navigator.of(context).pop(true);
   }
 
@@ -38,17 +58,21 @@ class _PostPageState extends State<PostPage> {
       appBar: AppBar(
         title: Text('酒の投稿'),
       ),
-      body: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: _getImageList,
-                  child: Text('投稿する'),
-                ),
-              ]
-          )
-      )
+      body: Column(
+        children: [
+          images.length > 0 ? Column(
+            children: images.map<Widget>((List<int> image) {
+              return Image(
+                image: MemoryImage(image),
+              );
+            }).toList(),
+          ) : Text('12'),
+          FlatButton(
+            onPressed: _getImageList,
+            child: Text('投稿する'),
+          ),
+        ]
+      ),
     );
   }
 }
