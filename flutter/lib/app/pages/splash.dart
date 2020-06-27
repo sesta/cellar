@@ -61,7 +61,7 @@ class _SplashPageState extends State<SplashPage> {
 }
 
 // TODO: 別の場所におく
-// 参考
+// 参考: https://github.com/kitoko552/flutter_image_viewer_sample/blob/master/lib/fade_in_route.dart
 class FadeInRoute extends PageRouteBuilder {
   FadeInRoute({
     @required this.widget,
