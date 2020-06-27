@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
@@ -14,11 +16,23 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
+  List<Asset> imageAssets = [];
+  List<List<int>> images = [];
+
+  final nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getImageList();
+  }
+
   void _getImageList() async {
     List<Asset> resultList;
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 10,
+        maxImages: 5,
       );
     } catch (e) {
       return ;
@@ -28,7 +42,28 @@ class _PostPageState extends State<PostPage> {
       return ;
     }
 
-    await post(widget.user.id, resultList);
+    List<List<int>> images = [];
+    await Future.forEach(resultList, (Asset result) async {
+      final data = await result.getByteData();
+      images.add(data.buffer.asUint8List());
+    });
+
+    setState(() {
+      this.imageAssets = resultList;
+      this.images = images;
+    });
+  }
+
+  void _postSake() async {
+    if (images.length == 0) {
+      return;
+    }
+
+    if (nameController.text == '') {
+      return;
+    }
+
+    await post(widget.user.id, imageAssets, nameController.text);
     Navigator.of(context).pop(true);
   }
 
@@ -38,17 +73,101 @@ class _PostPageState extends State<PostPage> {
       appBar: AppBar(
         title: Text('酒の投稿'),
       ),
-      body: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: _getImageList,
-                  child: Text('投稿する'),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            images.length > 0 ? ImagePreview(images: images) : Text('画像を読み込み中'),
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'お酒の名前',
                 ),
-              ]
-          )
-      )
+              ),
+            ),
+            RaisedButton(
+              onPressed: _postSake,
+              child: Text('投稿する'),
+              color: Colors.blue, // TODO: 色を統一する
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ]
+        ),
+      ),
+    );
+  }
+}
+
+class ImagePreview extends StatefulWidget {
+  ImagePreview({
+    Key key,
+    this.images,
+  }) : super(key: key);
+
+  final List<List<int>> images;
+
+  @override
+  _ImagePreviewState createState() => _ImagePreviewState();
+}
+
+class _ImagePreviewState extends State<ImagePreview> {
+  List<int> bigImage;
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      this.bigImage = widget.images[0];
+    });
+  }
+
+  _updateIndex(image) {
+    setState(() {
+      this.bigImage = image;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        AspectRatio(
+          aspectRatio: 1,
+          child: Image(
+            image: MemoryImage(bigImage),
+            fit: BoxFit.cover,
+          ),
+        ),
+        GridView.count(
+          shrinkWrap: true,
+          crossAxisCount: 5,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+          padding: EdgeInsets.all(8),
+          childAspectRatio: 1,
+          children: widget.images.map<Widget>((image) {
+            return GestureDetector(
+              child: Material(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                clipBehavior: Clip.antiAlias,
+                child: Image(
+                  image: MemoryImage(image),
+                  fit: BoxFit.cover,
+                  color: Color.fromRGBO(255, 255, 255, image == bigImage ? 0.76 : 1),
+                  colorBlendMode: BlendMode.modulate,
+                ),
+              ),
+              onTap: () => _updateIndex(image),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 }
