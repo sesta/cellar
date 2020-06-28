@@ -1,8 +1,10 @@
-import 'package:bacchus/app/pages/sign_in.dart';
 import 'package:flutter/material.dart';
 
-import 'package:bacchus/app/pages/home.dart';
 import 'package:bacchus/repository/provider/auth.dart';
+
+import 'package:bacchus/app/pages/home.dart';
+import 'package:bacchus/app/pages/sign_in.dart';
+import 'package:bacchus/app/widget/fade_in_route.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({Key key, this.setUser}) : super(key: key);
@@ -27,7 +29,7 @@ class _SplashPageState extends State<SplashPage> {
       Navigator.pushReplacement(
         context,
         FadeInRoute(
-          widget: SignInPage(),
+          widget: SignInPage(setUser: widget.setUser),
           opaque: true,
         ),
       );
@@ -57,47 +59,3 @@ class _SplashPageState extends State<SplashPage> {
 }
 
 // TODO: 別の場所におく
-// 参考: https://github.com/kitoko552/flutter_image_viewer_sample/blob/master/lib/fade_in_route.dart
-class FadeInRoute extends PageRouteBuilder {
-  FadeInRoute({
-    @required this.widget,
-    this.opaque = true,
-    this.onTransitionCompleted,
-    this.onTransitionDismissed,
-  }) : super(
-    opaque: opaque,
-    pageBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-        ) {
-      animation.addStatusListener((status) {
-        if (status == AnimationStatus.completed &&
-            onTransitionCompleted != null) {
-          onTransitionCompleted();
-        } else if (status == AnimationStatus.dismissed &&
-            onTransitionDismissed != null) {
-          onTransitionDismissed();
-        }
-      });
-
-      return widget;
-    },
-    transitionsBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-        Widget child,
-        ) {
-      return FadeTransition(
-        opacity: animation,
-        child: child,
-      );
-    },
-  );
-
-  final Widget widget;
-  final bool opaque;
-  final Function onTransitionCompleted;
-  final Function onTransitionDismissed;
-}
