@@ -15,6 +15,11 @@ class SignInPage extends StatefulWidget {
 class _SignInState extends State<SignInPage> {
   void _checkSignIn() async {
     final firebaseUser = await signIn();
+    if (firebaseUser == null) {
+      print('SignInに失敗しました');
+      return;
+    }
+
     final user = User(firebaseUser.uid, firebaseUser.displayName);
     await user.addStore();
 
