@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
+import 'package:bacchus/domain/entities/drink.dart';
 import 'package:bacchus/domain/entities/user.dart';
 import 'package:bacchus/domain/models/post.dart';
 
@@ -14,8 +15,6 @@ class PostPage extends StatefulWidget {
   @override
   _PostPageState createState() => _PostPageState();
 }
-
-enum DrinkType { Sake, Wine, Whisky }
 
 class _PostPageState extends State<PostPage> {
   List<Asset> imageAssets = [];
@@ -64,15 +63,20 @@ class _PostPageState extends State<PostPage> {
   }
 
   void _postDrink() async {
-    if (images.length == 0) {
+    if (
+      images.length == 0
+      || nameController.text == ''
+      || drinkType == null
+    ) {
       return;
     }
 
-    if (nameController.text == '') {
-      return;
-    }
-
-    await post(widget.user.id, imageAssets, nameController.text);
+    await post(
+      widget.user.id,
+      imageAssets,
+      nameController.text,
+      drinkType,
+    );
     Navigator.of(context).pop(true);
   }
 

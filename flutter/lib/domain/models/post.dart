@@ -8,7 +8,12 @@ import 'package:bacchus/conf.dart';
 import 'package:bacchus/domain/entities/drink.dart';
 import 'package:bacchus/repository/provider/storage.dart';
 
-Future<void> post(String userId, List<Asset> images, String name) async {
+Future<void> post(
+  String userId,
+  List<Asset> images,
+  String name,
+  DrinkType drinkType,
+) async {
   final nowDatetime = DateTime.now();
   final imageDirectory = '$BASE_IMAGE_PATH/$userId/${nowDatetime.millisecondsSinceEpoch}';
 
@@ -26,6 +31,7 @@ Future<void> post(String userId, List<Asset> images, String name) async {
   final drink = Drink(
     userId,
     name,
+    drinkType,
     thumbImagePath,
     imagePaths,
     nowDatetime,

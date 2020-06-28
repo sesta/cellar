@@ -8,6 +8,7 @@ Future<List<Drink>> getTimelineImageUrls() async {
   final drinks = rawData.map((data) => Drink(
     data['userId'],
     data['name'],
+    DrinkType.values[data['drinkTypeIndex']],
     data['thumbImagePath'],
     data['imagePaths'].cast<String>(),
     DateTime.fromMicrosecondsSinceEpoch(data['timestamp']),
