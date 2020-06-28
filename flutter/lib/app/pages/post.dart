@@ -76,7 +76,7 @@ class _PostPageState extends State<PostPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            images.length > 0 ? ImagePreview(images: images, addImage: _getImageList) : Text('画像を読み込み中'),
+            ImagePreview(images: images, addImage: _getImageList),
             Padding(
               padding: EdgeInsets.all(16.0),
               child: TextField(
@@ -120,15 +120,6 @@ class ImagePreview extends StatefulWidget {
 class _ImagePreviewState extends State<ImagePreview> {
   List<int> bigImage;
 
-  @override
-  void initState() {
-    super.initState();
-
-    setState(() {
-      this.bigImage = widget.images[0];
-    });
-  }
-
   _updateIndex(image) {
     setState(() {
       this.bigImage = image;
@@ -137,13 +128,29 @@ class _ImagePreviewState extends State<ImagePreview> {
 
   @override
   Widget build(BuildContext context) {
+    if (bigImage == null && widget.images.length > 0) {
+      setState(() {
+        this.bigImage = widget.images[0];
+      });
+    }
+
     return Column(
       children: [
         AspectRatio(
           aspectRatio: 1,
-          child: Image(
-            image: MemoryImage(bigImage),
-            fit: BoxFit.cover,
+          child: bigImage == null ? (
+            GestureDetector(
+              child: Material(
+                color: Colors.black26,
+                child: Icon(Icons.add, size: 48),
+              ),
+              onTap: widget.addImage,
+            )
+          ) : (
+            Image(
+              image: MemoryImage(bigImage),
+              fit: BoxFit.cover,
+            )
           ),
         ),
         GridView.count(
