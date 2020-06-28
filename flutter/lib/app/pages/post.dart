@@ -15,9 +15,12 @@ class PostPage extends StatefulWidget {
   _PostPageState createState() => _PostPageState();
 }
 
+enum SakeType { Wine, Nihonshu, Whisky }
+
 class _PostPageState extends State<PostPage> {
   List<Asset> imageAssets = [];
   List<List<int>> images = [];
+  SakeType sakeType;
 
   final nameController = TextEditingController();
 
@@ -26,6 +29,12 @@ class _PostPageState extends State<PostPage> {
     super.initState();
 
     _getImageList();
+  }
+
+  void _updateSakeType(SakeType sakeType) {
+    setState(() {
+      this.sakeType = sakeType;
+    });
   }
 
   void _getImageList() async {
@@ -79,23 +88,47 @@ class _PostPageState extends State<PostPage> {
             ImagePreview(images: images, addImage: _getImageList),
             Padding(
               padding: EdgeInsets.all(16.0),
-              child: TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'お酒の名前',
-                ),
+              child: Column(
+                children: <Widget>[
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'お酒の名前',
+                    ),
+                  ),
+                  DropdownButton(
+                    value: sakeType,
+                    onChanged: _updateSakeType,
+                    icon: Icon(Icons.arrow_drop_down),
+                    items: [
+                      DropdownMenuItem(
+                        value: SakeType.Nihonshu,
+                        child: Text('日本酒'),
+                      ),
+                      DropdownMenuItem(
+                        value: SakeType.Wine,
+                        child: Text('ワイン'),
+                      ),
+                      DropdownMenuItem(
+                        value: SakeType.Whisky,
+                        child: Text('ウィスキー'),
+                      ),
+                    ],
+                  ),
+                  RaisedButton(
+                    onPressed: _postSake,
+                    child: Text('投稿する'),
+                    color: Theme.of(context).primaryColorDark,
+                    textColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ],
               ),
             ),
-            RaisedButton(
-              onPressed: _postSake,
-              child: Text('投稿する'),
-              color: Theme.of(context).primaryColorDark,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
+
           ]
         ),
       ),
