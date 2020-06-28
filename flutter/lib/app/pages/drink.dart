@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:bacchus/domain/entities/sake.dart';
 
-class SakePage extends StatelessWidget {
+class DrinkPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Sake sake = ModalRoute.of(context).settings.arguments;
