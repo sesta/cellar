@@ -15,9 +15,12 @@ class PostPage extends StatefulWidget {
   _PostPageState createState() => _PostPageState();
 }
 
+enum SakeType { Wine, Nihonshu, Whisky }
+
 class _PostPageState extends State<PostPage> {
   List<Asset> imageAssets = [];
   List<List<int>> images = [];
+  SakeType sakeType;
 
   final nameController = TextEditingController();
 
@@ -28,11 +31,17 @@ class _PostPageState extends State<PostPage> {
     _getImageList();
   }
 
+  void _updateSakeType(SakeType sakeType) {
+    setState(() {
+      this.sakeType = sakeType;
+    });
+  }
+
   void _getImageList() async {
     List<Asset> resultList;
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 5,
+        maxImages: 5 - this.images.length,
       );
     } catch (e) {
       return ;
@@ -42,14 +51,14 @@ class _PostPageState extends State<PostPage> {
       return ;
     }
 
-    List<List<int>> images = [];
+    List<List<int>> images = this.images;
     await Future.forEach(resultList, (Asset result) async {
       final data = await result.getByteData();
       images.add(data.buffer.asUint8List());
     });
 
     setState(() {
-      this.imageAssets = resultList;
+      this.imageAssets = this.imageAssets + resultList;
       this.images = images;
     });
   }
@@ -76,26 +85,50 @@ class _PostPageState extends State<PostPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            images.length > 0 ? ImagePreview(images: images) : Text('画像を読み込み中'),
+            ImagePreview(images: images, addImage: _getImageList),
             Padding(
               padding: EdgeInsets.all(16.0),
-              child: TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'お酒の名前',
-                ),
+              child: Column(
+                children: <Widget>[
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'お酒の名前',
+                    ),
+                  ),
+                  DropdownButton(
+                    value: sakeType,
+                    onChanged: _updateSakeType,
+                    icon: Icon(Icons.arrow_drop_down),
+                    items: [
+                      DropdownMenuItem(
+                        value: SakeType.Nihonshu,
+                        child: Text('日本酒'),
+                      ),
+                      DropdownMenuItem(
+                        value: SakeType.Wine,
+                        child: Text('ワイン'),
+                      ),
+                      DropdownMenuItem(
+                        value: SakeType.Whisky,
+                        child: Text('ウィスキー'),
+                      ),
+                    ],
+                  ),
+                  RaisedButton(
+                    onPressed: _postSake,
+                    child: Text('投稿する'),
+                    color: Theme.of(context).primaryColorDark,
+                    textColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ],
               ),
             ),
-            RaisedButton(
-              onPressed: _postSake,
-              child: Text('投稿する'),
-              color: Theme.of(context).primaryColorDark,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
+
           ]
         ),
       ),
@@ -107,9 +140,11 @@ class ImagePreview extends StatefulWidget {
   ImagePreview({
     Key key,
     this.images,
+    this.addImage,
   }) : super(key: key);
 
   final List<List<int>> images;
+  final addImage;
 
   @override
   _ImagePreviewState createState() => _ImagePreviewState();
@@ -117,15 +152,6 @@ class ImagePreview extends StatefulWidget {
 
 class _ImagePreviewState extends State<ImagePreview> {
   List<int> bigImage;
-
-  @override
-  void initState() {
-    super.initState();
-
-    setState(() {
-      this.bigImage = widget.images[0];
-    });
-  }
 
   _updateIndex(image) {
     setState(() {
@@ -135,13 +161,29 @@ class _ImagePreviewState extends State<ImagePreview> {
 
   @override
   Widget build(BuildContext context) {
+    if (bigImage == null && widget.images.length > 0) {
+      setState(() {
+        this.bigImage = widget.images[0];
+      });
+    }
+
     return Column(
       children: [
         AspectRatio(
           aspectRatio: 1,
-          child: Image(
-            image: MemoryImage(bigImage),
-            fit: BoxFit.cover,
+          child: bigImage == null ? (
+            GestureDetector(
+              child: Material(
+                color: Colors.black26,
+                child: Icon(Icons.add, size: 48),
+              ),
+              onTap: widget.addImage,
+            )
+          ) : (
+            Image(
+              image: MemoryImage(bigImage),
+              fit: BoxFit.cover,
+            )
           ),
         ),
         GridView.count(
@@ -149,23 +191,33 @@ class _ImagePreviewState extends State<ImagePreview> {
           crossAxisCount: 5,
           crossAxisSpacing: 8,
           mainAxisSpacing: 8,
-          padding: EdgeInsets.all(8),
+          padding: EdgeInsets.all(16),
           childAspectRatio: 1,
-          children: widget.images.map<Widget>((image) {
-            return GestureDetector(
+          children: List.generate(widget.images.length + 1, (i)=> i).map<Widget>((index) => index < widget.images.length ? (
+            GestureDetector(
               child: Material(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 clipBehavior: Clip.antiAlias,
                 child: Image(
-                  image: MemoryImage(image),
+                  image: MemoryImage(widget.images[index]),
                   fit: BoxFit.cover,
-                  color: Color.fromRGBO(255, 255, 255, image == bigImage ? 0.76 : 1),
+                  color: Color.fromRGBO(255, 255, 255, widget.images[index] == bigImage ? 0.76 : 1),
                   colorBlendMode: BlendMode.modulate,
                 ),
               ),
-              onTap: () => _updateIndex(image),
-            );
-          }).toList(),
+              onTap: () => _updateIndex(widget.images[index]),
+            )
+          ) : (
+            GestureDetector(
+              child: Material(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                clipBehavior: Clip.antiAlias,
+                color: Colors.black26,
+                child: Icon(Icons.add),
+              ),
+              onTap: widget.addImage,
+            )
+          )).toList(),
         ),
       ],
     );
