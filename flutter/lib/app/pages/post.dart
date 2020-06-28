@@ -158,7 +158,7 @@ class _ImagePreviewState extends State<ImagePreview> {
           crossAxisCount: 5,
           crossAxisSpacing: 8,
           mainAxisSpacing: 8,
-          padding: EdgeInsets.all(8),
+          padding: EdgeInsets.all(16),
           childAspectRatio: 1,
           children: List.generate(widget.images.length + 1, (i)=> i).map<Widget>((index) => index < widget.images.length ? (
             GestureDetector(
