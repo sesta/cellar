@@ -32,7 +32,7 @@ class _PostPageState extends State<PostPage> {
     List<Asset> resultList;
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 5,
+        maxImages: 5 - this.images.length,
       );
     } catch (e) {
       return ;
@@ -42,14 +42,14 @@ class _PostPageState extends State<PostPage> {
       return ;
     }
 
-    List<List<int>> images = [];
+    List<List<int>> images = this.images;
     await Future.forEach(resultList, (Asset result) async {
       final data = await result.getByteData();
       images.add(data.buffer.asUint8List());
     });
 
     setState(() {
-      this.imageAssets = resultList;
+      this.imageAssets = this.imageAssets + resultList;
       this.images = images;
     });
   }
@@ -76,7 +76,7 @@ class _PostPageState extends State<PostPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            images.length > 0 ? ImagePreview(images: images) : Text('画像を読み込み中'),
+            images.length > 0 ? ImagePreview(images: images, addImage: _getImageList) : Text('画像を読み込み中'),
             Padding(
               padding: EdgeInsets.all(16.0),
               child: TextField(
@@ -107,9 +107,11 @@ class ImagePreview extends StatefulWidget {
   ImagePreview({
     Key key,
     this.images,
+    this.addImage,
   }) : super(key: key);
 
   final List<List<int>> images;
+  final addImage;
 
   @override
   _ImagePreviewState createState() => _ImagePreviewState();
@@ -151,21 +153,31 @@ class _ImagePreviewState extends State<ImagePreview> {
           mainAxisSpacing: 8,
           padding: EdgeInsets.all(8),
           childAspectRatio: 1,
-          children: widget.images.map<Widget>((image) {
-            return GestureDetector(
+          children: List.generate(widget.images.length + 1, (i)=> i).map<Widget>((index) => index < widget.images.length ? (
+            GestureDetector(
               child: Material(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 clipBehavior: Clip.antiAlias,
                 child: Image(
-                  image: MemoryImage(image),
+                  image: MemoryImage(widget.images[index]),
                   fit: BoxFit.cover,
-                  color: Color.fromRGBO(255, 255, 255, image == bigImage ? 0.76 : 1),
+                  color: Color.fromRGBO(255, 255, 255, widget.images[index] == bigImage ? 0.76 : 1),
                   colorBlendMode: BlendMode.modulate,
                 ),
               ),
-              onTap: () => _updateIndex(image),
-            );
-          }).toList(),
+              onTap: () => _updateIndex(widget.images[index]),
+            )
+          ) : (
+            GestureDetector(
+              child: Material(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                clipBehavior: Clip.antiAlias,
+                color: Colors.black26,
+                child: Icon(Icons.add),
+              ),
+              onTap: widget.addImage,
+            )
+          )).toList(),
         ),
       ],
     );
