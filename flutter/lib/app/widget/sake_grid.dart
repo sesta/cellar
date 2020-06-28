@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:bacchus/domain/entities/sake.dart';
+import 'package:bacchus/domain/entities/drink.dart';
 
 class SakeGrid extends StatelessWidget {
-  final List<Sake> sakes;
-  SakeGrid({this.sakes});
+  final List<Drink> drinks;
+  SakeGrid({this.drinks});
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +14,12 @@ class SakeGrid extends StatelessWidget {
       mainAxisSpacing: 8,
       padding: EdgeInsets.all(16),
       childAspectRatio: 1,
-      children: sakes.map<Widget>((sake) {
+      children: drinks.map<Widget>((drink) {
         return Hero(
-          tag: sake.thumbImageUrl,
+          tag: drink.thumbImageUrl,
           child: GestureDetector(
-            child: GridItem(name: sake.name, imageUrl: sake.thumbImageUrl),
-            onTap: () => Navigator.of(context).pushNamed('/sake', arguments: sake),
+            child: GridItem(name: drink.name, imageUrl: drink.thumbImageUrl),
+            onTap: () => Navigator.of(context).pushNamed('/sake', arguments: drink),
           ),
         );
       }).toList(),
