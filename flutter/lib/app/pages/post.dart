@@ -63,7 +63,7 @@ class _PostPageState extends State<PostPage> {
     });
   }
 
-  void _postSake() async {
+  void _postDrink() async {
     if (images.length == 0) {
       return;
     }
@@ -117,7 +117,7 @@ class _PostPageState extends State<PostPage> {
                     ],
                   ),
                   RaisedButton(
-                    onPressed: _postSake,
+                    onPressed: _postDrink,
                     child: Text('投稿する'),
                     color: Theme.of(context).primaryColorDark,
                     textColor: Colors.white,
