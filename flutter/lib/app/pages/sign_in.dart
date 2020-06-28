@@ -13,6 +13,8 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInState extends State<SignInPage> {
+  String userId;
+
   void _checkSignIn() async {
     final firebaseUser = await signIn();
     if (firebaseUser == null) {
@@ -20,9 +22,25 @@ class _SignInState extends State<SignInPage> {
       return;
     }
 
-    final user = User(firebaseUser.uid, firebaseUser.displayName);
-    await user.addStore();
+    final user = await getSignInUser();
+    if (user != null) {
+      widget.setUser(user);
+      Navigator.of(context).pushReplacementNamed('/home');
+      return;
+    }
 
+    setState(() {
+      this.userId = firebaseUser.uid;
+    });
+  }
+
+  void _createUser(String userName) async {
+    if (userId == null || userName == '') {
+      return;
+    }
+
+    final user = User(userId, userName);
+    await user.addStore();
     widget.setUser(user);
     Navigator.of(context).pushReplacementNamed('/home');
   }
@@ -30,20 +48,49 @@ class _SignInState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('ログイン'),
-        ),
-        body: Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  FlatButton(
-                    onPressed: _checkSignIn,
-                    child: Text('Googleでログイン'),
-                  ),
-                ]
-            )
-        )
+      appBar: AppBar(
+        title: Text('ログイン'),
+      ),
+      body: Center(
+        child: userId == null ? Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Bacchusの利用には\nGoogleのログインが必要です。', textAlign: TextAlign.center),
+            RaisedButton(
+              onPressed: _checkSignIn,
+              child: Text('Googleでログイン'),
+              color: Theme.of(context).primaryColorDark,
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ]
+        ) : UserForm(createUser: _createUser),
+      )
+    );
+  }
+}
+
+class UserForm extends StatefulWidget {
+  UserForm({
+    Key key,
+    this.createUser
+  }) : super(key: key);
+
+  final createUser;
+
+  @override
+  _UserFormState createState() => _UserFormState();
+}
+
+class _UserFormState extends State<UserForm> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text('fdsa'),
+      ],
     );
   }
 }
