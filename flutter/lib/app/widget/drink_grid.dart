@@ -19,7 +19,7 @@ class DrinkGrid extends StatelessWidget {
           tag: drink.thumbImageUrl,
           child: GestureDetector(
             child: GridItem(name: drink.name, imageUrl: drink.thumbImageUrl),
-            onTap: () => Navigator.of(context).pushNamed('/sake', arguments: drink),
+            onTap: () => Navigator.of(context).pushNamed('/drink', arguments: drink),
           ),
         );
       }).toList(),

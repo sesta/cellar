@@ -40,7 +40,7 @@ class _BacchusState extends State<Bacchus> {
       routes: <String, WidgetBuilder> {
         '/splash': (BuildContext context) => SplashPage(setUser: _setUser),
         '/home': (BuildContext context) => HomePage(),
-        '/sake': (BuildContext context) => DrinkPage(),
+        '/drink': (BuildContext context) => DrinkPage(),
         '/post': (BuildContext context) => PostPage(user: user),
         '/signIn': (BuildContext context) => SignInPage(setUser: _setUser),
       },
