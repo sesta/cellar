@@ -22,7 +22,7 @@ class Drink {
   }
 
   addStore() {
-    addData('sakes', {
+    addData('drinks', {
       'userId': userId,
       'name': name,
       'thumbImagePath': thumbImagePath,

@@ -4,7 +4,7 @@ import 'package:bacchus/domain/entities/drink.dart';
 import 'package:bacchus/repository/provider/firestore.dart';
 
 Future<List<Drink>> getTimelineImageUrls() async {
-  final rawData = await getAll('sakes');
+  final rawData = await getAll('drinks');
   final drinks = rawData.map((data) => Drink(
     data['userId'],
     data['name'],

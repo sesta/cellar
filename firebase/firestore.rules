@@ -4,7 +4,7 @@ service cloud.firestore {
     match /users/{userId}/{multiSegment=**} {
       allow read, write: if request.auth.uid == userId;
     }
-    match /sakes/{multiSegment=**} {
+    match /drinks/{multiSegment=**} {
       allow read, write: if request.auth.uid != null;
     }
   }
