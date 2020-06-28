@@ -15,7 +15,7 @@ class PostPage extends StatefulWidget {
   _PostPageState createState() => _PostPageState();
 }
 
-enum DrinkType { Wine, Nihonshu, Whisky }
+enum DrinkType { Sake, Wine, Whisky }
 
 class _PostPageState extends State<PostPage> {
   List<Asset> imageAssets = [];
@@ -103,7 +103,7 @@ class _PostPageState extends State<PostPage> {
                     icon: Icon(Icons.arrow_drop_down),
                     items: [
                       DropdownMenuItem(
-                        value: DrinkType.Nihonshu,
+                        value: DrinkType.Sake,
                         child: Text('日本酒'),
                       ),
                       DropdownMenuItem(
