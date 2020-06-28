@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:bacchus/domain/entities/sake.dart';
+import 'package:bacchus/domain/entities/drink.dart';
 import 'package:bacchus/domain/models/timeline.dart';
 
-import 'package:bacchus/app/widget/sake_grid.dart';
+import 'package:bacchus/app/widget/drink_grid.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -13,15 +13,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Sake> sakes = [];
+  List<Drink> drinks = [];
 
   @override
   void initState() {
     super.initState();
 
-    getTimelineImageUrls().then((sakes) {
+    getTimelineImageUrls().then((drinks) {
       setState(() {
-        this.sakes = sakes;
+        this.drinks = drinks;
       });
     });
   }
@@ -30,9 +30,9 @@ class _HomePageState extends State<HomePage> {
     final isPosted = await Navigator.of(context).pushNamed('/post');
 
     if (isPosted != null) {
-      getTimelineImageUrls().then((sakes) {
+      getTimelineImageUrls().then((drinks) {
         setState(() {
-          this.sakes = sakes;
+          this.drinks = drinks;
         });
       });
     }
@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
         centerTitle: false,
         elevation: 0,
       ),
-      body: sakes.length == 0 ?
+      body: drinks.length == 0 ?
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         ) :
-        SakeGrid(sakes: sakes),
+        DrinkGrid(drinks: drinks),
       floatingActionButton: FloatingActionButton(
         onPressed: _movePostPage,
         tooltip: 'Increment',

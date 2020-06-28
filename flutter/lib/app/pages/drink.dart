@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:bacchus/domain/entities/sake.dart';
+import 'package:bacchus/domain/entities/drink.dart';
 
-class SakePage extends StatelessWidget {
+class DrinkPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Sake sake = ModalRoute.of(context).settings.arguments;
+    final Drink drink = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       body: Column(
@@ -13,9 +13,9 @@ class SakePage extends StatelessWidget {
           Stack(
             children: <Widget>[
               Hero(
-                tag: sake.thumbImageUrl,
+                tag: drink.thumbImageUrl,
                 child: Image(
-                  image: NetworkImage(sake.thumbImageUrl),
+                  image: NetworkImage(drink.thumbImageUrl),
                 ),
               ),
               IconButton(
@@ -25,7 +25,7 @@ class SakePage extends StatelessWidget {
               ),
             ],
           ),
-          Text(sake.name)
+          Text(drink.name)
         ]
       )
     );

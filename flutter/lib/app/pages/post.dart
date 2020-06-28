@@ -15,12 +15,12 @@ class PostPage extends StatefulWidget {
   _PostPageState createState() => _PostPageState();
 }
 
-enum SakeType { Wine, Nihonshu, Whisky }
+enum DrinkType { Wine, Nihonshu, Whisky }
 
 class _PostPageState extends State<PostPage> {
   List<Asset> imageAssets = [];
   List<List<int>> images = [];
-  SakeType sakeType;
+  DrinkType drinkType;
 
   final nameController = TextEditingController();
 
@@ -31,9 +31,9 @@ class _PostPageState extends State<PostPage> {
     _getImageList();
   }
 
-  void _updateSakeType(SakeType sakeType) {
+  void _updateDrinkType(DrinkType drinkType) {
     setState(() {
-      this.sakeType = sakeType;
+      this.drinkType = drinkType;
     });
   }
 
@@ -63,7 +63,7 @@ class _PostPageState extends State<PostPage> {
     });
   }
 
-  void _postSake() async {
+  void _postDrink() async {
     if (images.length == 0) {
       return;
     }
@@ -98,26 +98,26 @@ class _PostPageState extends State<PostPage> {
                     ),
                   ),
                   DropdownButton(
-                    value: sakeType,
-                    onChanged: _updateSakeType,
+                    value: drinkType,
+                    onChanged: _updateDrinkType,
                     icon: Icon(Icons.arrow_drop_down),
                     items: [
                       DropdownMenuItem(
-                        value: SakeType.Nihonshu,
+                        value: DrinkType.Nihonshu,
                         child: Text('日本酒'),
                       ),
                       DropdownMenuItem(
-                        value: SakeType.Wine,
+                        value: DrinkType.Wine,
                         child: Text('ワイン'),
                       ),
                       DropdownMenuItem(
-                        value: SakeType.Whisky,
+                        value: DrinkType.Whisky,
                         child: Text('ウィスキー'),
                       ),
                     ],
                   ),
                   RaisedButton(
-                    onPressed: _postSake,
+                    onPressed: _postDrink,
                     child: Text('投稿する'),
                     color: Theme.of(context).primaryColorDark,
                     textColor: Colors.white,

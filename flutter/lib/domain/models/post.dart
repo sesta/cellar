@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 import 'package:bacchus/conf.dart';
-import 'package:bacchus/domain/entities/sake.dart';
+import 'package:bacchus/domain/entities/drink.dart';
 import 'package:bacchus/repository/provider/storage.dart';
 
 Future<void> post(String userId, List<Asset> images, String name) async {
@@ -23,14 +23,14 @@ Future<void> post(String userId, List<Asset> images, String name) async {
     imagePaths.add(originalImagePath);
   }
 
-  final sake = Sake(
+  final drink = Drink(
     userId,
     name,
     thumbImagePath,
     imagePaths,
     nowDatetime,
   );
-  sake.addStore();
+  drink.addStore();
 }
 
 Future<void> uploadImage(Asset image, String path, int expectWidthSize) async {

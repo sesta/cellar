@@ -1,7 +1,7 @@
 import 'package:bacchus/repository/provider/firestore.dart';
 import 'package:bacchus/repository/provider/storage.dart';
 
-class Sake {
+class Drink {
   String userId;
   String name;
   String thumbImagePath;
@@ -9,7 +9,7 @@ class Sake {
   DateTime updateDatetime;
   String thumbImageUrl;
 
-  Sake(
+  Drink(
       this.userId,
       this.name,
       this.thumbImagePath,
@@ -22,7 +22,7 @@ class Sake {
   }
 
   addStore() {
-    addData('sakes', {
+    addData('drinks', {
       'userId': userId,
       'name': name,
       'thumbImagePath': thumbImagePath,
