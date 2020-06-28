@@ -49,7 +49,7 @@ class _SignInState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ログイン'),
+        title: Text(userId == null ? 'ログイン' : '新規登録'),
       ),
       body: Center(
         child: userId == null ? Column(
@@ -85,12 +85,32 @@ class UserForm extends StatefulWidget {
 }
 
 class _UserFormState extends State<UserForm> {
+  final nameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text('fdsa'),
-      ],
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        children: <Widget>[
+          TextField(
+            controller: nameController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'ユーザー名',
+            ),
+          ),
+          RaisedButton(
+            onPressed: () => widget.createUser(nameController.text),
+            child: Text('Googleでログイン'),
+            color: Theme.of(context).primaryColorDark,
+            textColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

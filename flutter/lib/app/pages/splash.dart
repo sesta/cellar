@@ -27,7 +27,7 @@ class _SplashPageState extends State<SplashPage> {
       Navigator.pushReplacement(
         context,
         FadeInRoute(
-          widget: SignInPage(),
+          widget: SignInPage(setUser: widget.setUser),
           opaque: true,
         ),
       );
