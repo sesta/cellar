@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bacchus/domain/entities/drink.dart';
 import 'package:bacchus/domain/models/timeline.dart';
 
-import 'package:bacchus/app/widget/sake_grid.dart';
+import 'package:bacchus/app/widget/drink_grid.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         ) :
-        SakeGrid(drinks: drinks),
+        DrinkGrid(drinks: drinks),
       floatingActionButton: FloatingActionButton(
         onPressed: _movePostPage,
         tooltip: 'Increment',

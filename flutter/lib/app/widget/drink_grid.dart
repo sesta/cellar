@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:bacchus/domain/entities/drink.dart';
 
-class SakeGrid extends StatelessWidget {
+class DrinkGrid extends StatelessWidget {
   final List<Drink> drinks;
-  SakeGrid({this.drinks});
+  DrinkGrid({this.drinks});
 
   @override
   Widget build(BuildContext context) {
