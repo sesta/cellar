@@ -24,6 +24,7 @@ class _PostPageState extends State<PostPage> {
   FirebaseVisionLabelDetector labelDetector = FirebaseVisionLabelDetector.instance;
 
   final nameController = TextEditingController();
+  final memoController = TextEditingController();
 
   @override
   void initState() {
@@ -94,6 +95,7 @@ class _PostPageState extends State<PostPage> {
       imageAssets,
       nameController.text,
       drinkType,
+      memoController.text,
     );
     Navigator.of(context).pop(true);
   }
@@ -137,6 +139,13 @@ class _PostPageState extends State<PostPage> {
                         child: Text('ウィスキー'),
                       ),
                     ],
+                  ),
+                  TextField(
+                    controller: memoController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'メモ',
+                    ),
                   ),
                   RaisedButton(
                     onPressed: _postDrink,

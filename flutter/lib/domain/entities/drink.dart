@@ -12,6 +12,7 @@ class Drink {
   String userId;
   String name;
   DrinkType drinkType;
+  String memo;
   String thumbImagePath;
   List<String> imagePaths;
   DateTime updateDatetime;
@@ -21,6 +22,7 @@ class Drink {
       this.userId,
       this.name,
       this.drinkType,
+      this.memo,
       this.thumbImagePath,
       this.imagePaths,
       this.updateDatetime,
@@ -35,6 +37,7 @@ class Drink {
       'userId': userId,
       'name': name,
       'drinkTypeIndex': drinkType.index,
+      'memo': memo,
       'thumbImagePath': thumbImagePath,
       'imagePaths': imagePaths,
       'timestamp': updateDatetime.millisecondsSinceEpoch,
