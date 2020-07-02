@@ -146,6 +146,7 @@ class _PostPageState extends State<PostPage> {
                       border: OutlineInputBorder(),
                       labelText: 'メモ',
                     ),
+                    maxLines: 3,
                   ),
                   RaisedButton(
                     onPressed: _postDrink,
