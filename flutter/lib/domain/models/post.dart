@@ -13,6 +13,7 @@ Future<void> post(
   List<Asset> images,
   String name,
   DrinkType drinkType,
+    String memo,
 ) async {
   final nowDatetime = DateTime.now();
   final imageDirectory = '$BASE_IMAGE_PATH/$userId/${nowDatetime.millisecondsSinceEpoch}';
@@ -32,6 +33,7 @@ Future<void> post(
     userId,
     name,
     drinkType,
+    memo,
     thumbImagePath,
     imagePaths,
     nowDatetime,

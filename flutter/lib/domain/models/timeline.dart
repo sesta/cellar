@@ -9,6 +9,7 @@ Future<List<Drink>> getTimelineImageUrls() async {
     data['userId'],
     data['name'],
     DrinkType.values[data['drinkTypeIndex']],
+    data['memo'],
     data['thumbImagePath'],
     data['imagePaths'].cast<String>(),
     DateTime.fromMicrosecondsSinceEpoch(data['timestamp']),
