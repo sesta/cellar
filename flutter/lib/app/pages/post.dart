@@ -36,7 +36,7 @@ class _PostPageState extends State<PostPage> {
     super.initState();
 
     // 初期化が終わってからにするために少し遅らせる
-    Future.delayed(Duration(milliseconds: 500))
+    Future.delayed(Duration(milliseconds: 300))
       .then((_) => _getImageList());
   }
 

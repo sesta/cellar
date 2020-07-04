@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:bacchus/repository/provider/auth.dart';
 
-import 'package:bacchus/app/pages/home.dart';
-import 'package:bacchus/app/pages/sign_in.dart';
-import 'package:bacchus/app/widget/fade_in_route.dart';
-
 class SplashPage extends StatefulWidget {
   SplashPage({Key key, this.setUser}) : super(key: key);
 
@@ -26,25 +22,13 @@ class _SplashPageState extends State<SplashPage> {
   void _checkSignIn() async {
     final user = await getSignInUser();
     if (user == null) {
-      Navigator.pushReplacement(
-        context,
-        FadeInRoute(
-          widget: SignInPage(setUser: widget.setUser),
-          opaque: true,
-        ),
-      );
+      Navigator.pushReplacementNamed(context, '/signIn');
 
       return ;
     }
 
     widget.setUser(user);
-    Navigator.pushReplacement(
-      context,
-      FadeInRoute(
-        widget: HomePage(),
-        opaque: true,
-      ),
-    );
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override

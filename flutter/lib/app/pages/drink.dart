@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:bacchus/domain/entities/drink.dart';
 
 class DrinkPage extends StatelessWidget {
+  final Drink drink;
+  DrinkPage({this.drink});
+
   @override
   Widget build(BuildContext context) {
-    final Drink drink = ModalRoute.of(context).settings.arguments;
-
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -14,8 +15,15 @@ class DrinkPage extends StatelessWidget {
             children: <Widget>[
               Hero(
                 tag: drink.thumbImageUrl,
-                child: Image(
-                  image: NetworkImage(drink.thumbImageUrl),
+                child: GestureDetector(
+                  onVerticalDragEnd: (event) {
+                    if (event.velocity.pixelsPerSecond.dy > 100) {
+                      Navigator.of(context).pop(true);
+                    }
+                  },
+                  child: Image(
+                    image: NetworkImage(drink.thumbImageUrl),
+                  ),
                 ),
               ),
               Padding(
