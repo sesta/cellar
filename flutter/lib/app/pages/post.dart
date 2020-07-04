@@ -26,6 +26,7 @@ class _PostPageState extends State<PostPage> {
   List<Asset> imageAssets = [];
   List<List<int>> images = [];
   DrinkType drinkType;
+  int score = 3;
   FirebaseVisionLabelDetector labelDetector = FirebaseVisionLabelDetector.instance;
 
   final nameController = TextEditingController();
@@ -43,6 +44,12 @@ class _PostPageState extends State<PostPage> {
   void _updateDrinkType(DrinkType drinkType) {
     setState(() {
       this.drinkType = drinkType;
+    });
+  }
+
+  void _updateScore(int score) {
+    setState(() {
+      this.score = score;
     });
   }
 
@@ -208,50 +215,57 @@ class _PostPageState extends State<PostPage> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            TitleText('種類'),
-                            DropdownButton(
-                              value: drinkType,
-                              onChanged: _updateDrinkType,
-                              icon: Icon(Icons.arrow_drop_down),
-                              underline: Container(
-                                height: 1,
-                                color: Colors.black38,
-                              ),
-                              items: [
-                                DropdownMenuItem(
-                                  value: DrinkType.Sake,
-                                  child: NormalText('日本酒'),
-                                ),
-                                DropdownMenuItem(
-                                  value: DrinkType.Wine,
-                                  child: NormalText('ワイン'),
-                                ),
-                                DropdownMenuItem(
-                                  value: DrinkType.Whisky,
-                                  child: NormalText('ウィスキー'),
-                                ),
-                              ],
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          TitleText('種類'),
+                          DropdownButton(
+                            value: drinkType,
+                            onChanged: _updateDrinkType,
+                            icon: Icon(Icons.arrow_drop_down),
+                            underline: Container(
+                              height: 1,
+                              color: Colors.black38,
                             ),
-                          ],
-                        ),
+                            items: [
+                              DropdownMenuItem(
+                                value: DrinkType.Sake,
+                                child: NormalText('日本酒'),
+                              ),
+                              DropdownMenuItem(
+                                value: DrinkType.Wine,
+                                child: NormalText('ワイン'),
+                              ),
+                              DropdownMenuItem(
+                                value: DrinkType.Whisky,
+                                child: NormalText('ウィスキー'),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      Expanded(
+                      Padding(
+                        padding: const EdgeInsets.only(left: 32),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             TitleText('評価'),
-                            Row(
-                              children: <Widget>[
-                                Text('1'),
-                                Text('2'),
-                                Text('3'),
-                                Text('4'),
-                                Text('5'),
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Row(
+                                children: List.generate(5, (i)=> i).map<Widget>((index) =>
+                                  SizedBox(
+                                    height: 32,
+                                    width: 32,
+                                    child: IconButton(
+                                      padding: EdgeInsets.all(4),
+                                      onPressed: () => _updateScore(index + 1),
+                                      icon: Icon(index < score ? Icons.star : Icons.star_border),
+                                      color: Colors.orangeAccent,
+                                    ),
+                                  )
+                                ).toList(),
+                              ),
                             ),
                           ],
                         ),
