@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import 'package:bacchus/repository/provider/firestore.dart';
 import 'package:bacchus/repository/provider/storage.dart';
 
@@ -49,6 +51,11 @@ class Drink {
       case DrinkType.Whisky:
         return 'ウイスキー';
     }
+  }
+
+  get priceString {
+    final formatter = NumberFormat('#,###');
+    return "¥${formatter.format(price)}";
   }
 
   addStore() {

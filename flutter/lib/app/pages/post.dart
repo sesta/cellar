@@ -168,7 +168,7 @@ class _PostPageState extends State<PostPage> {
       drinkType,
       score,
       memoController.text,
-      int.parse(priceController.text),
+      priceController.text == '' ? 0 : int.parse(priceController.text),
       placeController.text,
     );
     Navigator.of(context).pop(true);
