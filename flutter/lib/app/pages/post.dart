@@ -221,7 +221,7 @@ class _PostPageState extends State<PostPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          TitleText('種類'),
+                          TitleText('種類 *'),
                           DropdownButton(
                             value: drinkType,
                             onChanged: _updateDrinkType,
@@ -252,7 +252,7 @@ class _PostPageState extends State<PostPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            TitleText('評価'),
+                            TitleText('評価 *'),
                             Padding(
                               padding: const EdgeInsets.only(top: 8),
                               child: Row(
@@ -277,7 +277,7 @@ class _PostPageState extends State<PostPage> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 16),
-                    child: TitleText('名前')
+                    child: TitleText('名前 *')
                   ),
                   TextField(
                     controller: nameController,
