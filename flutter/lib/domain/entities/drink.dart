@@ -32,6 +32,17 @@ class Drink {
     thumbImageUrl = await getDataUrl(thumbImagePath);
   }
 
+  get drinkTypeLabel {
+    switch(drinkType) {
+      case DrinkType.Sake:
+        return '日本酒';
+      case DrinkType.Wine:
+        return 'ワイン';
+      case DrinkType.Whisky:
+        return 'ウイスキー';
+    }
+  }
+
   addStore() {
     addData('drinks', {
       'userId': userId,
