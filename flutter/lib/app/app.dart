@@ -7,7 +7,13 @@ import 'package:bacchus/app/pages/home.dart';
 import 'package:bacchus/app/pages/drink.dart';
 import 'package:bacchus/app/pages/post.dart';
 import 'package:bacchus/app/pages/sign_in.dart';
+
 import 'package:bacchus/domain/entities/user.dart';
+import 'package:bacchus/domain/entities/drink.dart';
+
+import 'package:bacchus/app/widget/fade_in_route.dart';
+import 'package:bacchus/app/widget/slide_up_route.dart';
+
 
 class Bacchus extends StatefulWidget {
   Bacchus({Key key}) : super(key: key);
@@ -36,13 +42,28 @@ class _BacchusState extends State<Bacchus> {
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
-      initialRoute: '/splash',
-      routes: <String, WidgetBuilder> {
-        '/splash': (BuildContext context) => SplashPage(setUser: _setUser),
-        '/home': (BuildContext context) => HomePage(),
-        '/drink': (BuildContext context) => DrinkPage(),
-        '/post': (BuildContext context) => PostPage(user: user),
-        '/signIn': (BuildContext context) => SignInPage(setUser: _setUser),
+      onGenerateRoute: (settings) {
+        if (settings.name == '/home') {
+          return FadeInRoute(
+            widget: HomePage(),
+            opaque: true,
+          );
+        }
+        if (settings.name == '/signIn') {
+          return FadeInRoute(
+            widget: SignInPage(setUser: _setUser),
+            opaque: true,
+          );
+        }
+        if (settings.name == '/drink') {
+          final Drink drink = settings.arguments;
+          return slideUpRoute(DrinkPage(drink: drink));
+        }
+        if (settings.name == '/post') {
+          return slideUpRoute(PostPage());
+        }
+
+        return MaterialPageRoute(builder: (context) => SplashPage(setUser: _setUser));
       },
     );
   }

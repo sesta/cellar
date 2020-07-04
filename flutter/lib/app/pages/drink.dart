@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:bacchus/domain/entities/drink.dart';
 
 class DrinkPage extends StatelessWidget {
+  final Drink drink;
+  DrinkPage({this.drink});
+
   @override
   Widget build(BuildContext context) {
-    final Drink drink = ModalRoute.of(context).settings.arguments;
-
     return Scaffold(
       body: Column(
         children: <Widget>[
