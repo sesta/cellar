@@ -15,8 +15,15 @@ class DrinkPage extends StatelessWidget {
             children: <Widget>[
               Hero(
                 tag: drink.thumbImageUrl,
-                child: Image(
-                  image: NetworkImage(drink.thumbImageUrl),
+                child: GestureDetector(
+                  onVerticalDragEnd: (event) {
+                    if (event.velocity.pixelsPerSecond.dy > 100) {
+                      Navigator.of(context).pop(true);
+                    }
+                  },
+                  child: Image(
+                    image: NetworkImage(drink.thumbImageUrl),
+                  ),
                 ),
               ),
               Padding(
