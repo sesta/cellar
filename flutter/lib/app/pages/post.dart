@@ -8,6 +8,11 @@ import 'package:bacchus/domain/entities/drink.dart';
 import 'package:bacchus/domain/entities/user.dart';
 import 'package:bacchus/domain/models/post.dart';
 
+enum UploadMethods {
+  Camera,
+  Library,
+}
+
 class PostPage extends StatefulWidget {
   PostPage({Key key, this.user}) : super(key: key);
 
@@ -30,13 +35,69 @@ class _PostPageState extends State<PostPage> {
   void initState() {
     super.initState();
 
-    _getImageList();
+    // 初期化が終わってからにするために少し遅らせる
+    Future.delayed(Duration(milliseconds: 500))
+      .then((_) => _selectUploadMethod());
   }
 
   void _updateDrinkType(DrinkType drinkType) {
     setState(() {
       this.drinkType = drinkType;
     });
+  }
+
+  void _selectUploadMethod() async {
+    final uploadMethod = await showModalBottomSheet<UploadMethods>(
+        context: context,
+        builder: (BuildContext context){
+          return Container(
+            height: 180,
+            padding: EdgeInsets.all(24.0),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: TitleText('どの写真を使いますか'),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    FlatButton(
+                      onPressed: () => Navigator.pop(context, UploadMethods.Camera),
+                      child: Text(
+                        '写真を撮る',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ),
+                    FlatButton(
+                      onPressed: () => Navigator.pop(context, UploadMethods.Library),
+                      child: Text(
+                        'カメラロール',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        }
+    );
+
+    switch(uploadMethod) {
+      case UploadMethods.Camera:
+        print('camera');
+        break;
+      case UploadMethods.Library:
+        _getImageList();
+        break;
+    }
   }
 
   void _getImageList() async {
@@ -138,7 +199,7 @@ class _PostPageState extends State<PostPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ImagePreview(images: images, addImage: _getImageList),
+            ImagePreview(images: images, addImage: _selectUploadMethod),
             Padding(
               padding: EdgeInsets.only(top: 32, right: 16, left: 16, bottom: 80),
               child: Column(
@@ -225,7 +286,10 @@ class _PostPageState extends State<PostPage> {
                     child: Center(
                       child: RaisedButton(
                         onPressed: _postDrink,
-                        child: Text('投稿する'),
+                        child: Text(
+                          '投稿する',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         color: Theme.of(context).primaryColor,
                         textColor: Colors.white,
                         shape: RoundedRectangleBorder(
