@@ -37,7 +37,7 @@ class _PostPageState extends State<PostPage> {
 
     // 初期化が終わってからにするために少し遅らせる
     Future.delayed(Duration(milliseconds: 500))
-      .then((_) => _selectUploadMethod());
+      .then((_) => _getImageList());
   }
 
   void _updateDrinkType(DrinkType drinkType) {
@@ -46,7 +46,7 @@ class _PostPageState extends State<PostPage> {
     });
   }
 
-  void _selectUploadMethod() async {
+  void _selectUploadMethod() async { // カメラは大変なのであとで
     final uploadMethod = await showModalBottomSheet<UploadMethods>(
         context: context,
         builder: (BuildContext context){
@@ -199,7 +199,7 @@ class _PostPageState extends State<PostPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ImagePreview(images: images, addImage: _selectUploadMethod),
+            ImagePreview(images: images, addImage: _getImageList),
             Padding(
               padding: EdgeInsets.only(top: 32, right: 16, left: 16, bottom: 80),
               child: Column(
