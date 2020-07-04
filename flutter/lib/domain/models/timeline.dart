@@ -9,10 +9,13 @@ Future<List<Drink>> getTimelineImageUrls() async {
     data['userId'],
     data['name'],
     DrinkType.values[data['drinkTypeIndex']],
+    data['score'],
     data['memo'],
+    data['price'],
+    data['place'],
     data['thumbImagePath'],
     data['imagePaths'].cast<String>(),
-    DateTime.fromMicrosecondsSinceEpoch(data['timestamp']),
+    DateTime.fromMicrosecondsSinceEpoch(data['timestamp'] * 1000),
   )).toList();
 
   await Future.forEach(drinks, (drink) async {

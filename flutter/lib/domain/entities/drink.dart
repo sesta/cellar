@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import 'package:bacchus/repository/provider/firestore.dart';
 import 'package:bacchus/repository/provider/storage.dart';
 
@@ -12,7 +14,12 @@ class Drink {
   String userId;
   String name;
   DrinkType drinkType;
+  int score;
   String memo;
+  int price;
+  String place;
+
+
   String thumbImagePath;
   List<String> imagePaths;
   DateTime updateDatetime;
@@ -22,7 +29,10 @@ class Drink {
       this.userId,
       this.name,
       this.drinkType,
+      this.score,
       this.memo,
+      this.price,
+      this.place,
       this.thumbImagePath,
       this.imagePaths,
       this.updateDatetime,
@@ -43,12 +53,25 @@ class Drink {
     }
   }
 
+  get priceString {
+    final formatter = NumberFormat('#,###');
+    return "¥${formatter.format(price)}";
+  }
+
+  get updateDatetimeString {
+    final formatter = DateFormat('yyyy/MM/dd');
+    return formatter.format(updateDatetime);
+  }
+
   addStore() {
     addData('drinks', {
       'userId': userId,
       'name': name,
       'drinkTypeIndex': drinkType.index,
+      'score': score,
       'memo': memo,
+      'price': price,
+      'place': place,
       'thumbImagePath': thumbImagePath,
       'imagePaths': imagePaths,
       'timestamp': updateDatetime.millisecondsSinceEpoch,
