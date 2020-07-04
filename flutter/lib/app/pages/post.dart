@@ -100,68 +100,144 @@ class _PostPageState extends State<PostPage> {
     Navigator.of(context).pop(true);
   }
 
+  Widget NormalText(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Widget TitleText(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 14,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('お酒の記録'),
+        title: Text(
+          '投稿',
+          style: TextStyle(
+            color: Colors.black87,
+          ),
+        ),
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        iconTheme: IconThemeData(
+          color: Colors.black87,
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             ImagePreview(images: images, addImage: _getImageList),
             Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.only(top: 32, right: 16, left: 16, bottom: 80),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'お酒の名前',
-                    ),
-                  ),
-                  DropdownButton(
-                    value: drinkType,
-                    onChanged: _updateDrinkType,
-                    icon: Icon(Icons.arrow_drop_down),
-                    items: [
-                      DropdownMenuItem(
-                        value: DrinkType.Sake,
-                        child: Text('日本酒'),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            TitleText('種類'),
+                            DropdownButton(
+                              value: drinkType,
+                              onChanged: _updateDrinkType,
+                              icon: Icon(Icons.arrow_drop_down),
+                              underline: Container(
+                                height: 1,
+                                color: Colors.black38,
+                              ),
+                              items: [
+                                DropdownMenuItem(
+                                  value: DrinkType.Sake,
+                                  child: NormalText('日本酒'),
+                                ),
+                                DropdownMenuItem(
+                                  value: DrinkType.Wine,
+                                  child: NormalText('ワイン'),
+                                ),
+                                DropdownMenuItem(
+                                  value: DrinkType.Whisky,
+                                  child: NormalText('ウィスキー'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                      DropdownMenuItem(
-                        value: DrinkType.Wine,
-                        child: Text('ワイン'),
-                      ),
-                      DropdownMenuItem(
-                        value: DrinkType.Whisky,
-                        child: Text('ウィスキー'),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            TitleText('評価'),
+                            Row(
+                              children: <Widget>[
+                                Text('1'),
+                                Text('2'),
+                                Text('3'),
+                                Text('4'),
+                                Text('5'),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: TitleText('名前')
+                  ),
+                  TextField(
+                    controller: nameController,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(top: 24),
+                      child: TitleText('メモ')
+                  ),
                   TextField(
                     controller: memoController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'メモ',
-                    ),
                     maxLines: 3,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  RaisedButton(
-                    onPressed: _postDrink,
-                    child: Text('投稿する'),
-                    color: Theme.of(context).primaryColorDark,
-                    textColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+                  Padding(
+                    padding: EdgeInsets.only(top: 48),
+                    child: Center(
+                      child: RaisedButton(
+                        onPressed: _postDrink,
+                        child: Text('投稿する'),
+                        color: Theme.of(context).primaryColor,
+                        textColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-
-          ]
+          ],
         ),
       ),
     );
@@ -201,55 +277,76 @@ class _ImagePreviewState extends State<ImagePreview> {
 
     return Column(
       children: [
-        AspectRatio(
-          aspectRatio: 1,
-          child: bigImage == null ? (
-            GestureDetector(
-              child: Material(
-                color: Colors.black26,
-                child: Icon(Icons.add, size: 48),
-              ),
-              onTap: widget.addImage,
-            )
-          ) : (
-            Image(
-              image: MemoryImage(bigImage),
-              fit: BoxFit.cover,
-            )
-          ),
-        ),
-        GridView.count(
-          shrinkWrap: true,
-          crossAxisCount: 5,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-          padding: EdgeInsets.all(16),
-          childAspectRatio: 1,
-          children: List.generate(widget.images.length + 1, (i)=> i).map<Widget>((index) => index < widget.images.length ? (
-            GestureDetector(
-              child: Material(
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: bigImage == null ? (
+              GestureDetector(
+                child: Material(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  clipBehavior: Clip.antiAlias,
+                  color: Theme.of(context).primaryColorLight,
+                  child: Icon(Icons.add, size: 48, color: Colors.black87),
+                ),
+                onTap: widget.addImage,
+              )
+            ) : (
+              Material(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 clipBehavior: Clip.antiAlias,
                 child: Image(
-                  image: MemoryImage(widget.images[index]),
+                  image: MemoryImage(bigImage),
                   fit: BoxFit.cover,
-                  color: Color.fromRGBO(255, 255, 255, widget.images[index] == bigImage ? 0.76 : 1),
-                  colorBlendMode: BlendMode.modulate,
                 ),
-              ),
-              onTap: () => _updateIndex(widget.images[index]),
-            )
-          ) : (
-            GestureDetector(
-              child: Material(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                clipBehavior: Clip.antiAlias,
-                color: Colors.black26,
-                child: Icon(Icons.add),
-              ),
-              onTap: widget.addImage,
-            )
-          )).toList(),
+              )
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12),
+          child: Row(
+            children: List.generate(5, (i)=> i).map<Widget>((index) {
+              Widget content = Material();
+              if (index < widget.images.length) {
+                content = GestureDetector(
+                  child: Material(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    clipBehavior: Clip.antiAlias,
+                    child: Image(
+                      image: MemoryImage(widget.images[index]),
+                      fit: BoxFit.cover,
+                      color: Color.fromRGBO(255, 255, 255, widget.images[index] == bigImage ? 0.76 : 1),
+                      colorBlendMode: BlendMode.modulate,
+                    ),
+                  ),
+                  onTap: () => _updateIndex(widget.images[index]),
+                );
+              }
+
+              if (index == widget.images.length) {
+                content = GestureDetector(
+                  child: Material(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    clipBehavior: Clip.antiAlias,
+                    color: Theme.of(context).primaryColorLight,
+                    child: Icon(Icons.add, color: Colors.black87),
+                  ),
+                  onTap: widget.addImage,
+                );
+              }
+
+              return Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 4, right: 4),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: content,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
         ),
       ],
     );

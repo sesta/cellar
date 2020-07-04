@@ -31,7 +31,7 @@ class _BacchusState extends State<Bacchus> {
     return MaterialApp(
       title: 'Bacchus',
       theme: ThemeData(
-        primarySwatch: Colors.brown,
+        primarySwatch: Colors.blueGrey,
       ),
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
