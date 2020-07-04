@@ -58,6 +58,11 @@ class Drink {
     return "¥${formatter.format(price)}";
   }
 
+  get updateDatetimeString {
+    final formatter = DateFormat('yyyy/MM/dd');
+    return formatter.format(updateDatetime);
+  }
+
   addStore() {
     addData('drinks', {
       'userId': userId,

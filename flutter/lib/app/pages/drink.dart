@@ -54,23 +54,34 @@ class DrinkPage extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(
-                top: 32,
+                top: 8,
                 left: 16,
                 right: 16,
               ),
-              child: Text(
-                drink.drinkTypeLabel
-                + (drink.price == 0 ? '' : "・${drink.priceString}")
-                + (drink.place == '' ? '' : "・${drink.place}"),
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).primaryColor,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    drink.drinkTypeLabel
+                        + (drink.price == 0 ? '' : "・${drink.priceString}")
+                        + (drink.place == '' ? '' : "・${drink.place}"),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  Text(
+                    drink.updateDatetimeString,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  )
+                ],
               ),
             ),
             Padding(
               padding: EdgeInsets.only(
-                top: 8,
+                top: 24,
                 left: 16,
                 right: 16,
               ),
@@ -84,7 +95,7 @@ class DrinkPage extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(
-                top: 8,
+                top: 20,
                 left: 16,
                 right: 16,
               ),
@@ -92,7 +103,7 @@ class DrinkPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(5, (i)=> i).map<Widget>((index) =>
                   Padding(
-                    padding: EdgeInsets.all(4),
+                    padding: EdgeInsets.only(left: 4, right: 4),
                     child: Icon(
                       index < drink.score ? Icons.star : Icons.star_border,
                       color: Colors.orangeAccent,
@@ -103,7 +114,7 @@ class DrinkPage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                top: 24,
+                top: 16,
                 left: 16,
                 right: 16,
               ),
