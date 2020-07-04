@@ -166,7 +166,10 @@ class _PostPageState extends State<PostPage> {
       imageAssets,
       nameController.text,
       drinkType,
+      score,
       memoController.text,
+      int.parse(priceController.text),
+      placeController.text,
     );
     Navigator.of(context).pop(true);
   }

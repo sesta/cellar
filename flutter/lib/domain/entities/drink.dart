@@ -12,7 +12,12 @@ class Drink {
   String userId;
   String name;
   DrinkType drinkType;
+  int score;
   String memo;
+  int price;
+  String place;
+
+
   String thumbImagePath;
   List<String> imagePaths;
   DateTime updateDatetime;
@@ -22,7 +27,10 @@ class Drink {
       this.userId,
       this.name,
       this.drinkType,
+      this.score,
       this.memo,
+      this.price,
+      this.place,
       this.thumbImagePath,
       this.imagePaths,
       this.updateDatetime,
@@ -48,7 +56,10 @@ class Drink {
       'userId': userId,
       'name': name,
       'drinkTypeIndex': drinkType.index,
+      'score': score,
       'memo': memo,
+      'price': price,
+      'place': place,
       'thumbImagePath': thumbImagePath,
       'imagePaths': imagePaths,
       'timestamp': updateDatetime.millisecondsSinceEpoch,

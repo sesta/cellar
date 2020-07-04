@@ -60,7 +60,7 @@ class _BacchusState extends State<Bacchus> {
           return slideUpRoute(DrinkPage(drink: drink));
         }
         if (settings.name == '/post') {
-          return slideUpRoute(PostPage());
+          return slideUpRoute(PostPage(user: user));
         }
 
         return MaterialPageRoute(builder: (context) => SplashPage(setUser: _setUser));
