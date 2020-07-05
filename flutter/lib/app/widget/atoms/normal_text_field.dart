@@ -20,6 +20,14 @@ class NormalTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextInputType keyboardType = TextInputType.text;
+    if (inputType == InputType.Number) {
+      keyboardType = TextInputType.number;
+    }
+    if (maxLines > 1) {
+      keyboardType = TextInputType.multiline;
+    }
+
     return TextField(
       controller: controller,
       style: TextStyle(
@@ -28,9 +36,7 @@ class NormalTextField extends StatelessWidget {
         height: maxLines == 1 ? 1 : 1.5,
       ),
       maxLines: maxLines,
-      keyboardType: inputType == InputType.Number
-        ? TextInputType.number
-        : TextInputType.text,
+      keyboardType: keyboardType,
       inputFormatters: inputType == InputType.Number
           ? <TextInputFormatter>[
               WhitelistingTextInputFormatter.digitsOnly
