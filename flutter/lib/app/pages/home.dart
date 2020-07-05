@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:bacchus/domain/entities/user.dart';
 import 'package:bacchus/domain/entities/drink.dart';
 import 'package:bacchus/domain/models/timeline.dart';
 
 import 'package:bacchus/app/widget/drink_grid.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  HomePage({Key key, this.user}) : super(key: key);
+
+  final User user;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -14,29 +17,45 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Drink> drinks = [];
-  TimelineType timelineType = TimelineType.All;
+  TimelineType timelineType = TimelineType.Mine;
 
   @override
   void initState() {
     super.initState();
 
-    getTimelineImageUrls(timelineType).then((drinks) {
-      setState(() {
-        this.drinks = drinks;
-      });
-    });
+    _updateTimeline();
   }
 
   void _movePostPage() async {
     final isPosted = await Navigator.of(context).pushNamed('/post');
 
     if (isPosted != null) {
-      getTimelineImageUrls(timelineType).then((drinks) {
-        setState(() {
-          this.drinks = drinks;
-        });
-      });
+      _updateTimeline();
     }
+  }
+
+  void _updateTimeline() {
+    getTimelineImageUrls(
+      timelineType,
+      userId: widget.user.id,
+    ).then((drinks) {
+      setState(() {
+        this.drinks = drinks;
+      });
+    });
+  }
+
+  void _updateTimelineType(TimelineType timelineType) {
+    if (this.timelineType == timelineType) {
+      return;
+    }
+
+    setState(() {
+      this.timelineType = timelineType;
+      this.drinks = [];
+    });
+
+    _updateTimeline();
   }
 
   @override
@@ -86,18 +105,28 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               Expanded(
                 flex: 1,
-                child: Icon(
-                  Icons.home,
-                  size: 32,
-                  color: Colors.white,
+                child: IconButton(
+                  onPressed: () => _updateTimelineType(TimelineType.Mine),
+                  icon: Icon(
+                    Icons.home,
+                    size: 32,
+                    color: timelineType == TimelineType.Mine
+                      ? Colors.white
+                      : Theme.of(context).primaryColorLight,
+                  ),
                 ),
               ),
               Expanded(
                 flex: 1,
-                child: Icon(
-                  Icons.people,
-                  size: 32,
-                  color: Theme.of(context).primaryColorLight,
+                child: IconButton(
+                  onPressed: () => _updateTimelineType(TimelineType.All),
+                  icon: Icon(
+                    Icons.people,
+                    size: 32,
+                    color: timelineType == TimelineType.All
+                      ? Colors.white
+                      : Theme.of(context).primaryColorLight,
+                  ),
                 ),
               ),
               Container(

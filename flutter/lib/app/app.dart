@@ -44,7 +44,7 @@ class _BacchusState extends State<Bacchus> {
       ],
       onGenerateRoute: (settings) {
         if (settings.name == '/home') {
-          return fadeInRoute(HomePage());
+          return fadeInRoute(HomePage(user: user));
         }
         if (settings.name == '/signIn') {
           return fadeInRoute(SignInPage(setUser: _setUser));
