@@ -14,12 +14,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Drink> drinks = [];
+  TimelineType timelineType = TimelineType.All;
 
   @override
   void initState() {
     super.initState();
 
-    getTimelineImageUrls().then((drinks) {
+    getTimelineImageUrls(timelineType).then((drinks) {
       setState(() {
         this.drinks = drinks;
       });
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     final isPosted = await Navigator.of(context).pushNamed('/post');
 
     if (isPosted != null) {
-      getTimelineImageUrls().then((drinks) {
+      getTimelineImageUrls(timelineType).then((drinks) {
         setState(() {
           this.drinks = drinks;
         });
