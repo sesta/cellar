@@ -4,7 +4,7 @@ import 'package:bacchus/repository/provider/auth.dart';
 import 'package:bacchus/domain/entities/user.dart';
 
 import 'package:bacchus/app/pages/home.dart';
-import 'package:bacchus/app/widget/fade_in_route.dart';
+import 'package:bacchus/app/widget/transitions/fade_in_route.dart';
 
 class SignInPage extends StatefulWidget {
   SignInPage({Key key, this.setUser}) : super(key: key);

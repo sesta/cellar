@@ -11,8 +11,8 @@ import 'package:bacchus/app/pages/sign_in.dart';
 import 'package:bacchus/domain/entities/user.dart';
 import 'package:bacchus/domain/entities/drink.dart';
 
-import 'package:bacchus/app/widget/fade_in_route.dart';
-import 'package:bacchus/app/widget/slide_up_route.dart';
+import 'package:bacchus/app/widget/transitions/fade_in_route.dart';
+import 'package:bacchus/app/widget/transitions/slide_up_route.dart';
 
 
 class Bacchus extends StatefulWidget {
