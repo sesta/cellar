@@ -26,18 +26,26 @@ Future<DocumentSnapshot> getDocument(
 }
 
 Future<List<DocumentSnapshot>> getDocuments(String documentName, {
-  int limit = 50,
+  String whereKey,
+  String whereEqualValue,
   String orderKey,
   bool isDeskOrder = false,
+  int limit = 50,
 }) async {
   CollectionReference ref = firestoreInstance
     .collection(documentName);
 
-  Query query;
-  if (orderKey != null) {
-    query = ref.orderBy(orderKey, descending: isDeskOrder);
+  Query query = ref;
+  if (whereKey != null && whereEqualValue != null) {
+    query = query.where(
+      whereKey,
+      isEqualTo: whereEqualValue,
+    );
   }
-  query.limit(limit);
+  if (orderKey != null) {
+    query = query.orderBy(orderKey, descending: isDeskOrder);
+  }
+  query = query.limit(limit);
 
   final snapshot = await query.getDocuments();
   return snapshot.documents;

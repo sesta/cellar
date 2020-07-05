@@ -6,6 +6,8 @@ import 'package:bacchus/repository/provider/firestore.dart';
 Future<List<Drink>> getTimelineImageUrls() async {
   final rawData = await getDocuments(
     'drinks',
+    whereKey: 'userId',
+    whereEqualValue: 'VQorGe4kfJRCbT79U0Nm0GEhw2Z2',
     orderKey: 'timestamp',
     isDeskOrder: true,
   );
