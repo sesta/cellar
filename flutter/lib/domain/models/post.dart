@@ -10,6 +10,7 @@ import 'package:bacchus/repository/provider/storage.dart';
 
 Future<void> post(
   String userId,
+  String userName,
   List<Asset> images,
   String name,
   DrinkType drinkType,
@@ -34,6 +35,7 @@ Future<void> post(
 
   final drink = Drink(
     userId,
+    userName,
     name,
     drinkType,
     score,

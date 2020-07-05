@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:bacchus/repository/provider/auth.dart';
 import 'package:bacchus/domain/entities/user.dart';
 
-import 'package:bacchus/app/pages/home.dart';
-import 'package:bacchus/app/widget/fade_in_route.dart';
-
 class SignInPage extends StatefulWidget {
   SignInPage({Key key, this.setUser}) : super(key: key);
 
@@ -45,13 +42,7 @@ class _SignInState extends State<SignInPage> {
     final user = User(userId, userName);
     await user.addStore();
     widget.setUser(user);
-    Navigator.pushReplacement(
-      context,
-      FadeInRoute(
-        widget: HomePage(),
-        opaque: true,
-      ),
-    );
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override
