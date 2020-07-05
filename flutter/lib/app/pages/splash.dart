@@ -41,5 +41,3 @@ class _SplashPageState extends State<SplashPage> {
     );
   }
 }
-
-// TODO: 別の場所におく
