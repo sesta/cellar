@@ -25,10 +25,12 @@ Future<DocumentSnapshot> getDocument(
       .get();
 }
 
-Future<List<DocumentSnapshot>> getAll(String documentName) async {
-  // TODO: LIMITを設ける
+Future<List<DocumentSnapshot>> getAll(String documentName, {
+  int limit = 50,
+}) async {
   final snapshot = await firestoreInstance
     .collection(documentName)
+    .limit(limit)
     .getDocuments();
   return snapshot.documents;
 }
