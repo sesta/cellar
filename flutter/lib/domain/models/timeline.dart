@@ -2,9 +2,37 @@ import 'dart:async';
 
 import 'package:bacchus/domain/entities/drink.dart';
 import 'package:bacchus/repository/provider/firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-Future<List<Drink>> getTimelineImageUrls() async {
-  final rawData = await getAll('drinks');
+enum TimelineType {
+  Mine,
+  All,
+}
+
+Future<List<Drink>> getTimelineImageUrls(TimelineType timelineType, {
+  String userId
+}) async {
+  List<DocumentSnapshot> rawData;
+  switch (timelineType) {
+    // TODO: userIdがなかったらthrowする
+    case TimelineType.Mine:
+      rawData = await getDocuments(
+        'drinks',
+        whereKey: 'userId',
+        whereEqualValue: userId,
+        orderKey: 'timestamp',
+        isDeskOrder: true,
+      );
+      break;
+    case TimelineType.All:
+      rawData = await getDocuments(
+        'drinks',
+        orderKey: 'timestamp',
+        isDeskOrder: true,
+      );
+      break;
+  }
+
   final drinks = rawData.map((data) => Drink(
     data['userId'],
     data['userName'],
