@@ -88,6 +88,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: EdgeInsets.all(40),
                   child: CircularProgressIndicator(
+                    strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                   ),
                 )
