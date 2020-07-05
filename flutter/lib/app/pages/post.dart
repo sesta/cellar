@@ -1,13 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:mlkit/mlkit.dart';
 
 import 'package:bacchus/domain/entities/drink.dart';
 import 'package:bacchus/domain/entities/user.dart';
 import 'package:bacchus/domain/models/post.dart';
+import 'package:bacchus/app/widget/atoms/normal_text.dart';
+import 'package:bacchus/app/widget/atoms/normal_text_field.dart';
 
 enum UploadMethods {
   Camera,
@@ -67,7 +68,7 @@ class _PostPageState extends State<PostPage> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
-                  child: TitleText('どの写真を使いますか'),
+                  child: NormalText('どの写真を使いますか'),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -175,25 +176,6 @@ class _PostPageState extends State<PostPage> {
     Navigator.of(context).pop(true);
   }
 
-  Widget NormalText(String text) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-
-  Widget TitleText(String text) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: 14,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,7 +207,7 @@ class _PostPageState extends State<PostPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          TitleText('種類 *'),
+                          NormalText('種類 *'),
                           DropdownButton(
                             value: drinkType,
                             onChanged: _updateDrinkType,
@@ -237,15 +219,15 @@ class _PostPageState extends State<PostPage> {
                             items: [
                               DropdownMenuItem(
                                 value: DrinkType.Sake,
-                                child: NormalText('日本酒'),
+                                child: NormalText('日本酒', bold: true),
                               ),
                               DropdownMenuItem(
                                 value: DrinkType.Wine,
-                                child: NormalText('ワイン'),
+                                child: NormalText('ワイン', bold: true),
                               ),
                               DropdownMenuItem(
                                 value: DrinkType.Whisky,
-                                child: NormalText('ウィスキー'),
+                                child: NormalText('ウィスキー', bold: true),
                               ),
                             ],
                           ),
@@ -256,7 +238,7 @@ class _PostPageState extends State<PostPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            TitleText('評価 *'),
+                            NormalText('評価 *'),
                             Padding(
                               padding: const EdgeInsets.only(top: 8),
                               child: Row(
@@ -281,26 +263,20 @@ class _PostPageState extends State<PostPage> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 16),
-                    child: TitleText('名前 *')
+                    child: NormalText('名前 *')
                   ),
-                  TextField(
-                    controller: nameController,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  NormalTextField(
+                    nameController,
+                    bold: true
                   ),
                   Padding(
                       padding: EdgeInsets.only(top: 24),
-                      child: TitleText('メモ')
+                      child: NormalText('メモ')
                   ),
-                  TextField(
-                    controller: memoController,
+                  NormalTextField(
+                    memoController,
+                    bold: true,
                     maxLines: 3,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 24),
@@ -310,17 +286,11 @@ class _PostPageState extends State<PostPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              TitleText('価格'),
-                              TextField(
-                                controller: priceController,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: <TextInputFormatter>[
-                                  WhitelistingTextInputFormatter.digitsOnly
-                                ],
+                              NormalText('価格'),
+                              NormalTextField(
+                                priceController,
+                                bold: true,
+                                inputType: InputType.Number,
                               ),
                             ],
                           ),
@@ -332,13 +302,10 @@ class _PostPageState extends State<PostPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              TitleText('購入した場所'),
-                              TextField(
-                                controller: placeController,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              NormalText('購入した場所'),
+                              NormalTextField(
+                                placeController,
+                                bold: true,
                               ),
                             ],
                           ),

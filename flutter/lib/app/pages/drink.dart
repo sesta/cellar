@@ -1,36 +1,9 @@
+import 'package:bacchus/app/widget/atoms/main_text.dart';
+import 'package:bacchus/app/widget/atoms/normal_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bacchus/domain/entities/drink.dart';
-
-
-class LabelText extends StatelessWidget {
-  final String text;
-  LabelText(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      margin: EdgeInsets.only(
-        right: 6,
-        bottom: 6,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        color: Colors.black38,
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 12,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          height: 1,
-        ),
-      ),
-    );
-  }
-}
+import 'package:bacchus/app/widget/atoms/label_test.dart';
 
 class DrinkPage extends StatelessWidget {
   final Drink drink;
@@ -98,19 +71,9 @@ class DrinkPage extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: Text(
-                      drink.userName,
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
+                    child: NormalText(drink.userName),
                   ),
-                  Text(
-                    drink.updateDatetimeString,
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  )
+                  NormalText(drink.updateDatetimeString),
                 ],
               ),
             ),
@@ -120,12 +83,11 @@ class DrinkPage extends StatelessWidget {
                 left: 16,
                 right: 16,
               ),
-              child: Text(
+              child: MainText(
                 drink.name,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                bold: true,
+                multiLine: true,
+                textAlign: TextAlign.center,
               ),
             ),
             Padding(
@@ -167,11 +129,9 @@ class DrinkPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text(
+                  NormalText(
                     drink.memo,
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
+                    multiLine: true,
                   ),
                 ],
               )
