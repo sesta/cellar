@@ -2,6 +2,36 @@ import 'package:flutter/material.dart';
 
 import 'package:bacchus/domain/entities/drink.dart';
 
+
+class LabelText extends StatelessWidget {
+  final String text;
+  LabelText(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      margin: EdgeInsets.only(
+        right: 6,
+        bottom: 6,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(14.0)),
+        color: Colors.black38,
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          height: 1,
+        ),
+      ),
+    );
+  }
+}
+
 class DrinkPage extends StatelessWidget {
   final Drink drink;
   DrinkPage({this.drink});
@@ -54,20 +84,25 @@ class DrinkPage extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(
-                top: 8,
+                top: 16,
                 left: 16,
                 right: 16,
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
-                    drink.drinkTypeLabel
-                        + (drink.price == 0 ? '' : "・${drink.priceString}")
-                        + (drink.place == '' ? '' : "・${drink.place}"),
-                    style: TextStyle(
-                      fontSize: 16,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: Icon(
+                      Icons.person,
                       color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      drink.userName,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                   Text(
@@ -95,7 +130,7 @@ class DrinkPage extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(
-                top: 20,
+                top: 8,
                 left: 16,
                 right: 16,
               ),
@@ -112,18 +147,34 @@ class DrinkPage extends StatelessWidget {
                 ).toList(),
               ),
             ),
-            Padding(
+            Container(
+              alignment: Alignment.topLeft,
               padding: const EdgeInsets.only(
-                top: 16,
+                top: 32,
                 left: 16,
                 right: 16,
               ),
-              child: Text(
-                drink.memo,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 8),
+                    child: Wrap(
+                      children: <Widget>[
+                        LabelText(drink.drinkTypeLabel),
+                        drink.price == 0 ? Container() : LabelText(drink.priceString),
+                        drink.place == '' ? Container() : LabelText(drink.place),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    drink.memo,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              )
             )
           ]
         ),

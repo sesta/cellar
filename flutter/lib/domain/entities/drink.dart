@@ -12,6 +12,7 @@ enum DrinkType {
 
 class Drink {
   String userId;
+  String userName;
   String name;
   DrinkType drinkType;
   int score;
@@ -27,6 +28,7 @@ class Drink {
 
   Drink(
       this.userId,
+      this.userName,
       this.name,
       this.drinkType,
       this.score,
@@ -66,6 +68,7 @@ class Drink {
   addStore() {
     addData('drinks', {
       'userId': userId,
+      'userName': userName,
       'name': name,
       'drinkTypeIndex': drinkType.index,
       'score': score,

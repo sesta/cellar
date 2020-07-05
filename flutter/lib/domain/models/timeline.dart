@@ -7,6 +7,7 @@ Future<List<Drink>> getTimelineImageUrls() async {
   final rawData = await getAll('drinks');
   final drinks = rawData.map((data) => Drink(
     data['userId'],
+    data['userName'],
     data['name'],
     DrinkType.values[data['drinkTypeIndex']],
     data['score'],
