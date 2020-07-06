@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:mlkit/mlkit.dart';
 
-import 'package:bacchus/domain/entities/drink.dart';
-import 'package:bacchus/domain/entities/user.dart';
-import 'package:bacchus/domain/models/post.dart';
-import 'package:bacchus/app/widget/atoms/normal_text.dart';
-import 'package:bacchus/app/widget/atoms/normal_text_field.dart';
+import 'package:cellar/domain/entities/drink.dart';
+import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/domain/models/post.dart';
+import 'package:cellar/app/widget/atoms/normal_text.dart';
+import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 
 enum UploadMethods {
   Camera,

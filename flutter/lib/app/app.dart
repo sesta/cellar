@@ -2,27 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 
-import 'package:bacchus/app/pages/splash.dart';
-import 'package:bacchus/app/pages/home.dart';
-import 'package:bacchus/app/pages/drink.dart';
-import 'package:bacchus/app/pages/post.dart';
-import 'package:bacchus/app/pages/sign_in.dart';
+import 'package:cellar/app/pages/splash.dart';
+import 'package:cellar/app/pages/home.dart';
+import 'package:cellar/app/pages/drink.dart';
+import 'package:cellar/app/pages/post.dart';
+import 'package:cellar/app/pages/sign_in.dart';
 
-import 'package:bacchus/domain/entities/user.dart';
-import 'package:bacchus/domain/entities/drink.dart';
+import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/domain/entities/drink.dart';
 
-import 'package:bacchus/app/widget/transitions/fade_in_route.dart';
-import 'package:bacchus/app/widget/transitions/slide_up_route.dart';
+import 'package:cellar/app/widget/transitions/fade_in_route.dart';
+import 'package:cellar/app/widget/transitions/slide_up_route.dart';
 
 
-class Bacchus extends StatefulWidget {
-  Bacchus({Key key}) : super(key: key);
+class Cellar extends StatefulWidget {
+  Cellar({Key key}) : super(key: key);
 
   @override
-  _BacchusState createState() => _BacchusState();
+  _CellarState createState() => _CellarState();
 }
 
-class _BacchusState extends State<Bacchus> {
+class _CellarState extends State<Cellar> {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   User user;
 
@@ -35,7 +35,7 @@ class _BacchusState extends State<Bacchus> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bacchus',
+      title: 'Cellar',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),

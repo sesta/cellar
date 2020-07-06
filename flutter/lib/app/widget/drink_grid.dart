@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bacchus/domain/entities/drink.dart';
+import 'package:cellar/domain/entities/drink.dart';
 
 class DrinkGrid extends StatelessWidget {
   final List<Drink> drinks;

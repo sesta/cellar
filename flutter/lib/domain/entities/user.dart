@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bacchus/repository/provider/firestore.dart';
+import 'package:cellar/repository/provider/firestore.dart';
 
 class User {
   String id;
