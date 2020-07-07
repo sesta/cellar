@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:bacchus/repository/provider/auth.dart';
-import 'package:bacchus/domain/entities/user.dart';
+import 'package:cellar/repository/provider/auth.dart';
+import 'package:cellar/domain/entities/user.dart';
 
 class SignInPage extends StatefulWidget {
   SignInPage({Key key, this.setUser}) : super(key: key);
@@ -55,7 +55,7 @@ class _SignInState extends State<SignInPage> {
         child: userId == null ? Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Bacchusの利用には\nGoogleのログインが必要です。', textAlign: TextAlign.center),
+            Text('Cellarの利用には\nGoogleのログインが必要です。', textAlign: TextAlign.center),
             RaisedButton(
               onPressed: _checkSignIn,
               child: Text('Googleでログイン'),

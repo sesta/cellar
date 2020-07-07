@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bacchus/repository/provider/auth.dart';
+import 'package:cellar/repository/provider/auth.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({Key key, this.setUser}) : super(key: key);

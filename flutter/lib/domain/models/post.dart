@@ -4,9 +4,9 @@ import 'dart:typed_data';
 
 import 'package:multi_image_picker/multi_image_picker.dart';
 
-import 'package:bacchus/conf.dart';
-import 'package:bacchus/domain/entities/drink.dart';
-import 'package:bacchus/repository/provider/storage.dart';
+import 'package:cellar/conf.dart';
+import 'package:cellar/domain/entities/drink.dart';
+import 'package:cellar/repository/provider/storage.dart';
 
 Future<void> post(
   String userId,

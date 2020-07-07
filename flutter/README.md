@@ -1,4 +1,4 @@
-# bacchus
+# Cellar
 
 ## Getting Started
 

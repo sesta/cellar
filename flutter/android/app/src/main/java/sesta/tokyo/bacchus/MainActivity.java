@@ -1,4 +1,4 @@
-package sesta.dev.bacchus;
+package sesta.dev.cellar;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:bacchus/domain/entities/user.dart';
-import 'package:bacchus/domain/entities/drink.dart';
-import 'package:bacchus/domain/models/timeline.dart';
+import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/domain/entities/drink.dart';
+import 'package:cellar/domain/models/timeline.dart';
 
-import 'package:bacchus/app/widget/drink_grid.dart';
+import 'package:cellar/app/widget/drink_grid.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.user}) : super(key: key);
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               alignment: Alignment.topLeft,
               child: Text(
-                'Bacchus',
+                'Cellar',
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 24,

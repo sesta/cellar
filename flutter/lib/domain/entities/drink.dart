@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
-import 'package:bacchus/repository/provider/firestore.dart';
-import 'package:bacchus/repository/provider/storage.dart';
+import 'package:cellar/repository/provider/firestore.dart';
+import 'package:cellar/repository/provider/storage.dart';
 
 
 enum DrinkType {

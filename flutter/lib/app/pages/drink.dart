@@ -1,9 +1,9 @@
-import 'package:bacchus/app/widget/atoms/main_text.dart';
-import 'package:bacchus/app/widget/atoms/normal_text.dart';
+import 'package:cellar/app/widget/atoms/main_text.dart';
+import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:flutter/material.dart';
 
-import 'package:bacchus/domain/entities/drink.dart';
-import 'package:bacchus/app/widget/atoms/label_test.dart';
+import 'package:cellar/domain/entities/drink.dart';
+import 'package:cellar/app/widget/atoms/label_test.dart';
 
 class DrinkPage extends StatelessWidget {
   final Drink drink;
