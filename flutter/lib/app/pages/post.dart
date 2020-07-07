@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:mlkit/mlkit.dart';
 
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/entities/user.dart';
@@ -29,7 +28,6 @@ class _PostPageState extends State<PostPage> {
   List<List<int>> images = [];
   DrinkType drinkType;
   int score = 3;
-  FirebaseVisionLabelDetector labelDetector = FirebaseVisionLabelDetector.instance;
 
   final nameController = TextEditingController();
   final memoController = TextEditingController();
@@ -135,22 +133,6 @@ class _PostPageState extends State<PostPage> {
       this.imageAssets = this.imageAssets + resultList;
       this.images = images;
     });
-
-    final List<VisionLabel> labels = await labelDetector.detectFromBinary(images[0]);
-    DrinkType detectedDrinkType;
-    labels.firstWhere((VisionLabel label) {
-      if (label.label == 'Wine') {
-        detectedDrinkType = DrinkType.Wine;
-        return true;
-      }
-
-      return false;
-    }, orElse: () => null);
-    if (detectedDrinkType != null) {
-      setState(() {
-        this.drinkType = detectedDrinkType;
-      });
-    }
   }
 
   void _postDrink() async {
