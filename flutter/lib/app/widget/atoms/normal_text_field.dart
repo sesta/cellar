@@ -30,6 +30,7 @@ class NormalTextField extends StatelessWidget {
 
     return TextField(
       controller: controller,
+      cursorColor: Theme.of(context).accentColor,
       style: TextStyle(
         fontSize: 14,
         fontWeight: bold ? FontWeight.bold : FontWeight.normal,

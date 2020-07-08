@@ -67,7 +67,7 @@ class DrinkPage extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 4.0),
                     child: Icon(
                       Icons.person,
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).accentColor,
                     ),
                   ),
                   Expanded(

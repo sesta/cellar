@@ -36,8 +36,8 @@ class _CellarState extends State<Cellar> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cellar',
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+      theme: ThemeData.dark().copyWith(
+        accentColor: Colors.blueGrey,
       ),
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),

@@ -74,7 +74,6 @@ class _HomePageState extends State<HomePage> {
               child: Text(
                 'Cellar',
                 style: TextStyle(
-                  color: Theme.of(context).primaryColor,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -89,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.all(40),
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 )
               ],
@@ -98,7 +97,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).accentColor,
         shape: CircularNotchedRectangle(),
         child: Padding(
           padding: const EdgeInsets.only(top: 16.0, left: 16, right: 16),
@@ -139,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                 child: Icon( // 場所の調整のために見えない要素を置く
                   Icons.no_sim,
                   size: 32,
-                  color: Theme.of(context).primaryColor,
+                  color: Colors.transparent,
                 ),
               ),
             ],
@@ -149,7 +148,11 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _movePostPage,
         tooltip: 'Increment',
-        child: Icon(Icons.add),
+        backgroundColor: Theme.of(context).accentColor,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

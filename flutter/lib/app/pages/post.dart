@@ -164,15 +164,9 @@ class _PostPageState extends State<PostPage> {
       appBar: AppBar(
         title: Text(
           '投稿',
-          style: TextStyle(
-            color: Colors.black87,
-          ),
         ),
         elevation: 0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        iconTheme: IconThemeData(
-          color: Colors.black87,
-        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -196,7 +190,7 @@ class _PostPageState extends State<PostPage> {
                             icon: Icon(Icons.arrow_drop_down),
                             underline: Container(
                               height: 1,
-                              color: Colors.black38,
+                              color: Colors.white38,
                             ),
                             items: [
                               DropdownMenuItem(
@@ -296,15 +290,17 @@ class _PostPageState extends State<PostPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 48),
+                    padding: EdgeInsets.only(top: 64),
                     child: Center(
                       child: RaisedButton(
                         onPressed: _postDrink,
                         child: Text(
                           '投稿する',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 18,
                         ),
-                        color: Theme.of(context).primaryColor,
+                        ),
+                        color: Theme.of(context).accentColor,
                         textColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),

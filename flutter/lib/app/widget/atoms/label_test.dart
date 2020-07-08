@@ -14,7 +14,7 @@ class LabelText extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        color: Colors.black38,
+        color: Theme.of(context).primaryColor,
       ),
       child: Text(
         text,
