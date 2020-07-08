@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:intl/intl.dart';
 
 import 'package:cellar/repository/provider/firestore.dart';
@@ -19,12 +20,12 @@ class Drink {
   String memo;
   int price;
   String place;
-
+  DateTime postDatetime;
 
   String thumbImagePath;
   List<String> imagePaths;
-  DateTime postDatetime;
   String thumbImageUrl;
+  List<String> imageUrls;
 
   Drink(
       this.userId,
@@ -42,6 +43,13 @@ class Drink {
 
   init() async {
     thumbImageUrl = await getDataUrl(thumbImagePath);
+  }
+
+  getImageUrls() async {
+    imageUrls = [];
+    await Future.forEach(imagePaths, (path) async {
+      imageUrls.add(await getDataUrl(path));
+    });
   }
 
   get drinkTypeLabel {

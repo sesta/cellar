@@ -11,23 +11,59 @@ class DrinkPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (drink.imageUrls == null) {
+      drink.getImageUrls();
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Stack(
               children: <Widget>[
-                Hero(
-                  tag: drink.thumbImageUrl,
-                  child: GestureDetector(
-                    onVerticalDragEnd: (event) {
-                      if (event.velocity.pixelsPerSecond.dy > 100) {
-                        Navigator.of(context).pop(true);
+                AspectRatio(
+                  aspectRatio: 1,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: List.generate(drink.imagePaths.length, (index) {
+                      if (index == 0) {
+                        return Hero(
+                          tag: drink.thumbImageUrl,
+                          child: GestureDetector(
+                            onVerticalDragEnd: (event) {
+                              if (event.velocity.pixelsPerSecond.dy > 100) {
+                                Navigator.of(context).pop(true);
+                              }
+                            },
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Image(
+                                image: NetworkImage(drink.thumbImageUrl),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        );
                       }
-                    },
-                    child: Image(
-                      image: NetworkImage(drink.thumbImageUrl),
-                    ),
+
+                      if (drink.imageUrls == null) {
+                        return AspectRatio(
+                          aspectRatio: 1,
+                          child: Image(
+                            image: NetworkImage(drink.thumbImageUrl),
+                            fit: BoxFit.contain,
+                          ),
+                        );
+                      }
+
+                      return AspectRatio(
+                        aspectRatio: 1,
+                        child: Image(
+                          image: NetworkImage(drink.imageUrls[index]),
+                          fit: BoxFit.contain,
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
                 Padding(
