@@ -12,7 +12,7 @@ Future<void> post(
   String userId,
   String userName,
   List<Asset> images,
-  String name,
+  String drinkName,
   DrinkType drinkType,
   int score,
   String memo,
@@ -36,7 +36,7 @@ Future<void> post(
   final drink = Drink(
     userId,
     userName,
-    name,
+    drinkName,
     drinkType,
     score,
     memo,

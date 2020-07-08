@@ -73,7 +73,7 @@ class DrinkPage extends StatelessWidget {
                   Expanded(
                     child: NormalText(drink.userName),
                   ),
-                  NormalText(drink.updateDatetimeString),
+                  NormalText(drink.postDatetimeString),
                 ],
               ),
             ),
@@ -84,7 +84,7 @@ class DrinkPage extends StatelessWidget {
                 right: 16,
               ),
               child: MainText(
-                drink.name,
+                drink.drinkName,
                 bold: true,
                 multiLine: true,
                 textAlign: TextAlign.center,

@@ -13,7 +13,7 @@ enum DrinkType {
 class Drink {
   String userId;
   String userName;
-  String name;
+  String drinkName;
   DrinkType drinkType;
   int score;
   String memo;
@@ -23,13 +23,13 @@ class Drink {
 
   String thumbImagePath;
   List<String> imagePaths;
-  DateTime updateDatetime;
+  DateTime postDatetime;
   String thumbImageUrl;
 
   Drink(
       this.userId,
       this.userName,
-      this.name,
+      this.drinkName,
       this.drinkType,
       this.score,
       this.memo,
@@ -37,7 +37,7 @@ class Drink {
       this.place,
       this.thumbImagePath,
       this.imagePaths,
-      this.updateDatetime,
+      this.postDatetime,
   );
 
   init() async {
@@ -60,16 +60,16 @@ class Drink {
     return "¥${formatter.format(price)}";
   }
 
-  get updateDatetimeString {
+  get postDatetimeString {
     final formatter = DateFormat('yyyy/MM/dd');
-    return formatter.format(updateDatetime);
+    return formatter.format(postDatetime);
   }
 
   addStore() {
     addData('drinks', {
       'userId': userId,
       'userName': userName,
-      'name': name,
+      'drinkName': drinkName,
       'drinkTypeIndex': drinkType.index,
       'score': score,
       'memo': memo,
@@ -77,14 +77,14 @@ class Drink {
       'place': place,
       'thumbImagePath': thumbImagePath,
       'imagePaths': imagePaths,
-      'timestamp': updateDatetime.millisecondsSinceEpoch,
+      'postTimestamp': postDatetime.millisecondsSinceEpoch,
     });
   }
 
   @override
   String toString() {
-    return 'name: $name, '
-        'updateDatetime: ${updateDatetime.toString()}, '
+    return 'drinkName: $drinkName, '
+        'postDatetime: ${postDatetime.toString()}, '
         'imageLength ${imagePaths.length}';
   }
 }

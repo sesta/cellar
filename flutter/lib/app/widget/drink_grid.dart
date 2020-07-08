@@ -19,7 +19,7 @@ class DrinkGrid extends StatelessWidget {
         return Hero(
           tag: drink.thumbImageUrl,
           child: GestureDetector(
-            child: GridItem(name: drink.name, imageUrl: drink.thumbImageUrl),
+            child: GridItem(drinkName: drink.drinkName, imageUrl: drink.thumbImageUrl),
             onTap: () => Navigator.of(context).pushNamed('/drink', arguments: drink),
           ),
         );
@@ -31,10 +31,10 @@ class DrinkGrid extends StatelessWidget {
 class GridItem extends StatelessWidget {
   GridItem({
     Key key,
-    this.name,
+    this.drinkName,
     this.imageUrl,
   });
-  final String name;
+  final String drinkName;
   final String imageUrl;
 
   @override
@@ -46,7 +46,7 @@ class GridItem extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: GridTileBar(
           backgroundColor: Colors.black45,
-          title: Text(name)
+          title: Text(drinkName)
         ),
       ),
       child: Material(
