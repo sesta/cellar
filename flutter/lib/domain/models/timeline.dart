@@ -42,9 +42,11 @@ Future<List<Drink>> getTimelineImageUrls(TimelineType timelineType, {
     data['memo'],
     data['price'],
     data['place'],
+    DateTime.fromMicrosecondsSinceEpoch(data['postTimestamp'] * 1000),
     data['thumbImagePath'],
     data['imagePaths'].cast<String>(),
-    DateTime.fromMicrosecondsSinceEpoch(data['postTimestamp'] * 1000),
+    data['firstImageWidth'],
+    data['firstImageHeight'],
   )).toList();
 
   await Future.forEach(drinks, (drink) async {

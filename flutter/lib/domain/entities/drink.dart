@@ -26,6 +26,8 @@ class Drink {
   List<String> imagePaths;
   String thumbImageUrl;
   List<String> imageUrls;
+  int firstImageWidth;
+  int firstImageHeight;
 
   Drink(
       this.userId,
@@ -36,9 +38,11 @@ class Drink {
       this.memo,
       this.price,
       this.place,
+      this.postDatetime,
       this.thumbImagePath,
       this.imagePaths,
-      this.postDatetime,
+      this.firstImageWidth,
+      this.firstImageHeight,
   );
 
   init() async {
@@ -83,9 +87,11 @@ class Drink {
       'memo': memo,
       'price': price,
       'place': place,
+      'postTimestamp': postDatetime.millisecondsSinceEpoch,
       'thumbImagePath': thumbImagePath,
       'imagePaths': imagePaths,
-      'postTimestamp': postDatetime.millisecondsSinceEpoch,
+      'firstImageWidth': firstImageWidth,
+      'firstImageHeight': firstImageHeight,
     });
   }
 

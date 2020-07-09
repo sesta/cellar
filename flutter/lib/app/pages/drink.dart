@@ -22,7 +22,7 @@ class DrinkPage extends StatelessWidget {
             Stack(
               children: <Widget>[
                 AspectRatio(
-                  aspectRatio: 1,
+                  aspectRatio: drink.firstImageWidth/drink.firstImageHeight,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: List.generate(drink.imagePaths.length, (index) {
@@ -36,7 +36,7 @@ class DrinkPage extends StatelessWidget {
                               }
                             },
                             child: AspectRatio(
-                              aspectRatio: 1,
+                              aspectRatio: drink.firstImageWidth/drink.firstImageHeight,
                               child: Image(
                                 image: NetworkImage(drink.thumbImageUrl),
                                 fit: BoxFit.contain,
@@ -48,7 +48,7 @@ class DrinkPage extends StatelessWidget {
 
                       if (drink.imageUrls == null) {
                         return AspectRatio(
-                          aspectRatio: 1,
+                          aspectRatio: drink.firstImageWidth/drink.firstImageHeight,
                           child: Image(
                             image: NetworkImage(drink.thumbImageUrl),
                             fit: BoxFit.contain,
@@ -57,7 +57,7 @@ class DrinkPage extends StatelessWidget {
                       }
 
                       return AspectRatio(
-                        aspectRatio: 1,
+                        aspectRatio: drink.firstImageWidth/drink.firstImageHeight,
                         child: Image(
                           image: NetworkImage(drink.imageUrls[index]),
                           fit: BoxFit.contain,

@@ -33,6 +33,11 @@ Future<void> post(
     imagePaths.add(originalImagePath);
   }
 
+  final resizeRate = min(ORIGINAL_WIDTH_SIZE / images.first.originalWidth, 1);
+  final firstImageWidth = (images.first.originalWidth * resizeRate).round();
+  final firstImageHeight = (images.first.originalHeight * resizeRate).round();
+
+
   final drink = Drink(
     userId,
     userName,
@@ -42,9 +47,11 @@ Future<void> post(
     memo,
     price,
     place,
+    nowDatetime,
     thumbImagePath,
     imagePaths,
-    nowDatetime,
+    firstImageWidth,
+    firstImageHeight,
   );
   drink.addStore();
 }
