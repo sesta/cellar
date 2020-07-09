@@ -12,7 +12,7 @@ Future<void> post(
   String userId,
   String userName,
   List<Asset> images,
-  String name,
+  String drinkName,
   DrinkType drinkType,
   int score,
   String memo,
@@ -33,18 +33,25 @@ Future<void> post(
     imagePaths.add(originalImagePath);
   }
 
+  final resizeRate = min(ORIGINAL_WIDTH_SIZE / images.first.originalWidth, 1);
+  final firstImageWidth = (images.first.originalWidth * resizeRate).round();
+  final firstImageHeight = (images.first.originalHeight * resizeRate).round();
+
+
   final drink = Drink(
     userId,
     userName,
-    name,
+    drinkName,
     drinkType,
     score,
     memo,
     price,
     place,
+    nowDatetime,
     thumbImagePath,
     imagePaths,
-    nowDatetime,
+    firstImageWidth,
+    firstImageHeight,
   );
   drink.addStore();
 }

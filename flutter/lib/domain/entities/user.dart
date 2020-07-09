@@ -4,21 +4,21 @@ import 'package:cellar/repository/provider/firestore.dart';
 
 class User {
   String id;
-  String name;
+  String userName;
 
   User(
       this.id,
-      this.name,
+      this.userName,
   );
 
   Future<void> addStore() async {
     addData('users', {
-      'name': name,
+      'userName': userName,
     }, id);
   }
 
   @override
   String toString() {
-    return 'id: ${this.id}, name: ${this.name}';
+    return 'id: ${this.id}, userName: ${this.userName}';
   }
 }

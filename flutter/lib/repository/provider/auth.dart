@@ -26,7 +26,7 @@ Future<User> getSignInUser() async {
       return null;
     }
 
-    return User(firebaseUser.uid, rawUser['name']);
+    return User(firebaseUser.uid, rawUser['userName']);
   } catch (e) {
     print(e);
     return null;

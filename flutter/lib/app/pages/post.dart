@@ -146,7 +146,7 @@ class _PostPageState extends State<PostPage> {
 
     await post(
       widget.user.id,
-      widget.user.name,
+      widget.user.userName,
       imageAssets,
       nameController.text,
       drinkType,

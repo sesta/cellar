@@ -1,33 +1,110 @@
-import 'package:cellar/app/widget/atoms/main_text.dart';
-import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
+import 'package:cellar/app/widget/atoms/main_text.dart';
+import 'package:cellar/app/widget/atoms/normal_text.dart';
 
-class DrinkPage extends StatelessWidget {
+
+class DrinkPage extends StatefulWidget {
+  DrinkPage({Key key, this.drink}) : super(key: key);
+
   final Drink drink;
-  DrinkPage({this.drink});
+
+  @override
+  _DrinkPageState createState() => _DrinkPageState();
+}
+
+class _DrinkPageState extends State<DrinkPage> {
+  bool imageLoaded = false;
+  int caroucelPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      this.imageLoaded = widget.drink.imageUrls != null;
+    });
+
+    if (widget.drink.imageUrls == null) {
+      _loadImage();
+    }
+  }
+
+  void _loadImage() async {
+    await widget.drink.getImageUrls();
+    setState(() {
+      this.imageLoaded = true;
+    });
+  }
+
+  void _updatePage(int index, _) {
+    setState(() {
+      this.caroucelPage = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final imageRatio = widget.drink.firstImageWidth/widget.drink.firstImageHeight;
+    final imageLength = widget.drink.imagePaths.length;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Stack(
               children: <Widget>[
-                Hero(
-                  tag: drink.thumbImageUrl,
-                  child: GestureDetector(
-                    onVerticalDragEnd: (event) {
-                      if (event.velocity.pixelsPerSecond.dy > 100) {
-                        Navigator.of(context).pop(true);
-                      }
-                    },
-                    child: Image(
-                      image: NetworkImage(drink.thumbImageUrl),
+                Container(
+                  color: Theme.of(context).primaryColor,
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      aspectRatio: imageRatio,
+                      viewportFraction: 1,
+                      enableInfiniteScroll: false,
+                      onPageChanged: _updatePage,
                     ),
+                    items: List.generate(imageLength, (index) {
+                      Widget content = Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      );
+
+                      if (imageLoaded) {
+                        content = Image(
+                          image: NetworkImage(widget.drink.imageUrls[index]),
+                          fit: BoxFit.contain,
+                        );
+                      }
+
+                      if (index == 0) {
+                        content = Hero(
+                          tag: widget.drink.thumbImageUrl,
+                          child: imageLoaded
+                            ? content
+                            : Image(
+                              image: NetworkImage(widget.drink.thumbImageUrl),
+                              fit: BoxFit.contain,
+                            ),
+                        );
+                      }
+
+                      return GestureDetector(
+                        onVerticalDragEnd: (event) {
+                          if (event.velocity.pixelsPerSecond.dy > 100) {
+                            Navigator.of(context).pop(true);
+                          }
+                        },
+                        child: AspectRatio(
+                          aspectRatio: imageRatio,
+                          child: content,
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
                 Padding(
@@ -53,6 +130,14 @@ class DrinkPage extends StatelessWidget {
                     ),
                   ),
                 ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: NormalText("${caroucelPage + 1} / $imageLength"),
+                  ),
+                ),
               ],
             ),
             Padding(
@@ -71,9 +156,9 @@ class DrinkPage extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: NormalText(drink.userName),
+                    child: NormalText(widget.drink.userName),
                   ),
-                  NormalText(drink.updateDatetimeString),
+                  NormalText(widget.drink.postDatetimeString),
                 ],
               ),
             ),
@@ -84,7 +169,7 @@ class DrinkPage extends StatelessWidget {
                 right: 16,
               ),
               child: MainText(
-                drink.name,
+                widget.drink.drinkName,
                 bold: true,
                 multiLine: true,
                 textAlign: TextAlign.center,
@@ -102,7 +187,7 @@ class DrinkPage extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 4, right: 4),
                     child: Icon(
-                      index < drink.score ? Icons.star : Icons.star_border,
+                      index < widget.drink.score ? Icons.star : Icons.star_border,
                       color: Colors.orangeAccent,
                     ),
                   )
@@ -115,6 +200,7 @@ class DrinkPage extends StatelessWidget {
                 top: 32,
                 left: 16,
                 right: 16,
+                bottom: 64,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,14 +209,14 @@ class DrinkPage extends StatelessWidget {
                     padding: EdgeInsets.only(bottom: 8),
                     child: Wrap(
                       children: <Widget>[
-                        LabelText(drink.drinkTypeLabel),
-                        drink.price == 0 ? Container() : LabelText(drink.priceString),
-                        drink.place == '' ? Container() : LabelText(drink.place),
+                        LabelText(widget.drink.drinkTypeLabel),
+                        widget.drink.price == 0 ? Container() : LabelText(widget.drink.priceString),
+                        widget.drink.place == '' ? Container() : LabelText(widget.drink.place),
                       ],
                     ),
                   ),
                   NormalText(
-                    drink.memo,
+                    widget.drink.memo,
                     multiLine: true,
                   ),
                 ],

@@ -9,7 +9,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "timestamp",
+          "fieldPath": "postTimestamp",
           "order": "DESCENDING"
         }
       ]

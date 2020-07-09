@@ -20,14 +20,14 @@ Future<List<Drink>> getTimelineImageUrls(TimelineType timelineType, {
         'drinks',
         whereKey: 'userId',
         whereEqualValue: userId,
-        orderKey: 'timestamp',
+        orderKey: 'postTimestamp',
         isDeskOrder: true,
       );
       break;
     case TimelineType.All:
       rawData = await getDocuments(
         'drinks',
-        orderKey: 'timestamp',
+        orderKey: 'postTimestamp',
         isDeskOrder: true,
       );
       break;
@@ -36,15 +36,17 @@ Future<List<Drink>> getTimelineImageUrls(TimelineType timelineType, {
   final drinks = rawData.map((data) => Drink(
     data['userId'],
     data['userName'],
-    data['name'],
+    data['drinkName'],
     DrinkType.values[data['drinkTypeIndex']],
     data['score'],
     data['memo'],
     data['price'],
     data['place'],
+    DateTime.fromMicrosecondsSinceEpoch(data['postTimestamp'] * 1000),
     data['thumbImagePath'],
     data['imagePaths'].cast<String>(),
-    DateTime.fromMicrosecondsSinceEpoch(data['timestamp'] * 1000),
+    data['firstImageWidth'],
+    data['firstImageHeight'],
   )).toList();
 
   await Future.forEach(drinks, (drink) async {

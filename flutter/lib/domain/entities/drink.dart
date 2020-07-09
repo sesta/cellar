@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:intl/intl.dart';
 
 import 'package:cellar/repository/provider/firestore.dart';
@@ -13,35 +14,46 @@ enum DrinkType {
 class Drink {
   String userId;
   String userName;
-  String name;
+  String drinkName;
   DrinkType drinkType;
   int score;
   String memo;
   int price;
   String place;
-
+  DateTime postDatetime;
 
   String thumbImagePath;
   List<String> imagePaths;
-  DateTime updateDatetime;
   String thumbImageUrl;
+  List<String> imageUrls;
+  int firstImageWidth;
+  int firstImageHeight;
 
   Drink(
       this.userId,
       this.userName,
-      this.name,
+      this.drinkName,
       this.drinkType,
       this.score,
       this.memo,
       this.price,
       this.place,
+      this.postDatetime,
       this.thumbImagePath,
       this.imagePaths,
-      this.updateDatetime,
+      this.firstImageWidth,
+      this.firstImageHeight,
   );
 
   init() async {
     thumbImageUrl = await getDataUrl(thumbImagePath);
+  }
+
+  getImageUrls() async {
+    imageUrls = [];
+    await Future.forEach(imagePaths, (path) async {
+      imageUrls.add(await getDataUrl(path));
+    });
   }
 
   get drinkTypeLabel {
@@ -60,31 +72,33 @@ class Drink {
     return "¥${formatter.format(price)}";
   }
 
-  get updateDatetimeString {
+  get postDatetimeString {
     final formatter = DateFormat('yyyy/MM/dd');
-    return formatter.format(updateDatetime);
+    return formatter.format(postDatetime);
   }
 
   addStore() {
     addData('drinks', {
       'userId': userId,
       'userName': userName,
-      'name': name,
+      'drinkName': drinkName,
       'drinkTypeIndex': drinkType.index,
       'score': score,
       'memo': memo,
       'price': price,
       'place': place,
+      'postTimestamp': postDatetime.millisecondsSinceEpoch,
       'thumbImagePath': thumbImagePath,
       'imagePaths': imagePaths,
-      'timestamp': updateDatetime.millisecondsSinceEpoch,
+      'firstImageWidth': firstImageWidth,
+      'firstImageHeight': firstImageHeight,
     });
   }
 
   @override
   String toString() {
-    return 'name: $name, '
-        'updateDatetime: ${updateDatetime.toString()}, '
+    return 'drinkName: $drinkName, '
+        'postDatetime: ${postDatetime.toString()}, '
         'imageLength ${imagePaths.length}';
   }
 }
