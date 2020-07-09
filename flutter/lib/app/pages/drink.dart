@@ -17,8 +17,8 @@ class DrinkPage extends StatefulWidget {
 }
 
 class _DrinkPageState extends State<DrinkPage> {
-  final scrollController = ScrollController();
   bool imageLoaded = false;
+  int caroucelPage = 0;
 
   @override
   void initState() {
@@ -40,15 +40,16 @@ class _DrinkPageState extends State<DrinkPage> {
     });
   }
 
-  void _scrollEnd(event) {
-    if (event.velocity.pixelsPerSecond.dy > 100) {
-      Navigator.of(context).pop(true);
-    }
+  void _updatePage(int index, _) {
+    setState(() {
+      this.caroucelPage = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final imageRatio = widget.drink.firstImageWidth/widget.drink.firstImageHeight;
+    final imageLength = widget.drink.imagePaths.length;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -61,8 +62,9 @@ class _DrinkPageState extends State<DrinkPage> {
                     aspectRatio: imageRatio,
                     viewportFraction: 1,
                     enableInfiniteScroll: false,
+                    onPageChanged: _updatePage,
                   ),
-                  items: List.generate(widget.drink.imagePaths.length, (index) {
+                  items: List.generate(imageLength, (index) {
                     Widget image = Image(
                       image: NetworkImage(widget.drink.thumbImageUrl),
                       fit: BoxFit.contain,
@@ -119,6 +121,14 @@ class _DrinkPageState extends State<DrinkPage> {
                       padding: EdgeInsets.all(8),
                       onPressed: () => Navigator.pop(context),
                     ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: NormalText("${caroucelPage + 1} / $imageLength"),
                   ),
                 ),
               ],
@@ -183,6 +193,7 @@ class _DrinkPageState extends State<DrinkPage> {
                 top: 32,
                 left: 16,
                 right: 16,
+                bottom: 64,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
