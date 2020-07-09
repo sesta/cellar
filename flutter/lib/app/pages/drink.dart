@@ -1,19 +1,54 @@
-import 'package:cellar/app/widget/atoms/main_text.dart';
-import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
+import 'package:cellar/app/widget/atoms/main_text.dart';
+import 'package:cellar/app/widget/atoms/normal_text.dart';
 
-class DrinkPage extends StatelessWidget {
+
+class DrinkPage extends StatefulWidget {
+  DrinkPage({Key key, this.drink}) : super(key: key);
+
   final Drink drink;
-  DrinkPage({this.drink});
+
+  @override
+  _DrinkPageState createState() => _DrinkPageState();
+}
+
+class _DrinkPageState extends State<DrinkPage> {
+  final scrollController = ScrollController();
+  bool imageLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      this.imageLoaded = widget.drink.imageUrls != null;
+    });
+
+    if (widget.drink.imageUrls == null) {
+      _loadImage();
+    }
+  }
+
+  void _loadImage() async {
+    await widget.drink.getImageUrls();
+    setState(() {
+      this.imageLoaded = true;
+    });
+  }
+
+  void _scrollEnd(event) {
+    if (event.velocity.pixelsPerSecond.dy > 100) {
+      Navigator.of(context).pop(true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (drink.imageUrls == null) {
-      drink.getImageUrls();
-    }
+    final imageRatio = widget.drink.firstImageWidth/widget.drink.firstImageHeight;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -21,50 +56,47 @@ class DrinkPage extends StatelessWidget {
           children: <Widget>[
             Stack(
               children: <Widget>[
-                AspectRatio(
-                  aspectRatio: drink.firstImageWidth/drink.firstImageHeight,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: List.generate(drink.imagePaths.length, (index) {
-                      if (index == 0) {
-                        return Hero(
-                          tag: drink.thumbImageUrl,
-                          child: GestureDetector(
-                            onVerticalDragEnd: (event) {
-                              if (event.velocity.pixelsPerSecond.dy > 100) {
-                                Navigator.of(context).pop(true);
-                              }
-                            },
-                            child: AspectRatio(
-                              aspectRatio: drink.firstImageWidth/drink.firstImageHeight,
-                              child: Image(
-                                image: NetworkImage(drink.thumbImageUrl),
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-
-                      if (drink.imageUrls == null) {
-                        return AspectRatio(
-                          aspectRatio: drink.firstImageWidth/drink.firstImageHeight,
-                          child: Image(
-                            image: NetworkImage(drink.thumbImageUrl),
-                            fit: BoxFit.contain,
-                          ),
-                        );
-                      }
-
-                      return AspectRatio(
-                        aspectRatio: drink.firstImageWidth/drink.firstImageHeight,
-                        child: Image(
-                          image: NetworkImage(drink.imageUrls[index]),
-                          fit: BoxFit.contain,
-                        ),
-                      );
-                    }).toList(),
+                CarouselSlider(
+                  options: CarouselOptions(
+                    aspectRatio: imageRatio,
+                    viewportFraction: 1,
+                    enableInfiniteScroll: false,
                   ),
+                  items: List.generate(widget.drink.imagePaths.length, (index) {
+                    Widget image = Image(
+                      image: NetworkImage(widget.drink.thumbImageUrl),
+                      fit: BoxFit.contain,
+                    );
+
+                    if (imageLoaded) {
+                      image = Image(
+                        image: NetworkImage(widget.drink.imageUrls[index]),
+                        fit: BoxFit.contain,
+                      );
+                    }
+
+                    if (index == 0) {
+                      image = Hero(
+                        tag: widget.drink.thumbImageUrl,
+                        child: image,
+                      );
+                    }
+
+                    return GestureDetector(
+                      onVerticalDragEnd: (event) {
+                        if (event.velocity.pixelsPerSecond.dy > 100) {
+                          Navigator.of(context).pop(true);
+                        }
+                      },
+                      child: AspectRatio(
+                        aspectRatio: imageRatio,
+                        child: Container(
+                          color: Theme.of(context).primaryColor,
+                          child: image,
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -107,9 +139,9 @@ class DrinkPage extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: NormalText(drink.userName),
+                    child: NormalText(widget.drink.userName),
                   ),
-                  NormalText(drink.postDatetimeString),
+                  NormalText(widget.drink.postDatetimeString),
                 ],
               ),
             ),
@@ -120,7 +152,7 @@ class DrinkPage extends StatelessWidget {
                 right: 16,
               ),
               child: MainText(
-                drink.drinkName,
+                widget.drink.drinkName,
                 bold: true,
                 multiLine: true,
                 textAlign: TextAlign.center,
@@ -138,7 +170,7 @@ class DrinkPage extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 4, right: 4),
                     child: Icon(
-                      index < drink.score ? Icons.star : Icons.star_border,
+                      index < widget.drink.score ? Icons.star : Icons.star_border,
                       color: Colors.orangeAccent,
                     ),
                   )
@@ -159,14 +191,14 @@ class DrinkPage extends StatelessWidget {
                     padding: EdgeInsets.only(bottom: 8),
                     child: Wrap(
                       children: <Widget>[
-                        LabelText(drink.drinkTypeLabel),
-                        drink.price == 0 ? Container() : LabelText(drink.priceString),
-                        drink.place == '' ? Container() : LabelText(drink.place),
+                        LabelText(widget.drink.drinkTypeLabel),
+                        widget.drink.price == 0 ? Container() : LabelText(widget.drink.priceString),
+                        widget.drink.place == '' ? Container() : LabelText(widget.drink.place),
                       ],
                     ),
                   ),
                   NormalText(
-                    drink.memo,
+                    widget.drink.memo,
                     multiLine: true,
                   ),
                 ],
