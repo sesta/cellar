@@ -57,48 +57,48 @@ class _DrinkPageState extends State<DrinkPage> {
           children: <Widget>[
             Stack(
               children: <Widget>[
-                CarouselSlider(
-                  options: CarouselOptions(
-                    aspectRatio: imageRatio,
-                    viewportFraction: 1,
-                    enableInfiniteScroll: false,
-                    onPageChanged: _updatePage,
-                  ),
-                  items: List.generate(imageLength, (index) {
-                    Widget image = Image(
-                      image: NetworkImage(widget.drink.thumbImageUrl),
-                      fit: BoxFit.contain,
-                    );
-
-                    if (imageLoaded) {
-                      image = Image(
-                        image: NetworkImage(widget.drink.imageUrls[index]),
+                Container(
+                  color: Theme.of(context).primaryColor,
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      aspectRatio: imageRatio,
+                      viewportFraction: 1,
+                      enableInfiniteScroll: false,
+                      onPageChanged: _updatePage,
+                    ),
+                    items: List.generate(imageLength, (index) {
+                      Widget image = Image(
+                        image: NetworkImage(widget.drink.thumbImageUrl),
                         fit: BoxFit.contain,
                       );
-                    }
 
-                    if (index == 0) {
-                      image = Hero(
-                        tag: widget.drink.thumbImageUrl,
-                        child: image,
-                      );
-                    }
+                      if (imageLoaded) {
+                        image = Image(
+                          image: NetworkImage(widget.drink.imageUrls[index]),
+                          fit: BoxFit.contain,
+                        );
+                      }
 
-                    return GestureDetector(
-                      onVerticalDragEnd: (event) {
-                        if (event.velocity.pixelsPerSecond.dy > 100) {
-                          Navigator.of(context).pop(true);
-                        }
-                      },
-                      child: AspectRatio(
-                        aspectRatio: imageRatio,
-                        child: Container(
-                          color: Theme.of(context).primaryColor,
+                      if (index == 0) {
+                        image = Hero(
+                          tag: widget.drink.thumbImageUrl,
+                          child: image,
+                        );
+                      }
+
+                      return GestureDetector(
+                        onVerticalDragEnd: (event) {
+                          if (event.velocity.pixelsPerSecond.dy > 100) {
+                            Navigator.of(context).pop(true);
+                          }
+                        },
+                        child: AspectRatio(
+                          aspectRatio: imageRatio,
                           child: image,
                         ),
-                      ),
-                    );
-                  }).toList(),
+                      );
+                    }).toList(),
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
