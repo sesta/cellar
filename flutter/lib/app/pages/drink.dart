@@ -67,22 +67,29 @@ class _DrinkPageState extends State<DrinkPage> {
                       onPageChanged: _updatePage,
                     ),
                     items: List.generate(imageLength, (index) {
-                      Widget image = Image(
-                        image: NetworkImage(widget.drink.thumbImageUrl),
-                        fit: BoxFit.contain,
+                      Widget content = Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
                       );
 
                       if (imageLoaded) {
-                        image = Image(
+                        content = Image(
                           image: NetworkImage(widget.drink.imageUrls[index]),
                           fit: BoxFit.contain,
                         );
                       }
 
                       if (index == 0) {
-                        image = Hero(
+                        content = Hero(
                           tag: widget.drink.thumbImageUrl,
-                          child: image,
+                          child: imageLoaded
+                            ? content
+                            : Image(
+                              image: NetworkImage(widget.drink.thumbImageUrl),
+                              fit: BoxFit.contain,
+                            ),
                         );
                       }
 
@@ -94,7 +101,7 @@ class _DrinkPageState extends State<DrinkPage> {
                         },
                         child: AspectRatio(
                           aspectRatio: imageRatio,
-                          child: image,
+                          child: content,
                         ),
                       );
                     }).toList(),
