@@ -26,8 +26,8 @@ Future<DocumentSnapshot> getDocument(
 }
 
 Future<List<DocumentSnapshot>> getDocuments(String documentName, {
-  String whereKey,
-  String whereEqualValue,
+  List<String> whereKeys,
+  List<dynamic> whereEqualValues,
   String orderKey,
   bool isDeskOrder = false,
   int limit = 50,
@@ -36,11 +36,17 @@ Future<List<DocumentSnapshot>> getDocuments(String documentName, {
     .collection(documentName);
 
   Query query = ref;
-  if (whereKey != null && whereEqualValue != null) {
-    query = query.where(
-      whereKey,
-      isEqualTo: whereEqualValue,
-    );
+  if (whereKeys != null
+    && whereEqualValues != null
+    && whereKeys.length > 0
+    && whereKeys.length == whereEqualValues.length
+  ) {
+    List.generate(whereKeys.length, (index) {
+      query = query.where(
+        whereKeys[index],
+        isEqualTo: whereEqualValues[index],
+      );
+    });
   }
   if (orderKey != null) {
     query = query.orderBy(orderKey, descending: isDeskOrder);

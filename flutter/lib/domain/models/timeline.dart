@@ -10,28 +10,31 @@ enum TimelineType {
 }
 
 Future<List<Drink>> getTimelineImageUrls(TimelineType timelineType, {
-  String userId
+  DrinkType drinkType,
+  String userId,
 }) async {
-  List<DocumentSnapshot> rawData;
+  final List<String> whereKeys = [];
+  final List<dynamic> whereEqualValues = [];
+
   switch (timelineType) {
     // TODO: userIdがなかったらthrowする
     case TimelineType.Mine:
-      rawData = await getDocuments(
-        'drinks',
-        whereKey: 'userId',
-        whereEqualValue: userId,
-        orderKey: 'postTimestamp',
-        isDeskOrder: true,
-      );
-      break;
-    case TimelineType.All:
-      rawData = await getDocuments(
-        'drinks',
-        orderKey: 'postTimestamp',
-        isDeskOrder: true,
-      );
+      whereKeys.add('userId');
+      whereEqualValues.add(userId);
       break;
   }
+  if (drinkType != null) {
+    whereKeys.add('drinkTypeIndex');
+    whereEqualValues.add(drinkType.index);
+  }
+
+  final rawData = await getDocuments(
+    'drinks',
+    whereKeys: whereKeys,
+    whereEqualValues: whereEqualValues,
+    orderKey: 'postTimestamp',
+    isDeskOrder: true,
+  );
 
   final drinks = rawData.map((data) => Drink(
     data['userId'],

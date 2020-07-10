@@ -21,6 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Drink> drinks = [];
   TimelineType timelineType = TimelineType.Mine;
+  DrinkType drinkType;
   bool loading = true;
 
   @override
@@ -41,10 +42,12 @@ class _HomePageState extends State<HomePage> {
   Future<void> _updateTimeline() async {
     setState(() {
       this.loading = true;
+      this.drinks = [];
     });
 
     final drinks = await getTimelineImageUrls(
       timelineType,
+      drinkType: drinkType,
       userId: widget.user.id,
     );
 
@@ -61,7 +64,19 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       this.timelineType = timelineType;
-      this.drinks = [];
+      this.drinkType = null;
+    });
+
+    _updateTimeline();
+  }
+
+  void _updateDrinkType(DrinkType drinkType) {
+    if (this.drinkType == drinkType) {
+      return;
+    }
+
+    setState(() {
+      this.drinkType = drinkType;
     });
 
     _updateTimeline();
@@ -93,6 +108,45 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          Padding(padding: EdgeInsets.only(bottom: 16)),
+          Container(
+            height: 40,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                ButtonTheme(
+                  minWidth: 40,
+                  child: FlatButton(
+                    textColor: drinkType == null
+                      ? Colors.white
+                      : Colors.white38,
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: NormalText(
+                      '全て',
+                      bold: drinkType == null,
+                    ),
+                    onPressed: () => _updateDrinkType(null),
+                  ),
+                ),
+                ...DrinkType.values.map((type) =>
+                  ButtonTheme(
+                    minWidth: 40,
+                    child: FlatButton(
+                      textColor: drinkType == type
+                        ? Colors.white
+                        : Colors.white38,
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: NormalText(
+                        drinkTypeMapToLabel[type],
+                        bold: drinkType == type,
+                      ),
+                      onPressed: () => _updateDrinkType(type),
+                    ),
+                  ),
+                ).toList()
+              ],
+            ),
+          ),
           loading
             ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -114,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                   child: Padding(
                     padding: const EdgeInsets.only(
                       top: 64,
-                      bottom: 500,
+                      bottom: 300,
                     ),
                     child: NormalText('見つかりませんでした'),
                   ),
