@@ -9,6 +9,7 @@ class DrinkGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
+      physics: AlwaysScrollableScrollPhysics(),
       shrinkWrap: true,
       crossAxisCount: 2,
       crossAxisSpacing: 8,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/user.dart';
@@ -34,14 +36,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _updateTimeline() {
-    getTimelineImageUrls(
+  Future<void> _updateTimeline() async {
+    final drinks = await getTimelineImageUrls(
       timelineType,
       userId: widget.user.id,
-    ).then((drinks) {
-      setState(() {
-        this.drinks = drinks;
-      });
+    );
+
+    setState(() {
+      this.drinks = drinks;
     });
   }
 
@@ -56,6 +58,10 @@ class _HomePageState extends State<HomePage> {
     });
 
     _updateTimeline();
+  }
+
+  Future<void> _refresh() async {
+    await _updateTimeline();
   }
 
   @override
@@ -93,7 +99,10 @@ class _HomePageState extends State<HomePage> {
                 )
               ],
             ) :
-            DrinkGrid(drinks: drinks),
+            RefreshIndicator(
+              onRefresh: _refresh,
+              child: DrinkGrid(drinks: drinks),
+            ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
