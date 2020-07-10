@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/user.dart';
@@ -18,6 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Drink> drinks = [];
   TimelineType timelineType = TimelineType.Mine;
+  bool loading = true;
 
   @override
   void initState() {
@@ -34,14 +38,19 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _updateTimeline() {
-    getTimelineImageUrls(
+  Future<void> _updateTimeline() async {
+    setState(() {
+      this.loading = true;
+    });
+
+    final drinks = await getTimelineImageUrls(
       timelineType,
       userId: widget.user.id,
-    ).then((drinks) {
-      setState(() {
-        this.drinks = drinks;
-      });
+    );
+
+    setState(() {
+      this.drinks = drinks;
+      this.loading = false;
     });
   }
 
@@ -56,6 +65,10 @@ class _HomePageState extends State<HomePage> {
     });
 
     _updateTimeline();
+  }
+
+  Future<void> _refresh() async {
+    await _updateTimeline();
   }
 
   @override
@@ -80,8 +93,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          drinks.length == 0 ?
-            Row(
+          loading
+            ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
@@ -92,8 +105,22 @@ class _HomePageState extends State<HomePage> {
                   ),
                 )
               ],
-            ) :
-            DrinkGrid(drinks: drinks),
+            )
+            : RefreshIndicator(
+              onRefresh: _refresh,
+              child: drinks.length == 0
+                ? SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 64,
+                      bottom: 500,
+                    ),
+                    child: NormalText('見つかりませんでした'),
+                  ),
+                )
+                : DrinkGrid(drinks: drinks),
+            ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(

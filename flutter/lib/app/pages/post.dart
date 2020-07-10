@@ -28,6 +28,7 @@ class _PostPageState extends State<PostPage> {
   List<List<int>> images = [];
   DrinkType drinkType;
   int score = 3;
+  bool uploading = false;
 
   final nameController = TextEditingController();
   final memoController = TextEditingController();
@@ -144,6 +145,10 @@ class _PostPageState extends State<PostPage> {
       return;
     }
 
+    setState(() {
+      this.uploading = true;
+    });
+
     await post(
       widget.user.id,
       widget.user.userName,
@@ -155,6 +160,7 @@ class _PostPageState extends State<PostPage> {
       priceController.text == '' ? 0 : int.parse(priceController.text),
       placeController.text,
     );
+
     Navigator.of(context).pop(true);
   }
 
@@ -168,151 +174,163 @@ class _PostPageState extends State<PostPage> {
         elevation: 0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ImagePreview(images: images, addImage: _getImageList),
-            Padding(
-              padding: EdgeInsets.only(top: 32, right: 16, left: 16, bottom: 80),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                ImagePreview(images: images, addImage: _getImageList),
+                Padding(
+                  padding: EdgeInsets.only(top: 32, right: 16, left: 16, bottom: 80),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Column(
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          NormalText('種類 *'),
-                          DropdownButton(
-                            value: drinkType,
-                            onChanged: _updateDrinkType,
-                            icon: Icon(Icons.arrow_drop_down),
-                            underline: Container(
-                              height: 1,
-                              color: Colors.white38,
-                            ),
-                            items: [
-                              DropdownMenuItem(
-                                value: DrinkType.Sake,
-                                child: NormalText('日本酒', bold: true),
-                              ),
-                              DropdownMenuItem(
-                                value: DrinkType.Wine,
-                                child: NormalText('ワイン', bold: true),
-                              ),
-                              DropdownMenuItem(
-                                value: DrinkType.Whisky,
-                                child: NormalText('ウィスキー', bold: true),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              NormalText('種類 *'),
+                              DropdownButton(
+                                value: drinkType,
+                                onChanged: _updateDrinkType,
+                                icon: Icon(Icons.arrow_drop_down),
+                                underline: Container(
+                                  height: 1,
+                                  color: Colors.white38,
+                                ),
+                                items: [
+                                  DropdownMenuItem(
+                                    value: DrinkType.Sake,
+                                    child: NormalText('日本酒', bold: true),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: DrinkType.Wine,
+                                    child: NormalText('ワイン', bold: true),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: DrinkType.Whisky,
+                                    child: NormalText('ウィスキー', bold: true),
+                                  ),
+                                ],
                               ),
                             ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 32),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                NormalText('評価 *'),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Row(
+                                    children: List.generate(5, (i)=> i).map<Widget>((index) =>
+                                      SizedBox(
+                                        height: 32,
+                                        width: 32,
+                                        child: IconButton(
+                                          padding: EdgeInsets.all(4),
+                                          onPressed: () => _updateScore(index + 1),
+                                          icon: Icon(index < score ? Icons.star : Icons.star_border),
+                                          color: Colors.orangeAccent,
+                                        ),
+                                      )
+                                    ).toList(),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 32),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        padding: EdgeInsets.only(top: 16),
+                        child: NormalText('名前 *')
+                      ),
+                      NormalTextField(
+                        nameController,
+                        bold: true
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(top: 24),
+                          child: NormalText('メモ')
+                      ),
+                      NormalTextField(
+                        memoController,
+                        bold: true,
+                        maxLines: 3,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 24),
+                        child: Row(
                           children: <Widget>[
-                            NormalText('評価 *'),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  NormalText('価格'),
+                                  NormalTextField(
+                                    priceController,
+                                    bold: true,
+                                    inputType: InputType.Number,
+                                  ),
+                                ],
+                              ),
+                            ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: Row(
-                                children: List.generate(5, (i)=> i).map<Widget>((index) =>
-                                  SizedBox(
-                                    height: 32,
-                                    width: 32,
-                                    child: IconButton(
-                                      padding: EdgeInsets.all(4),
-                                      onPressed: () => _updateScore(index + 1),
-                                      icon: Icon(index < score ? Icons.star : Icons.star_border),
-                                      color: Colors.orangeAccent,
-                                    ),
-                                  )
-                                ).toList(),
+                              padding: EdgeInsets.only(left: 32),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  NormalText('購入した場所'),
+                                  NormalTextField(
+                                    placeController,
+                                    bold: true,
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 16),
-                    child: NormalText('名前 *')
-                  ),
-                  NormalTextField(
-                    nameController,
-                    bold: true
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(top: 24),
-                      child: NormalText('メモ')
-                  ),
-                  NormalTextField(
-                    memoController,
-                    bold: true,
-                    maxLines: 3,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 24),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              NormalText('価格'),
-                              NormalTextField(
-                                priceController,
-                                bold: true,
-                                inputType: InputType.Number,
-                              ),
-                            ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 64),
+                        child: Center(
+                          child: RaisedButton(
+                            onPressed: _postDrink,
+                            child: Text(
+                              '投稿する',
+                              style: TextStyle(
+                                fontSize: 18,
+                            ),
+                            ),
+                            color: Theme.of(context).accentColor,
+                            textColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 32),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              NormalText('購入した場所'),
-                              NormalTextField(
-                                placeController,
-                                bold: true,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 64),
-                    child: Center(
-                      child: RaisedButton(
-                        onPressed: _postDrink,
-                        child: Text(
-                          '投稿する',
-                          style: TextStyle(
-                            fontSize: 18,
-                        ),
-                        ),
-                        color: Theme.of(context).accentColor,
-                        textColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          uploading ? Container(
+            color: Colors.black38,
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          ) : Container(),
+        ],
       ),
     );
   }
