@@ -18,7 +18,7 @@ class DrinkPage extends StatefulWidget {
 
 class _DrinkPageState extends State<DrinkPage> {
   bool imageLoaded = false;
-  int caroucelPage = 0;
+  int carouselPage = 0;
 
   @override
   void initState() {
@@ -42,7 +42,7 @@ class _DrinkPageState extends State<DrinkPage> {
 
   void _updatePage(int index, _) {
     setState(() {
-      this.caroucelPage = index;
+      this.carouselPage = index;
     });
   }
 
@@ -135,7 +135,7 @@ class _DrinkPageState extends State<DrinkPage> {
                   right: 0,
                   child: Padding(
                     padding: EdgeInsets.all(16),
-                    child: NormalText("${caroucelPage + 1} / $imageLength"),
+                    child: NormalText("${carouselPage + 1} / $imageLength"),
                   ),
                 ),
               ],
