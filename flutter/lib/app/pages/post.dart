@@ -203,7 +203,7 @@ class _PostPageState extends State<PostPage> {
                                 items: DrinkType.values.map((type) =>
                                   DropdownMenuItem(
                                     value: type,
-                                    child: NormalText(drinkTypeLabelMap[type], bold: true),
+                                    child: NormalText(drinkTypeMapToLabel[type], bold: true),
                                   )
                                 ).toList(),
                               ),
