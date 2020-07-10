@@ -4,6 +4,93 @@ import 'package:intl/intl.dart';
 import 'package:cellar/repository/provider/firestore.dart';
 import 'package:cellar/repository/provider/storage.dart';
 
+class Drink {
+  String userId;
+  String userName;
+  String drinkName;
+  DrinkType drinkType;
+  SubDrinkType subDrinkType;
+  int score;
+  String memo;
+  int price;
+  String place;
+  DateTime postDatetime;
+
+  String thumbImagePath;
+  List<String> imagePaths;
+  String thumbImageUrl;
+  List<String> imageUrls;
+  int firstImageWidth;
+  int firstImageHeight;
+
+  Drink(
+      this.userId,
+      this.userName,
+      this.drinkName,
+      this.drinkType,
+      this.subDrinkType,
+      this.score,
+      this.memo,
+      this.price,
+      this.place,
+      this.postDatetime,
+      this.thumbImagePath,
+      this.imagePaths,
+      this.firstImageWidth,
+      this.firstImageHeight,
+  );
+
+  init() async {
+    thumbImageUrl = await getDataUrl(thumbImagePath);
+  }
+
+  getImageUrls() async {
+    imageUrls = [];
+    await Future.forEach(imagePaths, (path) async {
+      imageUrls.add(await getDataUrl(path));
+    });
+  }
+
+  get drinkTypeLabel {
+    return drinkTypeMapToLabel[drinkType];
+  }
+
+  get priceString {
+    final formatter = NumberFormat('#,###');
+    return "¥${formatter.format(price)}";
+  }
+
+  get postDatetimeString {
+    final formatter = DateFormat('yyyy/MM/dd');
+    return formatter.format(postDatetime);
+  }
+
+  addStore() {
+    addData('drinks', {
+      'userId': userId,
+      'userName': userName,
+      'drinkName': drinkName,
+      'drinkTypeIndex': drinkType.index,
+      'subDrinkTypeIndex': subDrinkType.index,
+      'score': score,
+      'memo': memo,
+      'price': price,
+      'place': place,
+      'postTimestamp': postDatetime.millisecondsSinceEpoch,
+      'thumbImagePath': thumbImagePath,
+      'imagePaths': imagePaths,
+      'firstImageWidth': firstImageWidth,
+      'firstImageHeight': firstImageHeight,
+    });
+  }
+
+  @override
+  String toString() {
+    return 'drinkName: $drinkName, '
+        'postDatetime: ${postDatetime.toString()}, '
+        'imageLength ${imagePaths.length}';
+  }
+}
 
 enum DrinkType {
   Sake,
@@ -19,7 +106,7 @@ enum DrinkType {
   Other,
 }
 
-final drinkTypeMapToLabel = {
+final Map<DrinkType, String> drinkTypeMapToLabel = {
   DrinkType.Sake: '日本酒',
   DrinkType.Shochu: '焼酎',
   DrinkType.Beer: 'ビール',
@@ -70,9 +157,10 @@ enum SubDrinkType {
   GinJenever,
   GinOldTom,
   GinSteinhager,
+  Empty,
 }
 
-final subDrinkTypeMapToLabel = {
+final Map<SubDrinkType, String> subDrinkTypeMapToLabel = {
   SubDrinkType.SakeDaiginjo: '大吟醸酒',
   SubDrinkType.SakeGinjo: '吟醸酒',
   SubDrinkType.SakeTokubetuHonzojo: '特別本醸造酒',
@@ -115,10 +203,13 @@ final subDrinkTypeMapToLabel = {
   SubDrinkType.GinJenever: 'イェネーバ',
   SubDrinkType.GinOldTom: 'オールド・トム・ジン',
   SubDrinkType.GinSteinhager: 'シュタインヘーガー',
+
+  SubDrinkType.Empty: '-',
 };
 
-final drinkTypeMapToSub = {
+final Map<DrinkType, List<SubDrinkType>> drinkTypeMapToSub = {
   DrinkType.Sake: [
+    SubDrinkType.Empty,
     SubDrinkType.SakeDaiginjo,
     SubDrinkType.SakeGinjo,
     SubDrinkType.SakeTokubetuHonzojo,
@@ -129,6 +220,7 @@ final drinkTypeMapToSub = {
     SubDrinkType.SakeJunmai,
   ],
   DrinkType.Shochu: [
+    SubDrinkType.Empty,
     SubDrinkType.ShochuKome,
     SubDrinkType.ShochuMugi,
     SubDrinkType.ShochuImo,
@@ -140,121 +232,49 @@ final drinkTypeMapToSub = {
     SubDrinkType.ShochuAwamori,
   ],
   DrinkType.Beer: [
+    SubDrinkType.Empty,
     SubDrinkType.BeerLager,
     SubDrinkType.BeerAle,
   ],
   DrinkType.Wine: [
+    SubDrinkType.Empty,
     SubDrinkType.WineWhite,
     SubDrinkType.WineRed,
     SubDrinkType.WineRose,
     SubDrinkType.WineSparkling,
     SubDrinkType.WineDessert,
   ],
-  DrinkType.Cidre: [],
+  DrinkType.Cidre: [
+    SubDrinkType.Empty,
+  ],
   DrinkType.Brandy: [
+    SubDrinkType.Empty,
     SubDrinkType.BrandyCognac,
     SubDrinkType.BrandyArmagnac,
     SubDrinkType.BrandyCalvados,
   ],
   DrinkType.Whisky: [
+    SubDrinkType.Empty,
     SubDrinkType.WhiskyScotch,
     SubDrinkType.WhiskyCanadian,
     SubDrinkType.WhiskyIrish,
     SubDrinkType.WhiskyAmerican,
     SubDrinkType.WhiskyJapanese,
   ],
-  DrinkType.Vodka: [],
+  DrinkType.Vodka: [
+    SubDrinkType.Empty,
+  ],
   DrinkType.Gin: [
+    SubDrinkType.Empty,
     SubDrinkType.GinDry,
     SubDrinkType.GinJenever,
     SubDrinkType.GinOldTom,
     SubDrinkType.GinSteinhager,
   ],
-  DrinkType.Liqueur: [],
-  DrinkType.Other: [],
+  DrinkType.Liqueur: [
+    SubDrinkType.Empty,
+  ],
+  DrinkType.Other: [
+    SubDrinkType.Empty,
+  ],
 };
-
-class Drink {
-  String userId;
-  String userName;
-  String drinkName;
-  DrinkType drinkType;
-  int score;
-  String memo;
-  int price;
-  String place;
-  DateTime postDatetime;
-
-  String thumbImagePath;
-  List<String> imagePaths;
-  String thumbImageUrl;
-  List<String> imageUrls;
-  int firstImageWidth;
-  int firstImageHeight;
-
-  Drink(
-      this.userId,
-      this.userName,
-      this.drinkName,
-      this.drinkType,
-      this.score,
-      this.memo,
-      this.price,
-      this.place,
-      this.postDatetime,
-      this.thumbImagePath,
-      this.imagePaths,
-      this.firstImageWidth,
-      this.firstImageHeight,
-  );
-
-  init() async {
-    thumbImageUrl = await getDataUrl(thumbImagePath);
-  }
-
-  getImageUrls() async {
-    imageUrls = [];
-    await Future.forEach(imagePaths, (path) async {
-      imageUrls.add(await getDataUrl(path));
-    });
-  }
-
-  get drinkTypeLabel {
-    return drinkTypeMapToLabel[drinkType];
-  }
-
-  get priceString {
-    final formatter = NumberFormat('#,###');
-    return "¥${formatter.format(price)}";
-  }
-
-  get postDatetimeString {
-    final formatter = DateFormat('yyyy/MM/dd');
-    return formatter.format(postDatetime);
-  }
-
-  addStore() {
-    addData('drinks', {
-      'userId': userId,
-      'userName': userName,
-      'drinkName': drinkName,
-      'drinkTypeIndex': drinkType.index,
-      'score': score,
-      'memo': memo,
-      'price': price,
-      'place': place,
-      'postTimestamp': postDatetime.millisecondsSinceEpoch,
-      'thumbImagePath': thumbImagePath,
-      'imagePaths': imagePaths,
-      'firstImageWidth': firstImageWidth,
-      'firstImageHeight': firstImageHeight,
-    });
-  }
-
-  @override
-  String toString() {
-    return 'drinkName: $drinkName, '
-        'postDatetime: ${postDatetime.toString()}, '
-        'imageLength ${imagePaths.length}';
-  }
-}
