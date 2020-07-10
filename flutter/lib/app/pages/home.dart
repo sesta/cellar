@@ -21,6 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Drink> drinks = [];
   TimelineType timelineType = TimelineType.Mine;
+  DrinkType drinkType;
   bool loading = true;
 
   @override
@@ -61,10 +62,21 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       this.timelineType = timelineType;
+      this.drinkType = null;
       this.drinks = [];
     });
 
     _updateTimeline();
+  }
+
+  void _updateDrinkType(DrinkType drinkType) {
+    if (this.drinkType == drinkType) {
+      return;
+    }
+
+    setState(() {
+      this.drinkType = drinkType;
+    });
   }
 
   Future<void> _refresh() async {
@@ -91,6 +103,45 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+            ),
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 16)),
+          Container(
+            height: 40,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                ButtonTheme(
+                  minWidth: 40,
+                  child: FlatButton(
+                    textColor: drinkType == null
+                      ? Colors.white
+                      : Colors.white38,
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: NormalText(
+                      '全て',
+                      bold: drinkType == null,
+                    ),
+                    onPressed: () => _updateDrinkType(null),
+                  ),
+                ),
+                ...DrinkType.values.map((type) =>
+                  ButtonTheme(
+                    minWidth: 40,
+                    child: FlatButton(
+                      textColor: drinkType == type
+                        ? Colors.white
+                        : Colors.white38,
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: NormalText(
+                        drinkTypeMapToLabel[type],
+                        bold: drinkType == type,
+                      ),
+                      onPressed: () => _updateDrinkType(type),
+                    ),
+                  ),
+                ).toList()
+              ],
             ),
           ),
           loading
