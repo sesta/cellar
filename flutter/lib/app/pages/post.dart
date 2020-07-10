@@ -27,6 +27,7 @@ class _PostPageState extends State<PostPage> {
   List<Asset> imageAssets = [];
   List<List<int>> images = [];
   DrinkType drinkType;
+  SubDrinkType subDrinkType = SubDrinkType.Empty;
   int score = 3;
   bool uploading = false;
 
@@ -47,6 +48,13 @@ class _PostPageState extends State<PostPage> {
   void _updateDrinkType(DrinkType drinkType) {
     setState(() {
       this.drinkType = drinkType;
+      this.subDrinkType = SubDrinkType.Empty;
+    });
+  }
+
+  void _updateSubDrinkType(SubDrinkType subDrinkType) {
+    setState(() {
+      this.subDrinkType = subDrinkType;
     });
   }
 
@@ -155,6 +163,7 @@ class _PostPageState extends State<PostPage> {
       imageAssets,
       nameController.text,
       drinkType,
+      subDrinkType,
       score,
       memoController.text,
       priceController.text == '' ? 0 : int.parse(priceController.text),
@@ -166,6 +175,8 @@ class _PostPageState extends State<PostPage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<SubDrinkType> subDrinkTypes = drinkType == null ? [SubDrinkType.Empty] : drinkTypeMapToSub[drinkType];
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -180,11 +191,37 @@ class _PostPageState extends State<PostPage> {
             child: Column(
               children: [
                 ImagePreview(images: images, addImage: _getImageList),
+
                 Padding(
                   padding: EdgeInsets.only(top: 32, right: 16, left: 16, bottom: 80),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      NormalText('名前 *'),
+                      NormalTextField(
+                        nameController,
+                        bold: true
+                      ),
+                      Padding(padding: EdgeInsets.only(bottom: 24)),
+
+                      NormalText('評価 *'),
+                      Padding(padding: const EdgeInsets.only(bottom: 8)),
+                      Row(
+                        children: List.generate(5, (i)=> i).map<Widget>((index) =>
+                            SizedBox(
+                              height: 32,
+                              width: 32,
+                              child: IconButton(
+                                padding: EdgeInsets.all(4),
+                                onPressed: () => _updateScore(index + 1),
+                                icon: Icon(index < score ? Icons.star : Icons.star_border),
+                                color: Colors.orangeAccent,
+                              ),
+                            )
+                        ).toList(),
+                      ),
+                      Padding(padding: EdgeInsets.only(bottom: 24)),
+
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -200,103 +237,93 @@ class _PostPageState extends State<PostPage> {
                                   height: 1,
                                   color: Colors.white38,
                                 ),
-                                items: [
+                                items: DrinkType.values.map((type) =>
                                   DropdownMenuItem(
-                                    value: DrinkType.Sake,
-                                    child: NormalText('日本酒', bold: true),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: DrinkType.Wine,
-                                    child: NormalText('ワイン', bold: true),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: DrinkType.Whisky,
-                                    child: NormalText('ウィスキー', bold: true),
-                                  ),
-                                ],
+                                    value: type,
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        minWidth: 80,
+                                      ),
+                                      child: NormalText(drinkTypeMapToLabel[type], bold: true),
+                                    ),
+                                  )
+                                ).toList(),
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 32),
+                          Padding(padding: EdgeInsets.only(right: 24)),
+
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              NormalText('種類の詳細'),
+                              DropdownButton(
+                                value: subDrinkType,
+                                onChanged: _updateSubDrinkType,
+                                icon: Icon(Icons.arrow_drop_down),
+                                underline: Container(
+                                  height: 1,
+                                  color: Colors.white38,
+                                ),
+                                items: subDrinkTypes.map((type) =>
+                                  DropdownMenuItem(
+                                    value: type,
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        minWidth: 100,
+                                      ),
+                                      child: NormalText(subDrinkTypeMapToLabel[type], bold: true)
+                                    ),
+                                  )
+                                ).toList(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Padding(padding: EdgeInsets.only(bottom: 24)),
+
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            width: 104,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                NormalText('評価 *'),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Row(
-                                    children: List.generate(5, (i)=> i).map<Widget>((index) =>
-                                      SizedBox(
-                                        height: 32,
-                                        width: 32,
-                                        child: IconButton(
-                                          padding: EdgeInsets.all(4),
-                                          onPressed: () => _updateScore(index + 1),
-                                          icon: Icon(index < score ? Icons.star : Icons.star_border),
-                                          color: Colors.orangeAccent,
-                                        ),
-                                      )
-                                    ).toList(),
-                                  ),
+                                NormalText('価格'),
+                                NormalTextField(
+                                  priceController,
+                                  bold: true,
+                                  inputType: InputType.Number,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(padding: EdgeInsets.only(right: 24)),
+
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                NormalText('購入した場所'),
+                                NormalTextField(
+                                  placeController,
+                                  bold: true,
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: NormalText('名前 *')
-                      ),
-                      NormalTextField(
-                        nameController,
-                        bold: true
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(top: 24),
-                          child: NormalText('メモ')
-                      ),
+                      Padding(padding: EdgeInsets.only(bottom: 24)),
+
+                      NormalText('メモ'),
                       NormalTextField(
                         memoController,
                         bold: true,
                         maxLines: 3,
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 24),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  NormalText('価格'),
-                                  NormalTextField(
-                                    priceController,
-                                    bold: true,
-                                    inputType: InputType.Number,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 32),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  NormalText('購入した場所'),
-                                  NormalTextField(
-                                    placeController,
-                                    bold: true,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+
                       Padding(
                         padding: EdgeInsets.only(top: 64),
                         child: Center(

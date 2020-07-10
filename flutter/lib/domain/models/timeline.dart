@@ -38,6 +38,7 @@ Future<List<Drink>> getTimelineImageUrls(TimelineType timelineType, {
     data['userName'],
     data['drinkName'],
     DrinkType.values[data['drinkTypeIndex']],
+    SubDrinkType.values[data['subDrinkTypeIndex']],
     data['score'],
     data['memo'],
     data['price'],
