@@ -7,9 +7,31 @@ import 'package:cellar/repository/provider/storage.dart';
 
 enum DrinkType {
   Sake,
+  Shochu,
+  Beer,
   Wine,
-  Whisky
+  Cidre,
+  Brandy,
+  Whisky,
+  Vodka,
+  Gin,
+  Liqueur,
+  Other,
 }
+
+final drinkTypeLabelMap = {
+  DrinkType.Sake: '日本酒',
+  DrinkType.Shochu: '焼酎',
+  DrinkType.Beer: 'ビール',
+  DrinkType.Wine: 'ワイン',
+  DrinkType.Cidre: 'シードル',
+  DrinkType.Brandy: 'ブランデー',
+  DrinkType.Whisky: 'ウイスキー',
+  DrinkType.Vodka: 'ウォッカ',
+  DrinkType.Gin: 'ジン',
+  DrinkType.Liqueur: 'リキュール',
+  DrinkType.Other: 'その他',
+};
 
 class Drink {
   String userId;
@@ -57,14 +79,7 @@ class Drink {
   }
 
   get drinkTypeLabel {
-    switch(drinkType) {
-      case DrinkType.Sake:
-        return '日本酒';
-      case DrinkType.Wine:
-        return 'ワイン';
-      case DrinkType.Whisky:
-        return 'ウイスキー';
-    }
+    return drinkTypeLabelMap[drinkType];
   }
 
   get priceString {

@@ -200,20 +200,12 @@ class _PostPageState extends State<PostPage> {
                                   height: 1,
                                   color: Colors.white38,
                                 ),
-                                items: [
+                                items: DrinkType.values.map((type) =>
                                   DropdownMenuItem(
-                                    value: DrinkType.Sake,
-                                    child: NormalText('日本酒', bold: true),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: DrinkType.Wine,
-                                    child: NormalText('ワイン', bold: true),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: DrinkType.Whisky,
-                                    child: NormalText('ウィスキー', bold: true),
-                                  ),
-                                ],
+                                    value: type,
+                                    child: NormalText(drinkTypeLabelMap[type], bold: true),
+                                  )
+                                ).toList(),
                               ),
                             ],
                           ),
