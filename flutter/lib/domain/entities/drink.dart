@@ -55,6 +55,10 @@ class Drink {
     return drinkTypeMapToLabel[drinkType];
   }
 
+  get subDrinkTypeLabel {
+    return subDrinkTypeMapToLabel[subDrinkType];
+  }
+
   get priceString {
     final formatter = NumberFormat('#,###');
     return "¥${formatter.format(price)}";
