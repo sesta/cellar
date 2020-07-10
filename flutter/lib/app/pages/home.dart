@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/user.dart';
@@ -20,6 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Drink> drinks = [];
   TimelineType timelineType = TimelineType.Mine;
+  bool loading = true;
 
   @override
   void initState() {
@@ -37,6 +39,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _updateTimeline() async {
+    setState(() {
+      this.loading = true;
+    });
+
     final drinks = await getTimelineImageUrls(
       timelineType,
       userId: widget.user.id,
@@ -44,6 +50,7 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       this.drinks = drinks;
+      this.loading = false;
     });
   }
 
@@ -86,8 +93,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          drinks.length == 0 ?
-            Row(
+          loading
+            ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
@@ -98,10 +105,21 @@ class _HomePageState extends State<HomePage> {
                   ),
                 )
               ],
-            ) :
-            RefreshIndicator(
+            )
+            : RefreshIndicator(
               onRefresh: _refresh,
-              child: DrinkGrid(drinks: drinks),
+              child: drinks.length == 0
+                ? SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 64,
+                      bottom: 500,
+                    ),
+                    child: NormalText('見つかりませんでした'),
+                  ),
+                )
+                : DrinkGrid(drinks: drinks),
             ),
         ],
       ),
