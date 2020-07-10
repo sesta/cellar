@@ -168,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                   child: Padding(
                     padding: const EdgeInsets.only(
                       top: 64,
-                      bottom: 500,
+                      bottom: 300,
                     ),
                     child: NormalText('見つかりませんでした'),
                   ),
