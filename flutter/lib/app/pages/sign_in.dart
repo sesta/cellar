@@ -1,3 +1,6 @@
+import 'package:cellar/app/widget/atoms/main_text.dart';
+import 'package:cellar/app/widget/atoms/normal_text.dart';
+import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/repository/provider/auth.dart';
@@ -55,11 +58,20 @@ class _SignInState extends State<SignInPage> {
         child: userId == null ? Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Cellarの利用には\nGoogleのログインが必要です。', textAlign: TextAlign.center),
+            NormalText(
+              'Cellarの利用には\nアカウント認証が必要です。',
+              multiLine: true,
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 32)),
             RaisedButton(
               onPressed: _checkSignIn,
-              child: Text('Googleでログイン'),
-              color: Theme.of(context).primaryColorDark,
+              child: Text(
+                'Googleで認証する',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+              color: Theme.of(context).accentColor,
               textColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
@@ -90,23 +102,31 @@ class _UserFormState extends State<UserForm> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(64),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          TextField(
-            controller: nameController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'ユーザー名',
-            ),
+          NormalText('ニックネーム'),
+          NormalTextField(
+            nameController,
+            bold: true,
           ),
-          RaisedButton(
-            onPressed: () => widget.createUser(nameController.text),
-            child: Text('Googleでログイン'),
-            color: Theme.of(context).primaryColorDark,
-            textColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
+          Padding(padding: EdgeInsets.only(bottom: 48)),
+
+          Center(
+            child: RaisedButton(
+              onPressed: () => widget.createUser(nameController.text),
+              child: Text(
+                '登録を完了する',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
             ),
           ),
         ],
