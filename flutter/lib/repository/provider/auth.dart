@@ -26,7 +26,11 @@ Future<User> getSignInUser() async {
       return null;
     }
 
-    return User(firebaseUser.uid, rawUser['userName']);
+    return User(
+      firebaseUser.uid,
+      rawUser['userName'],
+      drinkTypeUploadCounts: rawUser['drinkTypeUploadCounts'].cast<int>(),
+    );
   } catch (e) {
     print(e);
     return null;

@@ -69,8 +69,8 @@ class Drink {
     return formatter.format(postDatetime);
   }
 
-  addStore() {
-    addData('drinks', {
+  add() {
+    saveData('drinks', {
       'userId': userId,
       'userName': userName,
       'drinkName': drinkName,

@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 final firestoreInstance = Firestore.instance;
 
-Future<void> addData(
+Future<void> saveData(
   String documentName,
   Object data,
   [String documentId]
