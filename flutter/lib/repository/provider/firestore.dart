@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:cellar/domain/entities/drink.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 final firestoreInstance = Firestore.instance;
 
-Future<void> addData(
+Future<void> saveData(
   String documentName,
   Object data,
   [String documentId]
@@ -54,5 +55,28 @@ Future<List<DocumentSnapshot>> getDocuments(String documentName, {
   query = query.limit(limit);
 
   final snapshot = await query.getDocuments();
+  return snapshot.documents;
+}
+
+Future<void> incrementUploadCount(
+    DrinkType drinkType,
+    ) async {
+  return await firestoreInstance
+      .collection('status')
+      .document('production')
+      .collection('drinkTypes')
+      .document(drinkType.index.toString())
+      .updateData({
+    'uploadCount': FieldValue.increment(1),
+  });
+}
+
+Future<List<DocumentSnapshot>> getUploadCounts() async {
+  final snapshot = await firestoreInstance
+    .collection('status')
+    .document('production')
+    .collection('drinkTypes')
+    .getDocuments();
+
   return snapshot.documents;
 }

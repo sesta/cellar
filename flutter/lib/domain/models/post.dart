@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/repository/provider/firestore.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 import 'package:cellar/conf.dart';
@@ -9,7 +11,7 @@ import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/repository/provider/storage.dart';
 
 Future<void> post(
-  String userId,
+  User user,
   String userName,
   List<Asset> images,
   String drinkName,
@@ -21,7 +23,7 @@ Future<void> post(
   String place,
 ) async {
   final nowDatetime = DateTime.now();
-  final imageDirectory = '$BASE_IMAGE_PATH/$userId/${nowDatetime.millisecondsSinceEpoch}';
+  final imageDirectory = '$BASE_IMAGE_PATH/${user.userId}/${nowDatetime.millisecondsSinceEpoch}';
 
   // TODO: 識別子にタイムスタンプ以外も追加する
   final String thumbImagePath = '$imageDirectory/thumb';
@@ -40,7 +42,7 @@ Future<void> post(
 
 
   final drink = Drink(
-    userId,
+    user.userId,
     userName,
     drinkName,
     drinkType,
@@ -55,7 +57,12 @@ Future<void> post(
     firstImageWidth,
     firstImageHeight,
   );
-  drink.addStore();
+  drink.add();
+
+  user.incrementUploadCount(drinkType);
+  user.save();
+
+  incrementUploadCount(drinkType);
 }
 
 Future<void> uploadImage(Asset image, String path, int expectWidthSize) async {

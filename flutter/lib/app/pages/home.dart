@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:cellar/app/widget/atoms/normal_text.dart';
+import 'package:cellar/app/widget/atoms/label_test.dart';
+import 'package:cellar/repository/provider/firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/user.dart';
@@ -8,6 +9,8 @@ import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/models/timeline.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
+import 'package:cellar/app/widget/atoms/normal_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.user}) : super(key: key);
@@ -23,12 +26,30 @@ class _HomePageState extends State<HomePage> {
   TimelineType timelineType = TimelineType.Mine;
   DrinkType drinkType;
   bool loading = true;
+  int uploadCount = 0;
+  List<int> uploadCounts = List.generate(DrinkType.values.length, (_) => 0);
 
   @override
   void initState() {
     super.initState();
 
     _updateTimeline();
+    getUploadCounts().then((rawData) {
+      int count = 0;
+      rawData.sort((DocumentSnapshot dataA, DocumentSnapshot dataB) {
+        final idA = int.parse(dataA.documentID);
+        final idB = int.parse(dataB.documentID);
+        return idA.compareTo(idB);
+      });
+
+      setState(() {
+        this.uploadCounts = rawData.map((data) {
+          count += data['uploadCount'];
+          return data['uploadCount'];
+        }).toList().cast<int>();
+        this.uploadCount = count;
+      });
+    });
   }
 
   void _movePostPage() async {
@@ -48,7 +69,7 @@ class _HomePageState extends State<HomePage> {
     final drinks = await getTimelineImageUrls(
       timelineType,
       drinkType: drinkType,
-      userId: widget.user.id,
+      userId: widget.user.userId,
     );
 
     setState(() {
@@ -86,6 +107,26 @@ class _HomePageState extends State<HomePage> {
     await _updateTimeline();
   }
 
+  int getUploadCount(DrinkType drinkType) {
+    if (drinkType == null) {
+      switch(timelineType) {
+        case TimelineType.All:
+          return uploadCount;
+        case TimelineType.Mine:
+          return widget.user.uploadCount;
+      }
+    }
+
+    switch(timelineType) {
+      case TimelineType.All:
+        return uploadCounts[drinkType.index];
+      case TimelineType.Mine:
+        return widget.user.drinkTypeUploadCounts[drinkType.index];
+    }
+
+    throw 'timelineTypeの考慮漏れです';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,29 +162,54 @@ class _HomePageState extends State<HomePage> {
                       ? Colors.white
                       : Colors.white38,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: NormalText(
-                      '全て',
-                      bold: drinkType == null,
+                    child: Row(
+                      children: <Widget>[
+                        NormalText(
+                          '全て',
+                          bold: drinkType == null,
+                        ),
+                        Padding(padding: EdgeInsets.only(right: 4)),
+                        LabelText(
+                          getUploadCount(null).toString(),
+                          size: 'small',
+                          single: true,
+                        ),
+                      ],
                     ),
                     onPressed: () => _updateDrinkType(null),
                   ),
                 ),
-                ...DrinkType.values.map((type) =>
-                  ButtonTheme(
+                ...widget.user.drinkTypesByMany.map((userDrinkType) {
+                  final count = getUploadCount(userDrinkType);
+                  if (count == 0) {
+                    return Container();
+                  }
+
+                  return ButtonTheme(
                     minWidth: 40,
                     child: FlatButton(
-                      textColor: drinkType == type
-                        ? Colors.white
-                        : Colors.white38,
+                      textColor: drinkType == userDrinkType
+                          ? Colors.white
+                          : Colors.white38,
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: NormalText(
-                        drinkTypeMapToLabel[type],
-                        bold: drinkType == type,
+                      child: Row(
+                        children: <Widget>[
+                          NormalText(
+                            drinkTypeMapToLabel[userDrinkType],
+                            bold: drinkType == userDrinkType,
+                          ),
+                          Padding(padding: EdgeInsets.only(right: 4)),
+                          LabelText(
+                            count.toString(),
+                            size: 'small',
+                            single: true,
+                          ),
+                        ],
                       ),
-                      onPressed: () => _updateDrinkType(type),
+                      onPressed: () => _updateDrinkType(userDrinkType),
                     ),
-                  ),
-                ).toList()
+                  );
+                }).toList()
               ],
             ),
           ),

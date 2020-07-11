@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/repository/provider/firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum TimelineType {
   Mine,

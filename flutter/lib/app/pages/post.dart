@@ -158,7 +158,7 @@ class _PostPageState extends State<PostPage> {
     });
 
     await post(
-      widget.user.id,
+      widget.user,
       widget.user.userName,
       imageAssets,
       nameController.text,
@@ -237,7 +237,7 @@ class _PostPageState extends State<PostPage> {
                                   height: 1,
                                   color: Colors.white38,
                                 ),
-                                items: DrinkType.values.map((type) =>
+                                items: widget.user.drinkTypesByMany.map((DrinkType type) =>
                                   DropdownMenuItem(
                                     value: type,
                                     child: ConstrainedBox(
