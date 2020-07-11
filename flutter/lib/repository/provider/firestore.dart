@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cellar/domain/entities/drink.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 final firestoreInstance = Firestore.instance;
@@ -13,6 +14,19 @@ Future<void> saveData(
     .collection(documentName)
     .document(documentId)
     .setData(data);
+}
+
+Future<void> incrementUploadCount(
+    DrinkType drinkType,
+) async {
+  return await firestoreInstance
+    .collection('status')
+    .document('production')
+    .collection('drinkTypes')
+    .document(drinkType.index.toString())
+    .updateData({
+      'uploadCount': FieldValue.increment(1),
+    });
 }
 
 Future<DocumentSnapshot> getDocument(

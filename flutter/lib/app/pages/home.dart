@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cellar/app/widget/atoms/normal_text.dart';
+import 'package:cellar/repository/provider/firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/user.dart';

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/repository/provider/firestore.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 import 'package:cellar/conf.dart';
@@ -60,6 +61,8 @@ Future<void> post(
 
   user.incrementUploadCount(drinkType);
   user.save();
+
+  incrementUploadCount(drinkType);
 }
 
 Future<void> uploadImage(Asset image, String path, int expectWidthSize) async {
