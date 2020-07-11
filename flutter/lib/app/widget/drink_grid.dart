@@ -12,8 +12,8 @@ class DrinkGrid extends StatelessWidget {
       physics: AlwaysScrollableScrollPhysics(),
       shrinkWrap: true,
       crossAxisCount: 2,
-      crossAxisSpacing: 8,
-      mainAxisSpacing: 8,
+      crossAxisSpacing: 16,
+      mainAxisSpacing: 16,
       padding: EdgeInsets.all(16),
       childAspectRatio: 1,
       children: drinks.map<Widget>((drink) {
