@@ -333,7 +333,7 @@ class _PostPageState extends State<PostPage> {
                               '投稿する',
                               style: TextStyle(
                                 fontSize: 18,
-                            ),
+                              ),
                             ),
                             color: Theme.of(context).accentColor,
                             textColor: Colors.white,
