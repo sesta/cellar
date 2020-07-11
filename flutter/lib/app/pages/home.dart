@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cellar/app/widget/atoms/label_test.dart';
+import 'package:cellar/repository/provider/firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/user.dart';
@@ -9,6 +10,7 @@ import 'package:cellar/domain/models/timeline.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.user}) : super(key: key);
@@ -24,12 +26,31 @@ class _HomePageState extends State<HomePage> {
   TimelineType timelineType = TimelineType.Mine;
   DrinkType drinkType;
   bool loading = true;
+  int uploadCount = 0;
+  List<int> uploadCounts = List.generate(DrinkType.values.length, (_) => 0);
 
   @override
   void initState() {
     super.initState();
 
     _updateTimeline();
+    getUploadCounts().then((rawData) {
+      int count = 0;
+      rawData.sort((DocumentSnapshot dataA, DocumentSnapshot dataB) {
+        final idA = int.parse(dataA.documentID);
+        final idB = int.parse(dataB.documentID);
+        return idA.compareTo(idB);
+      });
+
+      setState(() {
+        this.uploadCounts = rawData.map((data) {
+          count += data['uploadCount'];
+          print(data.documentID);
+          return data['uploadCount'];
+        }).toList().cast<int>();
+        this.uploadCount = count;
+      });
+    });
   }
 
   void _movePostPage() async {
@@ -87,6 +108,26 @@ class _HomePageState extends State<HomePage> {
     await _updateTimeline();
   }
 
+  int getUploadCount(DrinkType drinkType) {
+    if (drinkType == null) {
+      switch(timelineType) {
+        case TimelineType.All:
+          return uploadCount;
+        case TimelineType.Mine:
+          return widget.user.uploadCount;
+      }
+    }
+
+    switch(timelineType) {
+      case TimelineType.All:
+        return uploadCounts[drinkType.index];
+      case TimelineType.Mine:
+        return widget.user.drinkTypeUploadCounts[drinkType.index];
+    }
+
+    throw 'timelineTypeの考慮漏れです';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Padding(padding: EdgeInsets.only(right: 4)),
                         LabelText(
-                          widget.user.uploadCount.toString(),
+                          getUploadCount(null).toString(),
                           size: 'small',
                           single: true,
                         ),
@@ -155,7 +196,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Padding(padding: EdgeInsets.only(right: 4)),
                           LabelText(
-                            uploadCountObject['uploadCount'].toString(),
+                            getUploadCount(uploadCountObject['type']).toString(),
                             size: 'small',
                             single: true,
                           ),

@@ -16,19 +16,6 @@ Future<void> saveData(
     .setData(data);
 }
 
-Future<void> incrementUploadCount(
-    DrinkType drinkType,
-) async {
-  return await firestoreInstance
-    .collection('status')
-    .document('production')
-    .collection('drinkTypes')
-    .document(drinkType.index.toString())
-    .updateData({
-      'uploadCount': FieldValue.increment(1),
-    });
-}
-
 Future<DocumentSnapshot> getDocument(
   String documentName,
   String documentId,
@@ -68,5 +55,28 @@ Future<List<DocumentSnapshot>> getDocuments(String documentName, {
   query = query.limit(limit);
 
   final snapshot = await query.getDocuments();
+  return snapshot.documents;
+}
+
+Future<void> incrementUploadCount(
+    DrinkType drinkType,
+    ) async {
+  return await firestoreInstance
+      .collection('status')
+      .document('production')
+      .collection('drinkTypes')
+      .document(drinkType.index.toString())
+      .updateData({
+    'uploadCount': FieldValue.increment(1),
+  });
+}
+
+Future<List<DocumentSnapshot>> getUploadCounts() async {
+  final snapshot = await firestoreInstance
+    .collection('status')
+    .document('production')
+    .collection('drinkTypes')
+    .getDocuments();
+
   return snapshot.documents;
 }
