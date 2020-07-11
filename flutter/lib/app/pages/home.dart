@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
     final drinks = await getTimelineImageUrls(
       timelineType,
       drinkType: drinkType,
-      userId: widget.user.id,
+      userId: widget.user.userId,
     );
 
     setState(() {

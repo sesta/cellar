@@ -22,7 +22,7 @@ Future<void> post(
   String place,
 ) async {
   final nowDatetime = DateTime.now();
-  final imageDirectory = '$BASE_IMAGE_PATH/${user.id}/${nowDatetime.millisecondsSinceEpoch}';
+  final imageDirectory = '$BASE_IMAGE_PATH/${user.userId}/${nowDatetime.millisecondsSinceEpoch}';
 
   // TODO: 識別子にタイムスタンプ以外も追加する
   final String thumbImagePath = '$imageDirectory/thumb';
@@ -41,7 +41,7 @@ Future<void> post(
 
 
   final drink = Drink(
-    user.id,
+    user.userId,
     userName,
     drinkName,
     drinkType,

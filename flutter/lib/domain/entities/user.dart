@@ -4,12 +4,12 @@ import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/repository/provider/firestore.dart';
 
 class User {
-  String id;
+  String userId;
   String userName;
   List<int> drinkTypeUploadCounts;
 
   User(
-    this.id,
+    this.userId,
     this.userName,
     {
       this.drinkTypeUploadCounts,
@@ -32,12 +32,12 @@ class User {
     saveData('users', {
       'userName': userName,
       'drinkTypeUploadCounts': drinkTypeUploadCounts,
-    }, id);
+    }, userId);
   }
 
   @override
   String toString() {
-    return 'id: ${this.id}, userName: ${this.userName}, '
+    return 'userId: ${this.userId}, userName: ${this.userName}, '
       'uploadCount: ${this.uploadCount}, '
       'drinkTypeUploadCounts: ${this.drinkTypeUploadCounts.toString()}';
   }
