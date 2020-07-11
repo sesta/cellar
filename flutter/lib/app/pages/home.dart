@@ -45,7 +45,6 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         this.uploadCounts = rawData.map((data) {
           count += data['uploadCount'];
-          print(data.documentID);
           return data['uploadCount'];
         }).toList().cast<int>();
         this.uploadCount = count;
@@ -180,32 +179,37 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () => _updateDrinkType(null),
                   ),
                 ),
-                ...widget.user.uploadCountsByMany.map((uploadCountObject) =>
-                  ButtonTheme(
+                ...widget.user.drinkTypesByMany.map((userDrinkType) {
+                  final count = getUploadCount(userDrinkType);
+                  if (count == 0) {
+                    return Container();
+                  }
+
+                  return ButtonTheme(
                     minWidth: 40,
                     child: FlatButton(
-                      textColor: drinkType == uploadCountObject['type']
-                        ? Colors.white
-                        : Colors.white38,
+                      textColor: drinkType == userDrinkType
+                          ? Colors.white
+                          : Colors.white38,
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Row(
                         children: <Widget>[
                           NormalText(
-                            drinkTypeMapToLabel[uploadCountObject['type']],
-                            bold: drinkType == uploadCountObject['type'],
+                            drinkTypeMapToLabel[userDrinkType],
+                            bold: drinkType == userDrinkType,
                           ),
                           Padding(padding: EdgeInsets.only(right: 4)),
                           LabelText(
-                            getUploadCount(uploadCountObject['type']).toString(),
+                            count.toString(),
                             size: 'small',
                             single: true,
                           ),
                         ],
                       ),
-                      onPressed: () => _updateDrinkType(uploadCountObject['type']),
+                      onPressed: () => _updateDrinkType(userDrinkType),
                     ),
-                  ),
-                ).toList()
+                  );
+                }).toList()
               ],
             ),
           ),
