@@ -24,6 +24,16 @@ class User {
     return drinkTypeUploadCounts.reduce((sum, count) => sum + count);
   }
 
+  get uploadCountsByMany {
+    final types = List.from(DrinkType.values);
+    types.sort((typeA, typeB) => drinkTypeUploadCounts[typeB.index].compareTo(drinkTypeUploadCounts[typeA.index]));
+
+    return types.map((type) => {
+      'type': type,
+      'uploadCount': drinkTypeUploadCounts[type.index],
+    });
+  }
+
   void incrementUploadCount(DrinkType drinkType) {
     this.drinkTypeUploadCounts[drinkType.index] ++;
   }

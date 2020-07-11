@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:cellar/app/widget/atoms/normal_text.dart';
-import 'package:cellar/repository/provider/firestore.dart';
+import 'package:cellar/app/widget/atoms/label_test.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/user.dart';
@@ -9,6 +8,7 @@ import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/models/timeline.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
+import 'package:cellar/app/widget/atoms/normal_text.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.user}) : super(key: key);
@@ -122,26 +122,46 @@ class _HomePageState extends State<HomePage> {
                       ? Colors.white
                       : Colors.white38,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: NormalText(
-                      '全て',
-                      bold: drinkType == null,
+                    child: Row(
+                      children: <Widget>[
+                        NormalText(
+                          '全て',
+                          bold: drinkType == null,
+                        ),
+                        Padding(padding: EdgeInsets.only(right: 4)),
+                        LabelText(
+                          widget.user.uploadCount.toString(),
+                          size: 'small',
+                          single: true,
+                        ),
+                      ],
                     ),
                     onPressed: () => _updateDrinkType(null),
                   ),
                 ),
-                ...DrinkType.values.map((type) =>
+                ...widget.user.uploadCountsByMany.map((uploadCountObject) =>
                   ButtonTheme(
                     minWidth: 40,
                     child: FlatButton(
-                      textColor: drinkType == type
+                      textColor: drinkType == uploadCountObject['type']
                         ? Colors.white
                         : Colors.white38,
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: NormalText(
-                        drinkTypeMapToLabel[type],
-                        bold: drinkType == type,
+                      child: Row(
+                        children: <Widget>[
+                          NormalText(
+                            drinkTypeMapToLabel[uploadCountObject['type']],
+                            bold: drinkType == uploadCountObject['type'],
+                          ),
+                          Padding(padding: EdgeInsets.only(right: 4)),
+                          LabelText(
+                            uploadCountObject['uploadCount'].toString(),
+                            size: 'small',
+                            single: true,
+                          ),
+                        ],
                       ),
-                      onPressed: () => _updateDrinkType(type),
+                      onPressed: () => _updateDrinkType(uploadCountObject['type']),
                     ),
                   ),
                 ).toList()
