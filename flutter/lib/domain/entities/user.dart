@@ -20,15 +20,15 @@ class User {
     }
   }
 
-  get uploadCount {
+  int get uploadCount {
     return drinkTypeUploadCounts.reduce((sum, count) => sum + count);
   }
 
-  get drinkTypesByMany {
+  List<DrinkType> get drinkTypesByMany {
     final types = List.from(DrinkType.values);
     types.sort((typeA, typeB) => drinkTypeUploadCounts[typeB.index].compareTo(drinkTypeUploadCounts[typeA.index]));
 
-    return types;
+    return types.cast<DrinkType>();
   }
 
   void incrementUploadCount(DrinkType drinkType) {
