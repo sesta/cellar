@@ -39,6 +39,7 @@ class _CellarState extends State<Cellar> {
       theme: ThemeData.dark().copyWith(
         accentColor: Colors.blueGrey,
       ),
+      color: Theme.of(context).accentColor,
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
