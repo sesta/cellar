@@ -1,3 +1,4 @@
+import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/conf.dart';
@@ -22,7 +23,7 @@ class DrinkGrid extends StatelessWidget {
         return Hero(
           tag: drink.thumbImagePath,
           child: GestureDetector(
-            child: GridItem(drinkName: drink.drinkName, imageUrl: drink.thumbImageUrl),
+            child: GridItem(drink),
             onTap: () => Navigator.of(context).pushNamed('/drink', arguments: drink),
           ),
         );
@@ -32,13 +33,8 @@ class DrinkGrid extends StatelessWidget {
 }
 
 class GridItem extends StatelessWidget {
-  GridItem({
-    Key key,
-    this.drinkName,
-    this.imageUrl,
-  });
-  final String drinkName;
-  final String imageUrl;
+  GridItem(this.drink);
+  final Drink drink;
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +43,28 @@ class GridItem extends StatelessWidget {
         color: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))),
         clipBehavior: Clip.antiAlias,
-        child: GridTileBar(
-          backgroundColor: Colors.black45,
-          title: Text(drinkName)
+        child: Container(
+          color: Colors.black38,
+          padding: EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NormalText(drink.drinkName, bold: true),
+              Padding(padding: EdgeInsets.only(bottom: 4)),
+              Row(
+                children: List.generate(5, (i)=> i).map<Widget>((index) =>
+                  Padding(
+                    padding: EdgeInsets.only(right: 4),
+                    child: Icon(
+                      index < drink.score ? Icons.star : Icons.star_border,
+                      size: 16,
+                      color: Colors.orangeAccent,
+                    ),
+                  )
+                ).toList(),
+              ),
+            ],
+          ),
         ),
       ),
       child: Material(
@@ -62,7 +77,7 @@ class GridItem extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
           ),
-          imageUrl: imageUrl,
+          imageUrl: drink.thumbImageUrl,
           fit: BoxFit.cover,
         ),
       ),
