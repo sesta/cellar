@@ -37,7 +37,7 @@ class _SplashPageState extends State<SplashPage> {
       backgroundColor: Theme.of(context).accentColor,
       body: Center(
         child: Image.asset(
-          'assets/images/icon_small.png',
+          'assets/images/icon.png',
           width: 124,
         ),
       )
