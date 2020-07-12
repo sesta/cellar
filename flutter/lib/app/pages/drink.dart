@@ -164,14 +164,15 @@ class _DrinkPageState extends State<DrinkPage> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: NormalText("${carouselPage + 1} / $imageLength"),
+                  imageLength == 1 ? Container()
+                    :Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: NormalText("${carouselPage + 1} / $imageLength"),
+                      ),
                     ),
-                  ),
                 ],
               ),
               Padding(
