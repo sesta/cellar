@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entities/drink.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class DrinkGrid extends StatelessWidget {
   final List<Drink> drinks;
@@ -20,12 +19,9 @@ class DrinkGrid extends StatelessWidget {
       padding: EdgeInsets.all(16),
       childAspectRatio: IMAGE_ASPECT_RATIO,
       children: drinks.map<Widget>((drink) {
-        return Hero(
-          tag: drink.thumbImagePath,
-          child: GestureDetector(
-            child: GridItem(drink),
-            onTap: () => Navigator.of(context).pushNamed('/drink', arguments: drink),
-          ),
+        return GestureDetector(
+          child: GridItem(drink),
+          onTap: () => Navigator.of(context).pushNamed('/drink', arguments: drink),
         );
       }).toList(),
     );
@@ -70,15 +66,14 @@ class GridItem extends StatelessWidget {
       child: Material(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         clipBehavior: Clip.antiAlias,
-        child: CachedNetworkImage(
-          placeholder: (context, url) => Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        child: Hero(
+          tag: drink.thumbImagePath,
+          child: Image(
+            image: NetworkImage(
+              drink.thumbImageUrl,
             ),
+            fit: BoxFit.cover,
           ),
-          imageUrl: drink.thumbImageUrl,
-          fit: BoxFit.cover,
         ),
       ),
     );
