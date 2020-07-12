@@ -113,7 +113,7 @@ class _DrinkPageState extends State<DrinkPage> {
 
                         if (index == 0) {
                           content = Hero(
-                            tag: widget.drink.thumbImageUrl,
+                            tag: widget.drink.thumbImagePath,
                             child: imageLoaded
                               ? CachedNetworkImage(
                                 placeholder: (context, url) => Image(
