@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
@@ -98,8 +99,14 @@ class _DrinkPageState extends State<DrinkPage> {
                         );
 
                         if (imageLoaded) {
-                          content = Image(
-                            image: NetworkImage(widget.drink.imageUrls[index]),
+                          content = CachedNetworkImage(
+                            placeholder: (context, url) => Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ),
+                            imageUrl: widget.drink.imageUrls[index],
                             fit: BoxFit.contain,
                           );
                         }
@@ -108,9 +115,20 @@ class _DrinkPageState extends State<DrinkPage> {
                           content = Hero(
                             tag: widget.drink.thumbImageUrl,
                             child: imageLoaded
-                              ? content
+                              ? CachedNetworkImage(
+                                placeholder: (context, url) => Image(
+                                    image: NetworkImage(
+                                      widget.drink.thumbImageUrl,
+                                    ),
+                                    fit: BoxFit.contain,
+                                  ),
+                                imageUrl: widget.drink.imageUrls.first,
+                                fit: BoxFit.contain,
+                              )
                               : Image(
-                                image: NetworkImage(widget.drink.thumbImageUrl),
+                                image: NetworkImage(
+                                  widget.drink.thumbImageUrl,
+                                ),
                                 fit: BoxFit.contain,
                               ),
                           );
