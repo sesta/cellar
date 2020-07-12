@@ -213,34 +213,36 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          loading
-            ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(40),
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                )
-              ],
-            )
-            : RefreshIndicator(
-              onRefresh: _refresh,
-              child: drinks.length == 0
-                ? SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 64,
-                      bottom: 300,
+          Expanded(
+            child: loading
+              ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(40),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
-                    child: NormalText('見つかりませんでした'),
-                  ),
-                )
-                : DrinkGrid(drinks: drinks),
-            ),
+                  )
+                ],
+              )
+              : RefreshIndicator(
+                onRefresh: _refresh,
+                child: drinks.length == 0
+                  ? SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 64,
+                        bottom: 300,
+                      ),
+                      child: NormalText('見つかりませんでした'),
+                    ),
+                  )
+                  : DrinkGrid(drinks: drinks),
+              ),
+          ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(

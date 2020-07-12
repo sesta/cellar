@@ -16,7 +16,12 @@ class DrinkGrid extends StatelessWidget {
       crossAxisCount: 2,
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.only(
+        top: 16,
+        left: 16,
+        right: 16,
+        bottom: 64,
+      ),
       childAspectRatio: IMAGE_ASPECT_RATIO,
       children: drinks.map<Widget>((drink) {
         return GestureDetector(

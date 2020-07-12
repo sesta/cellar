@@ -118,9 +118,9 @@ class _DrinkPageState extends State<DrinkPage> {
                               ? CachedNetworkImage(
                                 placeholder: (context, url) => Image(
                                     image: NetworkImage(
-                                      widget.drink.thumbImageUrl,
-                                    ),
-                                    fit: BoxFit.contain,
+                                  widget.drink.thumbImageUrl,
+                                ),
+                                  fit: BoxFit.contain,
                                   ),
                                 imageUrl: widget.drink.imageUrls.first,
                                 fit: BoxFit.contain,
