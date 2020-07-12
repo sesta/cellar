@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
+import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/models/post.dart';
@@ -399,7 +400,7 @@ class _ImagePreviewState extends State<ImagePreview> {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: AspectRatio(
-            aspectRatio: 1,
+            aspectRatio: IMAGE_ASPECT_RATIO,
             child: bigImage == null ? (
               GestureDetector(
                 child: Material(
@@ -459,7 +460,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                 child: Padding(
                   padding: EdgeInsets.only(left: 4, right: 4),
                   child: AspectRatio(
-                    aspectRatio: 1,
+                    aspectRatio: IMAGE_ASPECT_RATIO,
                     child: content,
                   ),
                 ),
