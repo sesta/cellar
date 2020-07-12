@@ -27,6 +27,7 @@ dependencies:
   carousel_slider: ^2.2.1
 
   flutter_launcher_icons: ^0.7.5
+  flutter_native_splash: ^0.1.9
 
 dev_dependencies:
   flutter_test:
@@ -34,7 +35,12 @@ dev_dependencies:
 
 flutter_icons:
   ios: true
-  image_path: "assets/icon/icon.png"
+  image_path: "assets/images/icon.png"
+
+flutter_native_splash:
+  image: "assets/images/splash.png"
+  color: "607D8B"
+  android: false
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
