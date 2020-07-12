@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entities/drink.dart';
 
 class DrinkGrid extends StatelessWidget {
@@ -15,7 +16,7 @@ class DrinkGrid extends StatelessWidget {
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
       padding: EdgeInsets.all(16),
-      childAspectRatio: 1,
+      childAspectRatio: IMAGE_ASPECT_RATIO,
       children: drinks.map<Widget>((drink) {
         return Hero(
           tag: drink.thumbImageUrl,
