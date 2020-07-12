@@ -33,7 +33,7 @@ flutter_icons:
   image_path: "assets/images/icon.png"
 
 flutter_native_splash:
-  image: "images/splash.png"
+  image: "assets/images/splash.png"
   color: "607D8B"
   android: false
 
