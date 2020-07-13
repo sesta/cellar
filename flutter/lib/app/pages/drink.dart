@@ -30,6 +30,7 @@ class _DrinkPageState extends State<DrinkPage> {
   ScrollController scrollController = ScrollController();
   // 連続でpopが発生しないように、状態を持っておく
   bool isPop = false;
+  bool isEdited = false;
 
   @override
   void initState() {
@@ -59,6 +60,14 @@ class _DrinkPageState extends State<DrinkPage> {
     });
   }
 
+  _editDrink() async{
+    final isEdited = await Navigator.of(context).pushNamed('/edit', arguments: widget.drink);
+
+    setState(() {
+      this.isEdited = isEdited;
+    });
+  }
+
   Future<void> _popPage() async {
     if (scrollController.position.pixels > -100 || isPop) {
       return;
@@ -67,7 +76,7 @@ class _DrinkPageState extends State<DrinkPage> {
     setState(() {
       this.isPop = true;
     });
-    Navigator.of(context).pop(true);
+    Navigator.of(context).pop(isEdited);
   }
 
   @override
@@ -166,7 +175,7 @@ class _DrinkPageState extends State<DrinkPage> {
                           color: Colors.white
                         ),
                         padding: EdgeInsets.all(8),
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () => Navigator.of(context).pop(isEdited),
                       ),
                     ),
                   ),
@@ -189,7 +198,7 @@ class _DrinkPageState extends State<DrinkPage> {
                               color: Colors.white
                           ),
                           padding: EdgeInsets.all(8),
-                          onPressed: () => Navigator.of(context).pushNamed('/edit', arguments: widget.drink),
+                          onPressed: _editDrink,
                         ),
                       ),
                     ),
