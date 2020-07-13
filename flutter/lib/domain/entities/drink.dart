@@ -92,7 +92,7 @@ class Drink {
     });
   }
 
-  Future<void> edit() async{
+  Future<void> save() async{
     if (drinkId == null) {
       throw '更新するためにはdrinkIdが必要です';
     }

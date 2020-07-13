@@ -85,6 +85,10 @@ class _EditPageState extends State<EditPage> {
       this.uploading = true;
     });
 
+    if (drinkType != widget.drink.drinkType) {
+      widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index] --;
+      widget.user.drinkTypeUploadCounts[drinkType.index] ++;
+    }
     widget.drink.drinkName = nameController.text;
     widget.drink.drinkType = drinkType;
     widget.drink.subDrinkType = subDrinkType;
@@ -93,7 +97,8 @@ class _EditPageState extends State<EditPage> {
     widget.drink.price = priceController.text == '' ? 0 : int.parse(priceController.text);
     widget.drink.place = placeController.text;
 
-    await widget.drink.edit();
+    await widget.drink.save();
+    await widget.user.save();
 
     Navigator.of(context).pop(true);
   }
