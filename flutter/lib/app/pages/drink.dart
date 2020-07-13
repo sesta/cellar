@@ -189,7 +189,7 @@ class _DrinkPageState extends State<DrinkPage> {
                               color: Colors.white
                           ),
                           padding: EdgeInsets.all(8),
-                          onPressed: () => Navigator.of(context).pushNamed('/drink', arguments: widget.drink),
+                          onPressed: () => Navigator.of(context).pushNamed('/edit', arguments: widget.drink),
                         ),
                       ),
                     ),

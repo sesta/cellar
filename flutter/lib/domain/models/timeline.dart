@@ -50,6 +50,7 @@ Future<List<Drink>> getTimelineImageUrls(TimelineType timelineType, {
     data['imagePaths'].cast<String>(),
     data['firstImageWidth'],
     data['firstImageHeight'],
+    drinkId: data.documentID,
   )).toList();
 
   await Future.forEach(drinks, (drink) async {

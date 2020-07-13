@@ -25,8 +25,6 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  List<Asset> imageAssets = [];
-  List<List<int>> images = [];
   DrinkType drinkType;
   SubDrinkType subDrinkType = SubDrinkType.Empty;
   int score = 3;
@@ -40,6 +38,20 @@ class _EditPageState extends State<EditPage> {
   @override
   void initState() {
     super.initState();
+
+    nameController.text = widget.drink.drinkName;
+    memoController.text = widget.drink.memo;
+    placeController.text = widget.drink.place;
+
+    if (widget.drink.price > 0) {
+      priceController.text = widget.drink.price.toString();
+    }
+
+    setState(() {
+      this.drinkType = widget.drink.drinkType;
+      this.subDrinkType = widget.drink.subDrinkType;
+      this.score = widget.drink.score;
+    });
   }
 
   void _updateDrinkType(DrinkType drinkType) {
@@ -61,44 +73,10 @@ class _EditPageState extends State<EditPage> {
     });
   }
 
-  void _getImageList() async {
-    List<Asset> resultList;
-    try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 5 - this.images.length,
-      );
-    } catch (e) {
-      return ;
-    }
-
-    if (resultList == null || resultList.length == 0) {
-      return ;
-    }
-
-    List<List<int>> images = this.images;
-    await Future.forEach(resultList, (Asset result) async {
-      final data = await result.getByteData();
-      images.add(data.buffer.asUint8List());
-    });
-
-    setState(() {
-      this.imageAssets = this.imageAssets + resultList;
-      this.images = images;
-    });
-  }
-
-  void _removeImage(int index) {
-    setState(() {
-      this.imageAssets.removeAt(index);
-      this.images.removeAt(index);
-    });
-  }
-
-  void _postDrink() async {
+  void _updateDrink() async {
     if (
-    images.length == 0
-        || nameController.text == ''
-        || drinkType == null
+      nameController.text == ''
+      || drinkType == null
     ) {
       return;
     }
@@ -107,18 +85,15 @@ class _EditPageState extends State<EditPage> {
       this.uploading = true;
     });
 
-    await post(
-      widget.user,
-      widget.user.userName,
-      imageAssets,
-      nameController.text,
-      drinkType,
-      subDrinkType,
-      score,
-      memoController.text,
-      priceController.text == '' ? 0 : int.parse(priceController.text),
-      placeController.text,
-    );
+    widget.drink.drinkName = nameController.text;
+    widget.drink.drinkType = drinkType;
+    widget.drink.subDrinkType = subDrinkType;
+    widget.drink.score =  score;
+    widget.drink.memo = memoController.text;
+    widget.drink.price = priceController.text == '' ? 0 : int.parse(priceController.text);
+    widget.drink.place = placeController.text;
+
+    await widget.drink.edit();
 
     Navigator.of(context).pop(true);
   }
@@ -140,11 +115,6 @@ class _EditPageState extends State<EditPage> {
           SingleChildScrollView(
             child: Column(
               children: [
-                ImagePreview(
-                  images: images,
-                  addImage: _getImageList,
-                  removeImage: _removeImage,
-                ),
 
                 Padding(
                   padding: EdgeInsets.only(top: 32, right: 16, left: 16, bottom: 80),
@@ -282,9 +252,9 @@ class _EditPageState extends State<EditPage> {
                         padding: EdgeInsets.only(top: 64),
                         child: Center(
                           child: RaisedButton(
-                            onPressed: _postDrink,
+                            onPressed: _updateDrink,
                             child: Text(
-                              '投稿する',
+                              '更新する',
                               style: TextStyle(
                                 fontSize: 18,
                               ),
@@ -313,160 +283,6 @@ class _EditPageState extends State<EditPage> {
           ) : Container(),
         ],
       ),
-    );
-  }
-}
-
-class ImagePreview extends StatefulWidget {
-  ImagePreview({
-    Key key,
-    this.images,
-    this.addImage,
-    this.removeImage,
-  }) : super(key: key);
-
-  final List<List<int>> images;
-  final addImage;
-  final removeImage;
-
-  @override
-  _ImagePreviewState createState() => _ImagePreviewState();
-}
-
-class _ImagePreviewState extends State<ImagePreview> {
-  List<int> bigImage;
-
-  _updateIndex(image) {
-    setState(() {
-      this.bigImage = image;
-    });
-  }
-
-  _removeImage(int index) {
-    widget.removeImage(index);
-
-    setState(() {
-      this.bigImage = widget.images.length == 0 ? null : widget.images[0];
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (bigImage == null && widget.images.length > 0) {
-      setState(() {
-        this.bigImage = widget.images[0];
-      });
-    }
-
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: AspectRatio(
-            aspectRatio: IMAGE_ASPECT_RATIO,
-            child: bigImage == null ? (
-                GestureDetector(
-                  child: Material(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                    clipBehavior: Clip.antiAlias,
-                    color: Theme.of(context).primaryColorLight,
-                    child: Icon(Icons.add, size: 48, color: Colors.black87),
-                  ),
-                  onTap: widget.addImage,
-                )
-            ) : (
-                Material(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                  clipBehavior: Clip.antiAlias,
-                  child: Image(
-                    image: MemoryImage(bigImage),
-                    fit: BoxFit.cover,
-                  ),
-                )
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 12, right: 12),
-          child: Row(
-            children: List.generate(5, (i)=> i).map<Widget>((index) {
-              Widget content = Material();
-              if (index < widget.images.length) {
-                content = Stack(
-                  overflow: Overflow.visible,
-                  children: <Widget>[
-                    GestureDetector(
-                      child: AspectRatio(
-                        aspectRatio: IMAGE_ASPECT_RATIO,
-                        child: Material(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                          clipBehavior: Clip.antiAlias,
-                          child: Image(
-                            image: MemoryImage(widget.images[index]),
-                            fit: BoxFit.cover,
-                            color: Color.fromRGBO(255, 255, 255, widget.images[index] == bigImage ? 1 : 0.3),
-                            colorBlendMode: BlendMode.modulate,
-                          ),
-                        ),
-                      ),
-                      onTap: () => _updateIndex(widget.images[index]),
-                    ),
-                    Positioned(
-                        top: -8,
-                        right: -8,
-                        child: Container(
-                          height: 28,
-                          width: 28,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: SizedBox(
-                            height: 28,
-                            width: 28,
-                            child: IconButton(
-                              onPressed: () => _removeImage(index),
-                              padding: EdgeInsets.all(2),
-                              icon: Icon(
-                                  Icons.close,
-                                  size: 16,
-                                  color: Colors.white
-                              ),
-                              color: Colors.orangeAccent,
-                              splashColor: Colors.transparent,
-                            ),
-                          ),
-                        )
-                    ),
-                  ],
-                );
-              }
-
-              if (index == widget.images.length) {
-                content = GestureDetector(
-                  child: AspectRatio(
-                    aspectRatio: IMAGE_ASPECT_RATIO,
-                    child: Material(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                      clipBehavior: Clip.antiAlias,
-                      color: Theme.of(context).primaryColorLight,
-                      child: Icon(Icons.add, color: Colors.black87),
-                    ),
-                  ),
-                  onTap: widget.addImage,
-                );
-              }
-
-              return Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 4, right: 4),
-                  child: content,
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
     );
   }
 }
