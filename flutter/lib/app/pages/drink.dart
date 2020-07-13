@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
 import 'package:cellar/app/widget/atoms/main_text.dart';
@@ -10,8 +11,13 @@ import 'package:cellar/app/widget/atoms/normal_text.dart';
 
 
 class DrinkPage extends StatefulWidget {
-  DrinkPage({Key key, this.drink}) : super(key: key);
+  DrinkPage({
+    Key key,
+    this.user,
+    this.drink,
+  }) : super(key: key);
 
+  final User user;
   final Drink drink;
 
   @override
@@ -164,6 +170,29 @@ class _DrinkPageState extends State<DrinkPage> {
                       ),
                     ),
                   ),
+                  widget.user.userId != widget.drink.userId ? Container()
+                    : Positioned(
+                      top: MediaQuery.of(context).padding.top,
+                      right: 16,
+                      child: Container(
+                        alignment: Alignment.topRight,
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.black87.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: IconButton(
+                          icon: Icon(
+                              Icons.edit,
+                              size: 20,
+                              color: Colors.white
+                          ),
+                          padding: EdgeInsets.all(8),
+                          onPressed: () => Navigator.of(context).pushNamed('/drink', arguments: widget.drink),
+                        ),
+                      ),
+                    ),
                   imageLength == 1 ? Container()
                     :Positioned(
                       bottom: 0,
