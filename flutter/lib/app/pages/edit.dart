@@ -163,6 +163,10 @@ class _EditPageState extends State<EditPage> {
       return;
     }
 
+    setState(() {
+      this.uploading = true;
+    });
+
     if (widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index] > 0) {
       widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index]--;
       await widget.user.save();
