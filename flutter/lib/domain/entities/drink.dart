@@ -115,6 +115,14 @@ class Drink {
     }, drinkId);
   }
 
+  Future<void> delete() async{
+    if (drinkId == null) {
+      throw '削除するためにはdrinkIdが必要です';
+    }
+
+    await deleteData('drinks', drinkId);
+  }
+
   @override
   String toString() {
     return 'drinkName: $drinkName, '

@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/entities/user.dart';
-import 'package:cellar/domain/models/post.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 
@@ -100,7 +98,70 @@ class _EditPageState extends State<EditPage> {
     await widget.drink.save();
     await widget.user.save();
 
-    Navigator.of(context).pop(true);
+    Navigator.of(context).pop(false);
+  }
+
+  void _confirmDelete() async { // カメラは大変なのであとで
+    final isDelete = await showModalBottomSheet<bool>(
+        context: context,
+        builder: (BuildContext context){
+          return Container(
+            height: 240,
+            padding: EdgeInsets.all(24.0),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: NormalText(
+                    '削除した投稿は復元できません。\n本当に削除してよろしいですか？',
+                    multiLine: true,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    RaisedButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text(
+                        '削除する',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      color: Colors.redAccent,
+                      textColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.only(right: 32)),
+                    RaisedButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text(
+                        'やめる',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      color: Theme.of(context).accentColor,
+                      textColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        }
+    );
+
+    if (isDelete != null && isDelete) {
+      widget.drink.delete();
+
+      Navigator.of(context).pop(true);
+    }
   }
 
   @override
@@ -255,21 +316,39 @@ class _EditPageState extends State<EditPage> {
 
                       Padding(
                         padding: EdgeInsets.only(top: 64),
-                        child: Center(
-                          child: RaisedButton(
-                            onPressed: _updateDrink,
-                            child: Text(
-                              '更新する',
-                              style: TextStyle(
-                                fontSize: 18,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            RaisedButton(
+                              onPressed: _confirmDelete,
+                              child: Text(
+                                '削除する',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              color: Colors.redAccent,
+                              textColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
                               ),
                             ),
-                            color: Theme.of(context).accentColor,
-                            textColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
+                            Padding(padding: EdgeInsets.only(right: 32)),
+                            RaisedButton(
+                              onPressed: _updateDrink,
+                              child: Text(
+                                '更新する',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              color: Theme.of(context).accentColor,
+                              textColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ],

@@ -80,3 +80,13 @@ Future<List<DocumentSnapshot>> getUploadCounts() async {
 
   return snapshot.documents;
 }
+
+Future<void> deleteData(
+  String documentName,
+  String documentId
+) async {
+  await firestoreInstance
+    .collection(documentName)
+    .document(documentId)
+    .delete();
+}
