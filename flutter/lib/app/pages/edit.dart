@@ -84,8 +84,10 @@ class _EditPageState extends State<EditPage> {
     });
 
     if (drinkType != widget.drink.drinkType) {
-      widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index] --;
       widget.user.drinkTypeUploadCounts[drinkType.index] ++;
+      if (widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index] > 0) {
+        widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index] --;
+      }
     }
     widget.drink.drinkName = nameController.text;
     widget.drink.drinkType = drinkType;
@@ -157,11 +159,16 @@ class _EditPageState extends State<EditPage> {
         }
     );
 
-    if (isDelete != null && isDelete) {
-      widget.drink.delete();
-
-      Navigator.of(context).pop(true);
+    if (isDelete == null || !isDelete) {
+      return;
     }
+
+    if (widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index] > 0) {
+      widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index]--;
+      await widget.user.save();
+    }
+    await widget.drink.delete();
+    Navigator.of(context).pop(true);
   }
 
   @override
