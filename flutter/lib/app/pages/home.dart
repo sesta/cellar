@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cellar/app/widget/atoms/label_test.dart';
 import 'package:cellar/repository/provider/firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +8,8 @@ import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/models/timeline.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
+import 'package:cellar/app/widget/atoms/label_test.dart';
+import 'package:cellar/app/widget/atoms/main_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -245,10 +246,18 @@ class _HomePageState extends State<HomePage> {
                     physics: AlwaysScrollableScrollPhysics(),
                     child: Padding(
                       padding: const EdgeInsets.only(
-                        top: 64,
-                        bottom: 300,
+                        top: 200,
+                        bottom: 100,
                       ),
-                      child: NormalText('見つかりませんでした'),
+                      child: Column(
+                        children: <Widget>[
+                          NormalText('投稿したお酒が表示されます'),
+                          Padding(padding: EdgeInsets.only(bottom: 140)),
+                          MainText('投稿はこちら'),
+                          Padding(padding: EdgeInsets.only(bottom: 16)),
+                          Icon(Icons.arrow_downward),
+                        ],
+                      ),
                     ),
                   )
                   : DrinkGrid(drinks: drinks, updateDrink: _updateDrink),

@@ -284,10 +284,8 @@ class _DrinkPageState extends State<DrinkPage> {
                       padding: EdgeInsets.only(bottom: 8),
                       child: Wrap(
                         children: <Widget>[
-                          LabelText(widget.drink.subDrinkType == SubDrinkType.Empty
-                            ? widget.drink.drinkTypeLabel
-                            : widget.drink.subDrinkTypeLabel
-                          ),
+                          LabelText(widget.drink.drinkTypeLabel),
+                          widget.drink.subDrinkType == SubDrinkType.Empty ? Container() : LabelText(widget.drink.subDrinkTypeLabel),
                           widget.drink.price == 0 ? Container() : LabelText(widget.drink.priceString),
                           widget.drink.place == '' ? Container() : LabelText(widget.drink.place),
                         ],
