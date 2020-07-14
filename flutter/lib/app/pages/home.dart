@@ -127,6 +127,17 @@ class _HomePageState extends State<HomePage> {
     throw 'timelineTypeの考慮漏れです';
   }
 
+  _updateDrink(int index, bool isDelete) {
+    if (isDelete) {
+      setState(() {
+        this.drinks.removeAt(index);
+      });
+      return;
+    }
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -240,7 +251,7 @@ class _HomePageState extends State<HomePage> {
                       child: NormalText('見つかりませんでした'),
                     ),
                   )
-                  : DrinkGrid(drinks: drinks),
+                  : DrinkGrid(drinks: drinks, updateDrink: _updateDrink),
               ),
           ),
         ],

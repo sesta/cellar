@@ -6,10 +6,27 @@ import 'package:cellar/domain/entities/drink.dart';
 
 class DrinkGrid extends StatelessWidget {
   final List<Drink> drinks;
-  DrinkGrid({this.drinks});
+  final updateDrink;
+  DrinkGrid({
+    this.drinks,
+    this.updateDrink,
+  });
+
+  _pop(BuildContext context, int index, Drink drink) async {
+    final isDelete = await Navigator.of(context).pushNamed('/drink', arguments: drink);
+    updateDrink(index, isDelete);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> drinkWidgets = [];
+    drinks.asMap().forEach((index, drink) {
+      drinkWidgets.add(GestureDetector(
+        child: GridItem(drink),
+        onTap: () => _pop(context, index, drink),
+      ));
+    });
+
     return GridView.count(
       physics: AlwaysScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -23,12 +40,7 @@ class DrinkGrid extends StatelessWidget {
         bottom: 64,
       ),
       childAspectRatio: IMAGE_ASPECT_RATIO,
-      children: drinks.map<Widget>((drink) {
-        return GestureDetector(
-          child: GridItem(drink),
-          onTap: () => Navigator.of(context).pushNamed('/drink', arguments: drink),
-        );
-      }).toList(),
+      children: drinkWidgets,
     );
   }
 }
