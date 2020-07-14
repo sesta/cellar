@@ -5,6 +5,7 @@ import 'package:cellar/repository/provider/firestore.dart';
 import 'package:cellar/repository/provider/storage.dart';
 
 class Drink {
+  String drinkId;
   String userId;
   String userName;
   String drinkName;
@@ -24,20 +25,23 @@ class Drink {
   int firstImageHeight;
 
   Drink(
-      this.userId,
-      this.userName,
-      this.drinkName,
-      this.drinkType,
-      this.subDrinkType,
-      this.score,
-      this.memo,
-      this.price,
-      this.place,
-      this.postDatetime,
-      this.thumbImagePath,
-      this.imagePaths,
-      this.firstImageWidth,
-      this.firstImageHeight,
+    this.userId,
+    this.userName,
+    this.drinkName,
+    this.drinkType,
+    this.subDrinkType,
+    this.score,
+    this.memo,
+    this.price,
+    this.place,
+    this.postDatetime,
+    this.thumbImagePath,
+    this.imagePaths,
+    this.firstImageWidth,
+    this.firstImageHeight,
+    {
+      this.drinkId,
+    }
   );
 
   init() async {
@@ -86,6 +90,37 @@ class Drink {
       'firstImageWidth': firstImageWidth,
       'firstImageHeight': firstImageHeight,
     });
+  }
+
+  Future<void> save() async{
+    if (drinkId == null) {
+      throw '更新するためにはdrinkIdが必要です';
+    }
+
+    await saveData('drinks', {
+      'userId': userId,
+      'userName': userName,
+      'drinkName': drinkName,
+      'drinkTypeIndex': drinkType.index,
+      'subDrinkTypeIndex': subDrinkType.index,
+      'score': score,
+      'memo': memo,
+      'price': price,
+      'place': place,
+      'postTimestamp': postDatetime.millisecondsSinceEpoch,
+      'thumbImagePath': thumbImagePath,
+      'imagePaths': imagePaths,
+      'firstImageWidth': firstImageWidth,
+      'firstImageHeight': firstImageHeight,
+    }, drinkId);
+  }
+
+  Future<void> delete() async{
+    if (drinkId == null) {
+      throw '削除するためにはdrinkIdが必要です';
+    }
+
+    await deleteData('drinks', drinkId);
   }
 
   @override

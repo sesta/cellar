@@ -145,6 +145,13 @@ class _PostPageState extends State<PostPage> {
     });
   }
 
+  void _removeImage(int index) {
+    setState(() {
+      this.imageAssets.removeAt(index);
+      this.images.removeAt(index);
+    });
+  }
+
   void _postDrink() async {
     if (
       images.length == 0
@@ -191,7 +198,11 @@ class _PostPageState extends State<PostPage> {
           SingleChildScrollView(
             child: Column(
               children: [
-                ImagePreview(images: images, addImage: _getImageList),
+                ImagePreview(
+                  images: images,
+                  addImage: _getImageList,
+                  removeImage: _removeImage,
+                ),
 
                 Padding(
                   padding: EdgeInsets.only(top: 32, right: 16, left: 16, bottom: 80),
@@ -369,10 +380,12 @@ class ImagePreview extends StatefulWidget {
     Key key,
     this.images,
     this.addImage,
+    this.removeImage,
   }) : super(key: key);
 
   final List<List<int>> images;
   final addImage;
+  final removeImage;
 
   @override
   _ImagePreviewState createState() => _ImagePreviewState();
@@ -384,6 +397,14 @@ class _ImagePreviewState extends State<ImagePreview> {
   _updateIndex(image) {
     setState(() {
       this.bigImage = image;
+    });
+  }
+
+  _removeImage(int index) {
+    widget.removeImage(index);
+
+    setState(() {
+      this.bigImage = widget.images.length == 0 ? null : widget.images[0];
     });
   }
 
@@ -429,28 +450,66 @@ class _ImagePreviewState extends State<ImagePreview> {
             children: List.generate(5, (i)=> i).map<Widget>((index) {
               Widget content = Material();
               if (index < widget.images.length) {
-                content = GestureDetector(
-                  child: Material(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                    clipBehavior: Clip.antiAlias,
-                    child: Image(
-                      image: MemoryImage(widget.images[index]),
-                      fit: BoxFit.cover,
-                      color: Color.fromRGBO(255, 255, 255, widget.images[index] == bigImage ? 0.76 : 1),
-                      colorBlendMode: BlendMode.modulate,
+                content = Stack(
+                  overflow: Overflow.visible,
+                  children: <Widget>[
+                    GestureDetector(
+                      child: AspectRatio(
+                        aspectRatio: IMAGE_ASPECT_RATIO,
+                        child: Material(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          clipBehavior: Clip.antiAlias,
+                          child: Image(
+                            image: MemoryImage(widget.images[index]),
+                            fit: BoxFit.cover,
+                            color: Color.fromRGBO(255, 255, 255, widget.images[index] == bigImage ? 1 : 0.3),
+                            colorBlendMode: BlendMode.modulate,
+                          ),
+                        ),
+                      ),
+                      onTap: () => _updateIndex(widget.images[index]),
                     ),
-                  ),
-                  onTap: () => _updateIndex(widget.images[index]),
+                    Positioned(
+                      top: -8,
+                      right: -8,
+                      child: Container(
+                        height: 28,
+                        width: 28,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: SizedBox(
+                          height: 28,
+                          width: 28,
+                          child: IconButton(
+                            onPressed: () => _removeImage(index),
+                            padding: EdgeInsets.all(2),
+                            icon: Icon(
+                              Icons.close,
+                              size: 16,
+                              color: Colors.white
+                            ),
+                            color: Colors.orangeAccent,
+                            splashColor: Colors.transparent,
+                          ),
+                        ),
+                      )
+                    ),
+                  ],
                 );
               }
 
               if (index == widget.images.length) {
                 content = GestureDetector(
-                  child: Material(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                    clipBehavior: Clip.antiAlias,
-                    color: Theme.of(context).primaryColorLight,
-                    child: Icon(Icons.add, color: Colors.black87),
+                  child: AspectRatio(
+                    aspectRatio: IMAGE_ASPECT_RATIO,
+                    child: Material(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      clipBehavior: Clip.antiAlias,
+                      color: Theme.of(context).primaryColorLight,
+                      child: Icon(Icons.add, color: Colors.black87),
+                    ),
                   ),
                   onTap: widget.addImage,
                 );
@@ -459,10 +518,7 @@ class _ImagePreviewState extends State<ImagePreview> {
               return Expanded(
                 child: Padding(
                   padding: EdgeInsets.only(left: 4, right: 4),
-                  child: AspectRatio(
-                    aspectRatio: IMAGE_ASPECT_RATIO,
-                    child: content,
-                  ),
+                  child: content,
                 ),
               );
             }).toList(),
