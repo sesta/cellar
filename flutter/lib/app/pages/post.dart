@@ -150,6 +150,12 @@ class _PostPageState extends State<PostPage> {
     });
   }
 
+  get disablePost {
+    return images.length == 0
+      || nameController.text == ''
+      || drinkType == null;
+  }
+
   void _removeImage(int index) {
     setState(() {
       this.imageAssets.removeAt(index);
@@ -158,11 +164,7 @@ class _PostPageState extends State<PostPage> {
   }
 
   void _postDrink() async {
-    if (
-      images.length == 0
-      || nameController.text == ''
-      || drinkType == null
-    ) {
+    if (disablePost) {
       return;
     }
 
@@ -217,7 +219,8 @@ class _PostPageState extends State<PostPage> {
                       NormalText('名前 *'),
                       NormalTextField(
                         nameController,
-                        bold: true
+                        onChanged: (_) => setState(() {}),
+                        bold: true,
                       ),
                       Padding(padding: EdgeInsets.only(bottom: 24)),
 
@@ -345,7 +348,7 @@ class _PostPageState extends State<PostPage> {
                         padding: EdgeInsets.only(top: 64),
                         child: Center(
                           child: RaisedButton(
-                            onPressed: _postDrink,
+                            onPressed: disablePost ? null : _postDrink,
                             child: Text(
                               '投稿する',
                               style: TextStyle(
