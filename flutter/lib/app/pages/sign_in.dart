@@ -131,13 +131,16 @@ class _UserFormState extends State<UserForm> {
           NormalText('ニックネーム'),
           NormalTextField(
             nameController,
+            onChanged: (_) => setState(() {}),
             bold: true,
           ),
           Padding(padding: EdgeInsets.only(bottom: 48)),
 
           Center(
             child: RaisedButton(
-              onPressed: () => widget.createUser(nameController.text),
+              onPressed: nameController.text == ''
+                ? null
+                : () => widget.createUser(nameController.text),
               child: Text(
                 '登録を完了する',
                 style: TextStyle(

@@ -11,11 +11,13 @@ class NormalTextField extends StatelessWidget {
   final bool bold;
   final int maxLines;
   final InputType inputType;
+  final onChanged;
 
   NormalTextField(this.controller, {
     this.bold = false,
     this.maxLines = 1,
     this.inputType = InputType.String,
+    this.onChanged,
   });
 
   @override
@@ -30,6 +32,7 @@ class NormalTextField extends StatelessWidget {
 
     return TextField(
       controller: controller,
+      onChanged: onChanged,
       cursorColor: Theme.of(context).accentColor,
       style: TextStyle(
         fontSize: 14,

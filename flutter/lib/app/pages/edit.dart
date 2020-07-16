@@ -68,11 +68,13 @@ class _EditPageState extends State<EditPage> {
     });
   }
 
+  get disablePost {
+    return nameController.text == ''
+      || drinkType == null;
+  }
+
   void _updateDrink() async {
-    if (
-      nameController.text == ''
-      || drinkType == null
-    ) {
+    if (disablePost) {
       return;
     }
 
@@ -198,7 +200,8 @@ class _EditPageState extends State<EditPage> {
                       NormalText('名前 *'),
                       NormalTextField(
                           nameController,
-                          bold: true
+                          onChanged: (_) => setState(() {}),
+                          bold: true,
                       ),
                       Padding(padding: EdgeInsets.only(bottom: 24)),
 
@@ -343,7 +346,7 @@ class _EditPageState extends State<EditPage> {
                             ),
                             Padding(padding: EdgeInsets.only(right: 32)),
                             RaisedButton(
-                              onPressed: _updateDrink,
+                              onPressed: disablePost ? null : _updateDrink,
                               child: Text(
                                 '更新する',
                                 style: TextStyle(
