@@ -90,3 +90,36 @@ Future<void> deleteData(
     .document(documentId)
     .delete();
 }
+
+Future<void> updateDataBatch(
+  String collectionName,
+  Object data,
+  {
+    List<String> whereKeys,
+    List<dynamic> whereEqualValues,
+  }
+) async {
+  final batch = firestoreInstance.batch();
+  Query query = firestoreInstance
+    .collection(collectionName);
+
+  if (whereKeys != null
+    && whereEqualValues != null
+    && whereKeys.length > 0
+    && whereKeys.length == whereEqualValues.length
+  ) {
+    List.generate(whereKeys.length, (index) {
+      query = query.where(
+        whereKeys[index],
+        isEqualTo: whereEqualValues[index],
+      );
+    });
+  }
+
+  final snapshot = await query.getDocuments();
+  snapshot.documents.forEach((DocumentSnapshot document) {
+    batch.updateData(document.reference, data);
+  });
+
+  batch.commit();
+}

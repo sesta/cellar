@@ -1,17 +1,17 @@
 import 'dart:async';
 
-import 'package:cellar/repository/provider/firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/models/timeline.dart';
+import 'package:cellar/repository/provider/firestore.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
 import 'package:cellar/app/widget/atoms/main_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.user}) : super(key: key);
@@ -303,11 +303,18 @@ class _HomePageState extends State<HomePage> {
                 height: 40,
               ),
               Expanded(
-                flex: 2,
-                child: Icon( // 場所の調整のために見えない要素を置く
-                  Icons.no_sim,
-                  size: 32,
-                  color: Colors.transparent,
+                flex: 1,
+                child: Container(height: 0),
+              ),
+              Expanded(
+                flex: 1,
+                child: IconButton(
+                  onPressed: () => Navigator.of(context).pushNamed('/setting'),
+                  icon: Icon(
+                    Icons.settings,
+                    size: 32,
+                    color: Theme.of(context).primaryColorLight,
+                  ),
                 ),
               ),
             ],

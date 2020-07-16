@@ -8,6 +8,7 @@ import 'package:cellar/app/pages/drink.dart';
 import 'package:cellar/app/pages/post.dart';
 import 'package:cellar/app/pages/edit.dart';
 import 'package:cellar/app/pages/sign_in.dart';
+import 'package:cellar/app/pages/setting.dart';
 
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
@@ -61,6 +62,9 @@ class _CellarState extends State<Cellar> {
         if (settings.name == '/edit') {
           final Drink drink = settings.arguments;
           return slideUpRoute(EditPage(user: user, drink: drink));
+        }
+        if (settings.name == '/setting') {
+          return slideUpRoute(SettingPage(user: user));
         }
 
         return MaterialPageRoute(builder: (context) => SplashPage(setUser: _setUser));
