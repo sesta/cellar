@@ -133,6 +133,10 @@ class _PostPageState extends State<PostPage> {
       return ;
     }
 
+    setState(() {
+      this.loading = true;
+    });
+
     List<List<int>> images = this.images;
     await Future.forEach(resultList, (Asset result) async {
       final data = await result.getByteData();
@@ -142,6 +146,7 @@ class _PostPageState extends State<PostPage> {
     setState(() {
       this.imageAssets = this.imageAssets + resultList;
       this.images = images;
+      this.loading = false;
     });
   }
 
