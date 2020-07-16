@@ -30,7 +30,7 @@ class _PostPageState extends State<PostPage> {
   DrinkType drinkType;
   SubDrinkType subDrinkType = SubDrinkType.Empty;
   int score = 3;
-  bool uploading = false;
+  bool loading = false;
 
   final nameController = TextEditingController();
   final memoController = TextEditingController();
@@ -133,6 +133,10 @@ class _PostPageState extends State<PostPage> {
       return ;
     }
 
+    setState(() {
+      this.loading = true;
+    });
+
     List<List<int>> images = this.images;
     await Future.forEach(resultList, (Asset result) async {
       final data = await result.getByteData();
@@ -142,6 +146,7 @@ class _PostPageState extends State<PostPage> {
     setState(() {
       this.imageAssets = this.imageAssets + resultList;
       this.images = images;
+      this.loading = false;
     });
   }
 
@@ -162,7 +167,7 @@ class _PostPageState extends State<PostPage> {
     }
 
     setState(() {
-      this.uploading = true;
+      this.loading = true;
     });
 
     await post(
@@ -361,7 +366,7 @@ class _PostPageState extends State<PostPage> {
               ],
             ),
           ),
-          uploading ? Container(
+          loading ? Container(
             color: Colors.black38,
             alignment: Alignment.center,
             child: CircularProgressIndicator(
