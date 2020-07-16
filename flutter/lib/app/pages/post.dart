@@ -30,7 +30,7 @@ class _PostPageState extends State<PostPage> {
   DrinkType drinkType;
   SubDrinkType subDrinkType = SubDrinkType.Empty;
   int score = 3;
-  bool uploading = false;
+  bool loading = false;
 
   final nameController = TextEditingController();
   final memoController = TextEditingController();
@@ -162,7 +162,7 @@ class _PostPageState extends State<PostPage> {
     }
 
     setState(() {
-      this.uploading = true;
+      this.loading = true;
     });
 
     await post(
@@ -361,7 +361,7 @@ class _PostPageState extends State<PostPage> {
               ],
             ),
           ),
-          uploading ? Container(
+          loading ? Container(
             color: Colors.black38,
             alignment: Alignment.center,
             child: CircularProgressIndicator(
