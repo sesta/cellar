@@ -36,10 +36,18 @@ class User {
   }
 
   Future<void> save() async {
-    saveData('users', {
+    await saveData('users', {
       'userName': userName,
       'drinkTypeUploadCounts': drinkTypeUploadCounts,
     }, userId);
+    updateDataBatch(
+      'drinks',
+      {
+        'userName': userName,
+      },
+      whereKeys: ['userId'],
+      whereEqualValues: [userId],
+    );
   }
 
   @override
