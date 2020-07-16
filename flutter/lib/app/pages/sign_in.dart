@@ -17,8 +17,13 @@ class SignInPage extends StatefulWidget {
 
 class _SignInState extends State<SignInPage> {
   String userId;
+  bool loading = false;
 
   void _checkSignIn() async {
+    setState(() {
+      this.loading = true;
+    });
+
     final firebaseUser = await signIn();
     if (firebaseUser == null) {
       print('SignInに失敗しました');
@@ -34,6 +39,7 @@ class _SignInState extends State<SignInPage> {
 
     setState(() {
       this.userId = firebaseUser.uid;
+      this.loading = false;
     });
   }
 
@@ -41,6 +47,10 @@ class _SignInState extends State<SignInPage> {
     if (userId == null || userName == '') {
       return;
     }
+
+    setState(() {
+      this.loading = true;
+    });
 
     final user = User(userId, userName);
     await user.save();
@@ -54,31 +64,43 @@ class _SignInState extends State<SignInPage> {
       appBar: AppBar(
         title: Text(userId == null ? 'ログイン' : '新規登録'),
       ),
-      body: Center(
-        child: userId == null ? Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            NormalText(
-              'Cellarの利用には\nアカウント認証が必要です。',
-              multiLine: true,
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 32)),
-            RaisedButton(
-              onPressed: _checkSignIn,
-              child: Text(
-                'Googleで認証する',
-                style: TextStyle(
-                  fontSize: 14,
+      body: Stack(
+        children: <Widget>[
+          Center(
+            child: userId == null ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                NormalText(
+                  'Cellarの利用には\nアカウント認証が必要です。',
+                  multiLine: true,
                 ),
-              ),
-              color: Theme.of(context).accentColor,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
+                Padding(padding: EdgeInsets.only(bottom: 32)),
+                RaisedButton(
+                  onPressed: _checkSignIn,
+                  child: Text(
+                    'Googleで認証する',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                  color: Theme.of(context).accentColor,
+                  textColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ]
+            ) : UserForm(createUser: _createUser),
+          ),
+          loading ? Container(
+            color: Colors.black38,
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
-          ]
-        ) : UserForm(createUser: _createUser),
+          ) : Container(),
+        ],
       )
     );
   }
