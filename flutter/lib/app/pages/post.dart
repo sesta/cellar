@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entities/drink.dart';
@@ -120,6 +121,12 @@ class _PostPageState extends State<PostPage> {
   }
 
   void _getImageList() async {
+    final status = await Permission.photos.status;
+    if (status == PermissionStatus.undetermined) {
+      openAppSettings();
+      return;
+    }
+
     List<Asset> resultList;
     try {
       resultList = await MultiImagePicker.pickImages(
