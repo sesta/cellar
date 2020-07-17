@@ -23,6 +23,7 @@ dependencies:
 
   flutter_launcher_icons: ^0.7.5
   flutter_native_splash: ^0.1.9
+  rename: 1.2.0
 
 dev_dependencies:
   flutter_test:
