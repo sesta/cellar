@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cellar/domain/entities/drink.dart';
+import 'package:cellar/repository/drink_repository.dart';
 import 'package:cellar/repository/user_repository.dart';
 
 class User {
@@ -44,7 +45,8 @@ class User {
 
   Future<void> updateName() async {
     await UserRepository().updateUserName(userId, userName);
-    // TODO: drinkも更新する
+    // batch処理なので、awaitしない
+    DrinkRepository().updateUserName(userId, userName);
   }
 
   Future<void> updateUploadCount() async {

@@ -46,6 +46,22 @@ class DrinkRepository extends DB {
     return _toEntities(snapshot.documents);
   }
 
+  Future<void> updateUserName (
+    String userId,
+    String userName,
+  ) async {
+    final snapshot = await db.collection(DRINK_COLLECTION_NAME)
+      .where('userId', isEqualTo: userId)
+      .getDocuments();
+
+    final batch = db.batch();
+    snapshot.documents.forEach((DocumentSnapshot document) {
+      batch.updateData(document.reference, { 'userName': userName });
+    });
+
+    batch.commit();
+  }
+
   Future<List<Drink>> _toEntities(List<DocumentSnapshot> rawData) async {
     final drinks = rawData.map((data) => Drink(
       data['userId'],
