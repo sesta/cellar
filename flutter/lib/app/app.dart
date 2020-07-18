@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 
+import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
 
@@ -25,7 +26,14 @@ class Cellar extends StatefulWidget {
 
 class _CellarState extends State<Cellar> {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
+  Status status;
   User user;
+
+  _setStatus(Status status) {
+    setState(() {
+      this.status = status;
+    });
+  }
 
   _setUser(User user) {
     setState(() {
@@ -46,7 +54,7 @@ class _CellarState extends State<Cellar> {
       ],
       onGenerateRoute: (settings) {
         if (settings.name == '/home') {
-          return fadeInRoute(HomePage(user: user));
+          return fadeInRoute(HomePage(status: status, user: user));
         }
         if (settings.name == '/signIn') {
           return fadeInRoute(SignInPage(setUser: _setUser));
@@ -66,7 +74,7 @@ class _CellarState extends State<Cellar> {
           return slideUpRoute(SettingPage(user: user));
         }
 
-        return MaterialPageRoute(builder: (context) => SplashPage(setUser: _setUser));
+        return MaterialPageRoute(builder: (context) => SplashPage(setStatus: _setStatus, setUser: _setUser));
       },
       debugShowCheckedModeBanner: false,
     );

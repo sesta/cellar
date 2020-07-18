@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
+import 'package:cellar/repository/status_repository.dart';
 import 'package:cellar/repository/user_repository.dart';
 import 'package:cellar/repository/provider/auth.dart';
 
 class SplashPage extends StatefulWidget {
-  SplashPage({Key key, this.setUser}) : super(key: key);
+  SplashPage({
+    Key key,
+    this.setStatus,
+    this.setUser,
+  }) : super(key: key);
 
+  final setStatus;
   final setUser;
 
   @override
@@ -18,6 +24,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
 
     _checkSignIn();
+    StatusRepository().getStatus('production').then((status) => widget.setStatus(status));
   }
 
   _checkSignIn() async {

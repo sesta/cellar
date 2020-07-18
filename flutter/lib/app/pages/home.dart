@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/models/timeline.dart';
-import 'package:cellar/repository/provider/firestore.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
@@ -14,8 +12,13 @@ import 'package:cellar/app/widget/atoms/main_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.user}) : super(key: key);
+  HomePage({
+    Key key,
+    this.user,
+    this.status,
+  }) : super(key: key);
 
+  final Status status;
   final User user;
 
   @override
@@ -27,30 +30,12 @@ class _HomePageState extends State<HomePage> {
   TimelineType timelineType = TimelineType.Mine;
   DrinkType drinkType;
   bool loading = true;
-  int uploadCount = 0;
-  List<int> uploadCounts = List.generate(DrinkType.values.length, (_) => 0);
 
   @override
   initState() {
     super.initState();
 
     _updateTimeline();
-    getUploadCounts().then((rawData) {
-      int count = 0;
-      rawData.sort((DocumentSnapshot dataA, DocumentSnapshot dataB) {
-        final idA = int.parse(dataA.documentID);
-        final idB = int.parse(dataB.documentID);
-        return idA.compareTo(idB);
-      });
-
-      setState(() {
-        this.uploadCounts = rawData.map((data) {
-          count += data['uploadCount'];
-          return data['uploadCount'];
-        }).toList().cast<int>();
-        this.uploadCount = count;
-      });
-    });
   }
 
   _movePostPage() async {
@@ -112,7 +97,7 @@ class _HomePageState extends State<HomePage> {
     if (drinkType == null) {
       switch(timelineType) {
         case TimelineType.All:
-          return uploadCount;
+          return widget.status.uploadCount;
         case TimelineType.Mine:
           return widget.user.uploadCount;
       }
@@ -120,7 +105,7 @@ class _HomePageState extends State<HomePage> {
 
     switch(timelineType) {
       case TimelineType.All:
-        return uploadCounts[drinkType.index];
+        return widget.status.drinkTypeUploadCounts[drinkType.index];
       case TimelineType.Mine:
         return widget.user.drinkTypeUploadCounts[drinkType.index];
     }

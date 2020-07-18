@@ -3,6 +3,7 @@ const String BASE_IMAGE_PATH =  'post_images';
 
 // Firestore Setting
 const PAGE_LIMIT = 50;
+const STATUS_COLLECTION_NAME = 'status';
 const DRINK_COLLECTION_NAME = 'drinks';
 const USER_COLLECTION_NAME = 'users';
 
