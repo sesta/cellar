@@ -4,6 +4,7 @@ const String BASE_IMAGE_PATH =  'post_images';
 // Firestore Setting
 const PAGE_LIMIT = 50;
 const DRINK_COLLECTION_NAME = 'drinks';
+const USER_COLLECTION_NAME = 'users';
 
 // Image Setting
 // スマホに表示する場合に安心できそうな横幅サイズ

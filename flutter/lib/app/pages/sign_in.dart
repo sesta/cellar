@@ -53,7 +53,7 @@ class _SignInState extends State<SignInPage> {
     });
 
     final user = User(userId, userName);
-    await user.save();
+    await user.create();
     widget.setUser(user);
     Navigator.pushReplacementNamed(context, '/home');
   }

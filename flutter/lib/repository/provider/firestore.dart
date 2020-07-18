@@ -6,7 +6,7 @@ import 'package:cellar/domain/entities/drink.dart';
 class DB {
   static Firestore _db = Firestore.instance;
 
-  get db => _db;
+  Firestore get db => _db;
 }
 
 final firestoreInstance = Firestore.instance;

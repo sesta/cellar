@@ -98,7 +98,7 @@ class _EditPageState extends State<EditPage> {
     widget.drink.place = placeController.text;
 
     await widget.drink.save();
-    await widget.user.save();
+    await widget.user.updateUploadCount();
 
     Navigator.of(context).pop(false);
   }
@@ -169,7 +169,7 @@ class _EditPageState extends State<EditPage> {
 
     if (widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index] > 0) {
       widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index]--;
-      await widget.user.save();
+      await widget.user.updateName();
     }
     await widget.drink.delete();
     Navigator.of(context).pop(true);

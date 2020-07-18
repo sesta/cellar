@@ -35,7 +35,7 @@ class _SettingState extends State<SettingPage> {
     });
 
     widget.user.userName = nameController.text;
-    await widget.user.save();
+    await widget.user.updateName();
 
     Navigator.of(context).pop();
   }

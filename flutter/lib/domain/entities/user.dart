@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cellar/domain/entities/drink.dart';
-import 'package:cellar/repository/provider/firestore.dart';
+import 'package:cellar/repository/user_repository.dart';
 
 class User {
   String userId;
@@ -35,19 +35,21 @@ class User {
     this.drinkTypeUploadCounts[drinkType.index] ++;
   }
 
-  Future<void> save() async {
-    await saveData('users', {
+  Future<void> create() async {
+    await UserRepository().createUser(userId, {
       'userName': userName,
       'drinkTypeUploadCounts': drinkTypeUploadCounts,
-    }, userId);
-    updateDataBatch(
-      'drinks',
-      {
-        'userName': userName,
-      },
-      whereKeys: ['userId'],
-      whereEqualValues: [userId],
-    );
+    });
+  }
+
+  Future<void> updateName() async {
+    await UserRepository().updateUserName(userId, userName);
+    // TODO: drinkも更新する
+  }
+
+  Future<void> updateUploadCount() async {
+    await UserRepository().updateUserUploadCount(userId, drinkTypeUploadCounts);
+    // TODO: statusも更新する
   }
 
   @override

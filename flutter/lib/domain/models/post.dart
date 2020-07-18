@@ -59,7 +59,7 @@ Future<void> post(
   drink.add();
 
   user.incrementUploadCount(drinkType);
-  user.save();
+  user.updateUploadCount();
 
   incrementUploadCount(drinkType);
 }
