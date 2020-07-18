@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 
+import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/domain/entities/drink.dart';
+
 import 'package:cellar/app/pages/splash.dart';
 import 'package:cellar/app/pages/home.dart';
 import 'package:cellar/app/pages/drink.dart';
@@ -9,9 +12,6 @@ import 'package:cellar/app/pages/post.dart';
 import 'package:cellar/app/pages/edit.dart';
 import 'package:cellar/app/pages/sign_in.dart';
 import 'package:cellar/app/pages/setting.dart';
-
-import 'package:cellar/domain/entities/user.dart';
-import 'package:cellar/domain/entities/drink.dart';
 
 import 'package:cellar/app/widget/transitions/fade_in_route.dart';
 import 'package:cellar/app/widget/transitions/slide_up_route.dart';
