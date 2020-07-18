@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
+
 import 'package:cellar/app/widget/atoms/label_test.dart';
 import 'package:cellar/app/widget/atoms/main_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
@@ -32,7 +33,7 @@ class _DrinkPageState extends State<DrinkPage> {
   bool isPop = false;
 
   @override
-  void initState() {
+  initState() {
     super.initState();
 
     scrollController.addListener(_popPage);
@@ -46,14 +47,14 @@ class _DrinkPageState extends State<DrinkPage> {
     }
   }
 
-  void _loadImage() async {
+  _loadImage() async {
     await widget.drink.getImageUrls();
     setState(() {
       this.imageLoaded = true;
     });
   }
 
-  void _updatePage(int index, _) {
+  _updatePage(int index, _) {
     setState(() {
       this.carouselPage = index;
     });

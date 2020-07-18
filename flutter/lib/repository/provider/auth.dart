@@ -1,15 +1,11 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-import 'package:cellar/domain/entities/user.dart';
-import 'package:cellar/repository/provider/firestore.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn();
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-Future<User> getSignInUser() async {
+Future<String> getSignInUserId() async {
   GoogleSignInAccount googleCurrentUser = _googleSignIn.currentUser;
 
   try {
@@ -21,16 +17,7 @@ Future<User> getSignInUser() async {
     }
 
     final firebaseUser = await getFirebaseUser(googleCurrentUser);
-    final rawUser = await getDocument('users', firebaseUser.uid);
-    if (rawUser == null) {
-      return null;
-    }
-
-    return User(
-      firebaseUser.uid,
-      rawUser['userName'],
-      drinkTypeUploadCounts: rawUser['drinkTypeUploadCounts'].cast<int>(),
-    );
+    return firebaseUser.uid;
   } catch (e) {
     print(e);
     return null;

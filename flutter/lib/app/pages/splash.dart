@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
+import 'package:cellar/repository/status_repository.dart';
+import 'package:cellar/repository/user_repository.dart';
 import 'package:cellar/repository/provider/auth.dart';
 
 class SplashPage extends StatefulWidget {
-  SplashPage({Key key, this.setUser}) : super(key: key);
+  SplashPage({
+    Key key,
+    this.setStatus,
+    this.setUser,
+  }) : super(key: key);
 
+  final setStatus;
   final setUser;
 
   @override
@@ -13,14 +20,16 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   @override
-  void initState() {
+  initState() {
     super.initState();
 
     _checkSignIn();
+    StatusRepository().getStatus('production').then((status) => widget.setStatus(status));
   }
 
-  void _checkSignIn() async {
-    final user = await getSignInUser();
+  _checkSignIn() async {
+    final userId = await getSignInUserId();
+    final user = await UserRepository().getUser(userId);
     if (user == null) {
       Navigator.pushReplacementNamed(context, '/signIn');
 

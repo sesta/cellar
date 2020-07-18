@@ -1,13 +1,14 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:cellar/conf.dart';
+import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/models/post.dart';
+
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 
@@ -17,8 +18,13 @@ enum UploadMethods {
 }
 
 class PostPage extends StatefulWidget {
-  PostPage({Key key, this.user}) : super(key: key);
+  PostPage({
+    Key key,
+    this.status,
+    this.user,
+  }) : super(key: key);
 
+  final Status status;
   final User user;
 
   @override
@@ -39,7 +45,7 @@ class _PostPageState extends State<PostPage> {
   final placeController = TextEditingController();
 
   @override
-  void initState() {
+  initState() {
     super.initState();
 
     // 初期化が終わってからにするために少し遅らせる
@@ -47,26 +53,26 @@ class _PostPageState extends State<PostPage> {
       .then((_) => _getImageList());
   }
 
-  void _updateDrinkType(DrinkType drinkType) {
+  _updateDrinkType(DrinkType drinkType) {
     setState(() {
       this.drinkType = drinkType;
       this.subDrinkType = SubDrinkType.Empty;
     });
   }
 
-  void _updateSubDrinkType(SubDrinkType subDrinkType) {
+  _updateSubDrinkType(SubDrinkType subDrinkType) {
     setState(() {
       this.subDrinkType = subDrinkType;
     });
   }
 
-  void _updateScore(int score) {
+  _updateScore(int score) {
     setState(() {
       this.score = score;
     });
   }
 
-  void _selectUploadMethod() async { // カメラは大変なのであとで
+  _selectUploadMethod() async { // カメラは大変なのであとで
     final uploadMethod = await showModalBottomSheet<UploadMethods>(
         context: context,
         builder: (BuildContext context){
@@ -163,7 +169,7 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
-  void _getImageList() async {
+  _getImageList() async {
     final status = await Permission.photos.status;
     if (status == PermissionStatus.undetermined) {
       _confirmOpenSetting();
@@ -206,14 +212,14 @@ class _PostPageState extends State<PostPage> {
       || drinkType == null;
   }
 
-  void _removeImage(int index) {
+  _removeImage(int index) {
     setState(() {
       this.imageAssets.removeAt(index);
       this.images.removeAt(index);
     });
   }
 
-  void _postDrink() async {
+  _postDrink() async {
     if (disablePost) {
       return;
     }
@@ -234,6 +240,7 @@ class _PostPageState extends State<PostPage> {
       priceController.text == '' ? 0 : int.parse(priceController.text),
       placeController.text,
     );
+    await widget.status.incrementUploadCount(drinkType);
 
     Navigator.of(context).pop(true);
   }

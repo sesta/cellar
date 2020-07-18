@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:intl/intl.dart';
 
-import 'package:cellar/repository/provider/firestore.dart';
+import 'package:cellar/repository/drink_repository.dart';
 import 'package:cellar/repository/provider/storage.dart';
 
 class Drink {
@@ -73,8 +73,8 @@ class Drink {
     return formatter.format(postDatetime);
   }
 
-  add() {
-    saveData('drinks', {
+  Future<void> create() async {
+    await DrinkRepository().createDrink({
       'userId': userId,
       'userName': userName,
       'drinkName': drinkName,
@@ -92,14 +92,12 @@ class Drink {
     });
   }
 
-  Future<void> save() async{
+  Future<void> update() async{
     if (drinkId == null) {
       throw '更新するためにはdrinkIdが必要です';
     }
 
-    await saveData('drinks', {
-      'userId': userId,
-      'userName': userName,
+    await DrinkRepository().updateDrink(drinkId, {
       'drinkName': drinkName,
       'drinkTypeIndex': drinkType.index,
       'subDrinkTypeIndex': subDrinkType.index,
@@ -107,12 +105,7 @@ class Drink {
       'memo': memo,
       'price': price,
       'place': place,
-      'postTimestamp': postDatetime.millisecondsSinceEpoch,
-      'thumbImagePath': thumbImagePath,
-      'imagePaths': imagePaths,
-      'firstImageWidth': firstImageWidth,
-      'firstImageHeight': firstImageHeight,
-    }, drinkId);
+    });
   }
 
   Future<void> delete() async{
@@ -120,7 +113,7 @@ class Drink {
       throw '削除するためにはdrinkIdが必要です';
     }
 
-    await deleteData('drinks', drinkId);
+    await DrinkRepository().deleteDrink(drinkId);
   }
 
   @override

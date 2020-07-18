@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:cellar/repository/provider/auth.dart';
 import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/repository/user_repository.dart';
+import 'package:cellar/repository/provider/auth.dart';
 
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
@@ -19,7 +20,7 @@ class _SignInState extends State<SignInPage> {
   String userId;
   bool loading = false;
 
-  void _checkSignIn() async {
+  _checkSignIn() async {
     setState(() {
       this.loading = true;
     });
@@ -30,7 +31,8 @@ class _SignInState extends State<SignInPage> {
       return;
     }
 
-    final user = await getSignInUser();
+    final userId = await getSignInUserId();
+    final user = await UserRepository().getUser(userId);
     if (user != null) {
       widget.setUser(user);
       Navigator.of(context).pushReplacementNamed('/home');
@@ -43,7 +45,7 @@ class _SignInState extends State<SignInPage> {
     });
   }
 
-  void _createUser(String userName) async {
+  _createUser(String userName) async {
     if (userId == null || userName == '') {
       return;
     }
@@ -53,7 +55,7 @@ class _SignInState extends State<SignInPage> {
     });
 
     final user = User(userId, userName);
-    await user.save();
+    await user.create();
     widget.setUser(user);
     Navigator.pushReplacementNamed(context, '/home');
   }

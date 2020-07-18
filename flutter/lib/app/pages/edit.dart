@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/entities/user.dart';
+
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 
@@ -31,7 +32,7 @@ class _EditPageState extends State<EditPage> {
   final placeController = TextEditingController();
 
   @override
-  void initState() {
+  initState() {
     super.initState();
 
     nameController.text = widget.drink.drinkName;
@@ -49,20 +50,20 @@ class _EditPageState extends State<EditPage> {
     });
   }
 
-  void _updateDrinkType(DrinkType drinkType) {
+  _updateDrinkType(DrinkType drinkType) {
     setState(() {
       this.drinkType = drinkType;
       this.subDrinkType = SubDrinkType.Empty;
     });
   }
 
-  void _updateSubDrinkType(SubDrinkType subDrinkType) {
+  _updateSubDrinkType(SubDrinkType subDrinkType) {
     setState(() {
       this.subDrinkType = subDrinkType;
     });
   }
 
-  void _updateScore(int score) {
+  _updateScore(int score) {
     setState(() {
       this.score = score;
     });
@@ -73,7 +74,7 @@ class _EditPageState extends State<EditPage> {
       || drinkType == null;
   }
 
-  void _updateDrink() async {
+  _updateDrink() async {
     if (disablePost) {
       return;
     }
@@ -96,13 +97,13 @@ class _EditPageState extends State<EditPage> {
     widget.drink.price = priceController.text == '' ? 0 : int.parse(priceController.text);
     widget.drink.place = placeController.text;
 
-    await widget.drink.save();
-    await widget.user.save();
+    await widget.drink.update();
+    await widget.user.updateUploadCount();
 
     Navigator.of(context).pop(false);
   }
 
-  void _confirmDelete() async { // カメラは大変なのであとで
+  _confirmDelete() async { // カメラは大変なのであとで
     final isDelete = await showModalBottomSheet<bool>(
         context: context,
         builder: (BuildContext context){
@@ -168,7 +169,7 @@ class _EditPageState extends State<EditPage> {
 
     if (widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index] > 0) {
       widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index]--;
-      await widget.user.save();
+      await widget.user.updateName();
     }
     await widget.drink.delete();
     Navigator.of(context).pop(true);
