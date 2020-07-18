@@ -6,7 +6,6 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/entities/user.dart';
-import 'package:cellar/repository/provider/firestore.dart';
 import 'package:cellar/repository/provider/storage.dart';
 
 Future<void> post(
@@ -60,8 +59,6 @@ Future<void> post(
 
   user.incrementUploadCount(drinkType);
   user.updateUploadCount();
-
-  incrementUploadCount(drinkType);
 }
 
 Future<void> uploadImage(Asset image, String path, int expectWidthSize) async {

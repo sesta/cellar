@@ -1,10 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:cellar/conf.dart';
+import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/models/post.dart';
@@ -18,8 +18,13 @@ enum UploadMethods {
 }
 
 class PostPage extends StatefulWidget {
-  PostPage({Key key, this.user}) : super(key: key);
+  PostPage({
+    Key key,
+    this.status,
+    this.user,
+  }) : super(key: key);
 
+  final Status status;
   final User user;
 
   @override
@@ -235,6 +240,7 @@ class _PostPageState extends State<PostPage> {
       priceController.text == '' ? 0 : int.parse(priceController.text),
       placeController.text,
     );
+    await widget.status.incrementUploadCount(drinkType);
 
     Navigator.of(context).pop(true);
   }

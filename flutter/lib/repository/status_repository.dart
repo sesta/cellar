@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cellar/domain/entities/drink.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:cellar/conf.dart';
@@ -15,6 +16,19 @@ class StatusRepository extends DB {
       .getDocuments();
 
     return _toEntity(drinkTypesData.documents);
+  }
+
+  Future<void> incrementUploadCount(
+    String environment,
+    DrinkType drinkType,
+  ) async {
+    await db.collection(STATUS_COLLECTION_NAME)
+      .document(environment)
+      .collection('drinkTypes')
+      .document(drinkType.index.toString())
+      .updateData({
+        'uploadCount': FieldValue.increment(1),
+      });
   }
 
   Status _toEntity(

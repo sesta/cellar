@@ -64,7 +64,7 @@ class _CellarState extends State<Cellar> {
           return slideUpRoute(DrinkPage(user: user, drink: drink));
         }
         if (settings.name == '/post') {
-          return slideUpRoute(PostPage(user: user));
+          return slideUpRoute(PostPage(status: status, user: user));
         }
         if (settings.name == '/edit') {
           final Drink drink = settings.arguments;
