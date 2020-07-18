@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entities/drink.dart';
@@ -119,7 +120,56 @@ class _PostPageState extends State<PostPage> {
     }
   }
 
+  _confirmOpenSetting() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) =>
+        AlertDialog(
+          title: NormalText(
+            "設定に移動してよろしいですか？",
+            bold: true,
+          ),
+          content: NormalText(
+            'アプリの写真へのアクセスが\n許可されていません。',
+            multiLine: true,
+          ),
+          actions: <Widget>[
+            // ボタン領域
+            FlatButton(
+              child: Text(
+                'やめる',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                ),
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+            FlatButton(
+              child: Text(
+                '設定をひらく',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                openAppSettings();
+              },
+            ),
+          ],
+        ),
+    );
+  }
+
   void _getImageList() async {
+    final status = await Permission.photos.status;
+    if (status == PermissionStatus.undetermined) {
+      _confirmOpenSetting();
+      return;
+    }
+
     List<Asset> resultList;
     try {
       resultList = await MultiImagePicker.pickImages(

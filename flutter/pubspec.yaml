@@ -20,6 +20,7 @@ dependencies:
   intl: ^0.16.1
   carousel_slider: ^2.2.1
   cached_network_image: ^2.2.0+1
+  permission_handler: 5.0.1+1
 
   flutter_launcher_icons: ^0.7.5
   flutter_native_splash: ^0.1.9
