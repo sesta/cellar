@@ -56,7 +56,7 @@ Future<void> post(
     firstImageWidth,
     firstImageHeight,
   );
-  drink.add();
+  drink.create();
 
   user.incrementUploadCount(drinkType);
   user.updateUploadCount();

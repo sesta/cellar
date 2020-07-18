@@ -6,6 +6,14 @@ import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/repository/provider/firestore.dart';
 
 class DrinkRepository extends DB {
+  Future<void> createDrink(
+    Object data,
+  ) async {
+    await db.collection(DRINK_COLLECTION_NAME)
+      .document()
+      .setData(data);
+  }
+
   Future<List<Drink>> getPublicDrinks (
     DrinkType drinkType,
   ) async {
@@ -46,6 +54,15 @@ class DrinkRepository extends DB {
     return _toEntities(snapshot.documents);
   }
 
+  Future<void> updateDrink (
+    String drinkId,
+    Object data,
+  ) async {
+    await db.collection(DRINK_COLLECTION_NAME)
+      .document(drinkId)
+      .updateData(data);
+  }
+
   Future<void> updateUserName (
     String userId,
     String userName,
@@ -60,6 +77,14 @@ class DrinkRepository extends DB {
     });
 
     batch.commit();
+  }
+
+  Future<void> deleteDrink(
+    String drinkId,
+  ) async {
+    await db.collection(DRINK_COLLECTION_NAME)
+      .document(drinkId)
+      .delete();
   }
 
   Future<List<Drink>> _toEntities(List<DocumentSnapshot> rawData) async {

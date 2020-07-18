@@ -97,7 +97,7 @@ class _EditPageState extends State<EditPage> {
     widget.drink.price = priceController.text == '' ? 0 : int.parse(priceController.text);
     widget.drink.place = placeController.text;
 
-    await widget.drink.save();
+    await widget.drink.update();
     await widget.user.updateUploadCount();
 
     Navigator.of(context).pop(false);
