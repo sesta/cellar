@@ -16,7 +16,6 @@ import 'package:cellar/app/pages/setting.dart';
 import 'package:cellar/app/widget/transitions/fade_in_route.dart';
 import 'package:cellar/app/widget/transitions/slide_up_route.dart';
 
-
 class Cellar extends StatefulWidget {
   Cellar({Key key}) : super(key: key);
 

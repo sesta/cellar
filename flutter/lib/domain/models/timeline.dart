@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cellar/domain/entities/drink.dart';
+import 'package:cellar/repository/drink_repository.dart';
 import 'package:cellar/repository/provider/firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum TimelineType {
   Mine,
@@ -15,25 +17,25 @@ Future<List<Drink>> getTimelineImageUrls(TimelineType timelineType, {
   final List<String> whereKeys = [];
   final List<dynamic> whereEqualValues = [];
 
+  List<DocumentSnapshot> rawData;
+
   switch (timelineType) {
     // TODO: userIdがなかったらthrowする
     case TimelineType.Mine:
       whereKeys.add('userId');
       whereEqualValues.add(userId);
+      rawData = await getDocuments(
+        'drinks',
+        whereKeys: whereKeys,
+        whereEqualValues: whereEqualValues,
+        orderKey: 'postTimestamp',
+        isDeskOrder: true,
+      );
+      break;
+    case TimelineType.All:
+      rawData = await DrinkRepository().getPublicDrinks(drinkType);
       break;
   }
-  if (drinkType != null) {
-    whereKeys.add('drinkTypeIndex');
-    whereEqualValues.add(drinkType.index);
-  }
-
-  final rawData = await getDocuments(
-    'drinks',
-    whereKeys: whereKeys,
-    whereEqualValues: whereEqualValues,
-    orderKey: 'postTimestamp',
-    isDeskOrder: true,
-  );
 
   final drinks = rawData.map((data) => Drink(
     data['userId'],
