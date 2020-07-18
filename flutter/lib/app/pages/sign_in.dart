@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/repository/user_repository.dart';
 import 'package:cellar/repository/provider/auth.dart';
 
 import 'package:cellar/app/widget/atoms/normal_text.dart';
@@ -30,7 +31,8 @@ class _SignInState extends State<SignInPage> {
       return;
     }
 
-    final user = await getSignInUser();
+    final userId = await getSignInUserId();
+    final user = await UserRepository().getUser(userId);
     if (user != null) {
       widget.setUser(user);
       Navigator.of(context).pushReplacementNamed('/home');

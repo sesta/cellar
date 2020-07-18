@@ -22,7 +22,7 @@ class DrinkRepository extends DB {
     query = query.limit(PAGE_LIMIT);
 
     final snapshot = await query.getDocuments();
-    return _toDrinkEntities(snapshot.documents);
+    return _toEntities(snapshot.documents);
   }
 
   Future<List<Drink>> getUserDrinks (
@@ -43,10 +43,10 @@ class DrinkRepository extends DB {
     query = query.limit(PAGE_LIMIT);
 
     final snapshot = await query.getDocuments();
-    return _toDrinkEntities(snapshot.documents);
+    return _toEntities(snapshot.documents);
   }
 
-  Future<List<Drink>> _toDrinkEntities(List<DocumentSnapshot> rawData) async {
+  Future<List<Drink>> _toEntities(List<DocumentSnapshot> rawData) async {
     final drinks = rawData.map((data) => Drink(
       data['userId'],
       data['userName'],

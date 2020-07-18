@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:cellar/repository/user_repository.dart';
 import 'package:cellar/repository/provider/auth.dart';
 
 class SplashPage extends StatefulWidget {
@@ -20,7 +21,8 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   _checkSignIn() async {
-    final user = await getSignInUser();
+    final userId = await getSignInUserId();
+    final user = await UserRepository().getUser(userId);
     if (user == null) {
       Navigator.pushReplacementNamed(context, '/signIn');
 
