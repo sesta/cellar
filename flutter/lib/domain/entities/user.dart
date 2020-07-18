@@ -31,7 +31,7 @@ class User {
     return types.cast<DrinkType>();
   }
 
-  void incrementUploadCount(DrinkType drinkType) {
+  incrementUploadCount(DrinkType drinkType) {
     this.drinkTypeUploadCounts[drinkType.index] ++;
   }
 

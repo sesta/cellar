@@ -32,7 +32,7 @@ class _DrinkPageState extends State<DrinkPage> {
   bool isPop = false;
 
   @override
-  void initState() {
+  initState() {
     super.initState();
 
     scrollController.addListener(_popPage);
@@ -46,14 +46,14 @@ class _DrinkPageState extends State<DrinkPage> {
     }
   }
 
-  void _loadImage() async {
+  _loadImage() async {
     await widget.drink.getImageUrls();
     setState(() {
       this.imageLoaded = true;
     });
   }
 
-  void _updatePage(int index, _) {
+  _updatePage(int index, _) {
     setState(() {
       this.carouselPage = index;
     });

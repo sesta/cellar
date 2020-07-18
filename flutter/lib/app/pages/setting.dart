@@ -19,13 +19,13 @@ class _SettingState extends State<SettingPage> {
   final nameController = TextEditingController();
 
   @override
-  void initState() {
+  initState() {
     super.initState();
 
     nameController.text = widget.user.userName;
   }
 
-  void _saveUser() async {
+  _saveUser() async {
     if (disableSave) {
       return;
     }

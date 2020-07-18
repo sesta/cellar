@@ -31,7 +31,7 @@ class _EditPageState extends State<EditPage> {
   final placeController = TextEditingController();
 
   @override
-  void initState() {
+  initState() {
     super.initState();
 
     nameController.text = widget.drink.drinkName;
@@ -49,20 +49,20 @@ class _EditPageState extends State<EditPage> {
     });
   }
 
-  void _updateDrinkType(DrinkType drinkType) {
+  _updateDrinkType(DrinkType drinkType) {
     setState(() {
       this.drinkType = drinkType;
       this.subDrinkType = SubDrinkType.Empty;
     });
   }
 
-  void _updateSubDrinkType(SubDrinkType subDrinkType) {
+  _updateSubDrinkType(SubDrinkType subDrinkType) {
     setState(() {
       this.subDrinkType = subDrinkType;
     });
   }
 
-  void _updateScore(int score) {
+  _updateScore(int score) {
     setState(() {
       this.score = score;
     });
@@ -73,7 +73,7 @@ class _EditPageState extends State<EditPage> {
       || drinkType == null;
   }
 
-  void _updateDrink() async {
+  _updateDrink() async {
     if (disablePost) {
       return;
     }
@@ -102,7 +102,7 @@ class _EditPageState extends State<EditPage> {
     Navigator.of(context).pop(false);
   }
 
-  void _confirmDelete() async { // カメラは大変なのであとで
+  _confirmDelete() async { // カメラは大変なのであとで
     final isDelete = await showModalBottomSheet<bool>(
         context: context,
         builder: (BuildContext context){

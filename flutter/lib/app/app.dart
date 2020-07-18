@@ -28,7 +28,7 @@ class _CellarState extends State<Cellar> {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   User user;
 
-  void _setUser(User user) {
+  _setUser(User user) {
     setState(() {
       this.user = user;
     });

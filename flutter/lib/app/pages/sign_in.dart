@@ -19,7 +19,7 @@ class _SignInState extends State<SignInPage> {
   String userId;
   bool loading = false;
 
-  void _checkSignIn() async {
+  _checkSignIn() async {
     setState(() {
       this.loading = true;
     });
@@ -43,7 +43,7 @@ class _SignInState extends State<SignInPage> {
     });
   }
 
-  void _createUser(String userName) async {
+  _createUser(String userName) async {
     if (userId == null || userName == '') {
       return;
     }

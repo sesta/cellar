@@ -39,7 +39,7 @@ class _PostPageState extends State<PostPage> {
   final placeController = TextEditingController();
 
   @override
-  void initState() {
+  initState() {
     super.initState();
 
     // 初期化が終わってからにするために少し遅らせる
@@ -47,26 +47,26 @@ class _PostPageState extends State<PostPage> {
       .then((_) => _getImageList());
   }
 
-  void _updateDrinkType(DrinkType drinkType) {
+  _updateDrinkType(DrinkType drinkType) {
     setState(() {
       this.drinkType = drinkType;
       this.subDrinkType = SubDrinkType.Empty;
     });
   }
 
-  void _updateSubDrinkType(SubDrinkType subDrinkType) {
+  _updateSubDrinkType(SubDrinkType subDrinkType) {
     setState(() {
       this.subDrinkType = subDrinkType;
     });
   }
 
-  void _updateScore(int score) {
+  _updateScore(int score) {
     setState(() {
       this.score = score;
     });
   }
 
-  void _selectUploadMethod() async { // カメラは大変なのであとで
+  _selectUploadMethod() async { // カメラは大変なのであとで
     final uploadMethod = await showModalBottomSheet<UploadMethods>(
         context: context,
         builder: (BuildContext context){
@@ -163,7 +163,7 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
-  void _getImageList() async {
+  _getImageList() async {
     final status = await Permission.photos.status;
     if (status == PermissionStatus.undetermined) {
       _confirmOpenSetting();
@@ -206,14 +206,14 @@ class _PostPageState extends State<PostPage> {
       || drinkType == null;
   }
 
-  void _removeImage(int index) {
+  _removeImage(int index) {
     setState(() {
       this.imageAssets.removeAt(index);
       this.images.removeAt(index);
     });
   }
 
-  void _postDrink() async {
+  _postDrink() async {
     if (disablePost) {
       return;
     }

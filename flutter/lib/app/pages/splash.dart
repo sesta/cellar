@@ -13,13 +13,13 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   @override
-  void initState() {
+  initState() {
     super.initState();
 
     _checkSignIn();
   }
 
-  void _checkSignIn() async {
+  _checkSignIn() async {
     final user = await getSignInUser();
     if (user == null) {
       Navigator.pushReplacementNamed(context, '/signIn');

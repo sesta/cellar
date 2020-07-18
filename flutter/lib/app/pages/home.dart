@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   List<int> uploadCounts = List.generate(DrinkType.values.length, (_) => 0);
 
   @override
-  void initState() {
+  initState() {
     super.initState();
 
     _updateTimeline();
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _movePostPage() async {
+  _movePostPage() async {
     final isPosted = await Navigator.of(context).pushNamed('/post');
 
     if (isPosted != null) {
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _updateTimelineType(TimelineType timelineType) {
+  _updateTimelineType(TimelineType timelineType) {
     if (this.timelineType == timelineType) {
       return;
     }
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
     _updateTimeline();
   }
 
-  void _updateDrinkType(DrinkType drinkType) {
+  _updateDrinkType(DrinkType drinkType) {
     if (this.drinkType == drinkType) {
       return;
     }
