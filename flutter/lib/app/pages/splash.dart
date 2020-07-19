@@ -24,7 +24,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
 
     _checkSignIn();
-    StatusRepository().getStatus('production').then((status) => widget.setStatus(status));
+    StatusRepository().getStatus().then((status) => widget.setStatus(status));
   }
 
   _checkSignIn() async {
