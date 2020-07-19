@@ -32,6 +32,14 @@ class Status {
     }
   }
 
+  Future<void> moveUploadCount(
+    DrinkType oldDrinkType,
+    DrinkType newDrinkType,
+  ) async {
+    await decrementUploadCount(oldDrinkType);
+    await incrementUploadCount(newDrinkType);
+  }
+
   @override
   String toString() {
     return 'uploadCounts: $drinkTypeUploadCounts';

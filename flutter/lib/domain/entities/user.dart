@@ -44,6 +44,14 @@ class User {
     }
   }
 
+  Future<void> moveUploadCount(
+      DrinkType oldDrinkType,
+      DrinkType newDrinkType,
+  ) async {
+    await decrementUploadCount(oldDrinkType);
+    await incrementUploadCount(newDrinkType);
+  }
+
   Future<void> create() async {
     await UserRepository().createUser(userId, {
       'userName': userName,
@@ -55,11 +63,6 @@ class User {
     await UserRepository().updateUserName(userId, userName);
     // batch処理なので、awaitしない
     DrinkRepository().updateUserName(userId, userName);
-  }
-
-  Future<void> updateUploadCount() async {
-    await UserRepository().updateUserUploadCount(userId, drinkTypeUploadCounts);
-    // TODO: statusも更新する
   }
 
   @override
