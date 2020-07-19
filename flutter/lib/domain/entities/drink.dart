@@ -92,10 +92,26 @@ class Drink {
     });
   }
 
-  Future<void> update() async{
+  Future<void> update(
+    String drinkName,
+    DrinkType drinkType,
+    SubDrinkType subDrinkType,
+    int score,
+    String memo,
+    int price,
+    String place,
+  ) async{
     if (drinkId == null) {
       throw '更新するためにはdrinkIdが必要です';
     }
+
+    this.drinkName = drinkName;
+    this.drinkType = drinkType;
+    this.subDrinkType = subDrinkType;
+    this.score = score;
+    this.memo = memo;
+    this.price = price;
+    this.place = place;
 
     await DrinkRepository().updateDrink(drinkId, {
       'drinkName': drinkName,

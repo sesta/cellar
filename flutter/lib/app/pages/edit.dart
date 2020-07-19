@@ -88,15 +88,15 @@ class _EditPageState extends State<EditPage> {
 
     final oldDrinkType = widget.drink.drinkType;
 
-    widget.drink.drinkName = nameController.text;
-    widget.drink.drinkType = drinkType;
-    widget.drink.subDrinkType = subDrinkType;
-    widget.drink.score =  score;
-    widget.drink.memo = memoController.text;
-    widget.drink.price = priceController.text == '' ? 0 : int.parse(priceController.text);
-    widget.drink.place = placeController.text;
-
-    await widget.drink.update();
+    await widget.drink.update(
+      nameController.text,
+      drinkType,
+      subDrinkType,
+      score,
+      memoController.text,
+      priceController.text == '' ? 0 : int.parse(priceController.text),
+      placeController.text,
+    );
     if (drinkType != oldDrinkType) {
       await widget.user.moveUploadCount(oldDrinkType, drinkType);
       await widget.status.moveUploadCount(oldDrinkType, drinkType);
