@@ -32,8 +32,9 @@ class User {
     return types.cast<DrinkType>();
   }
 
-  incrementUploadCount(DrinkType drinkType) {
-    this.drinkTypeUploadCounts[drinkType.index] ++;
+  Future<void> incrementUploadCount(DrinkType drinkType) async {
+    drinkTypeUploadCounts[drinkType.index] ++;
+    await UserRepository().updateUserUploadCount(userId, drinkTypeUploadCounts);
   }
 
   Future<void> create() async {

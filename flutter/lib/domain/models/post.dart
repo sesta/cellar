@@ -10,7 +10,6 @@ import 'package:cellar/repository/provider/storage.dart';
 
 Future<void> post(
   User user,
-  String userName,
   List<Asset> images,
   String drinkName,
   DrinkType drinkType,
@@ -38,10 +37,9 @@ Future<void> post(
   final firstImageWidth = (images.first.originalWidth * resizeRate).round();
   final firstImageHeight = (images.first.originalHeight * resizeRate).round();
 
-
   final drink = Drink(
     user.userId,
-    userName,
+    user.userName,
     drinkName,
     drinkType,
     subDrinkType,
@@ -55,10 +53,7 @@ Future<void> post(
     firstImageWidth,
     firstImageHeight,
   );
-  drink.create();
-
-  user.incrementUploadCount(drinkType);
-  user.updateUploadCount();
+  await drink.create();
 }
 
 Future<void> uploadImage(Asset image, String path, int expectWidthSize) async {

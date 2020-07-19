@@ -13,6 +13,8 @@ class Status {
   }
 
   Future<void> incrementUploadCount(DrinkType drinkType) async {
+    drinkTypeUploadCounts[drinkType.index] ++;
+    // DBの個数とずれるかもしれないが完全に同期できないので諦める
     await StatusRepository().incrementUploadCount(
       'production',
       drinkType,
