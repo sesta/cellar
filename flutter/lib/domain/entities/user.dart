@@ -37,6 +37,13 @@ class User {
     await UserRepository().updateUserUploadCount(userId, drinkTypeUploadCounts);
   }
 
+  Future<void> decrementUploadCount(DrinkType drinkType) async {
+    if (drinkTypeUploadCounts[drinkType.index] > 0) {
+      drinkTypeUploadCounts[drinkType.index] --;
+      await UserRepository().updateUserUploadCount(userId, drinkTypeUploadCounts);
+    }
+  }
+
   Future<void> create() async {
     await UserRepository().createUser(userId, {
       'userName': userName,

@@ -21,6 +21,17 @@ class Status {
     );
   }
 
+  Future<void> decrementUploadCount(DrinkType drinkType) async {
+    if (drinkTypeUploadCounts[drinkType.index] > 0) {
+      drinkTypeUploadCounts[drinkType.index] --;
+      // DBの個数とずれるかもしれないが完全に同期できないので諦める
+      await StatusRepository().decrementUploadCount(
+        'production',
+        drinkType,
+      );
+    }
+  }
+
   @override
   String toString() {
     return 'uploadCounts: $drinkTypeUploadCounts';

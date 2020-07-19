@@ -7,6 +7,8 @@ import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/repository/provider/firestore.dart';
 
 class StatusRepository extends DB {
+  // TODO: environmentを自分で持つ
+
   Future<Status> getStatus(
     String environment,
   ) async {
@@ -28,6 +30,19 @@ class StatusRepository extends DB {
       .document(drinkType.index.toString())
       .updateData({
         'uploadCount': FieldValue.increment(1),
+      });
+  }
+
+  Future<void> decrementUploadCount(
+    String environment,
+    DrinkType drinkType,
+  ) async {
+    await db.collection(STATUS_COLLECTION_NAME)
+      .document(environment)
+      .collection('drinkTypes')
+      .document(drinkType.index.toString())
+      .updateData({
+        'uploadCount': FieldValue.increment(-1),
       });
   }
 
