@@ -169,7 +169,7 @@ class _EditPageState extends State<EditPage> {
 
     if (widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index] > 0) {
       widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index]--;
-      await widget.user.updateName();
+      await widget.user.updateUploadCount();
     }
     await widget.drink.delete();
     Navigator.of(context).pop(true);
