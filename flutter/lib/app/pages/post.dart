@@ -230,7 +230,6 @@ class _PostPageState extends State<PostPage> {
 
     await post(
       widget.user,
-      widget.user.userName,
       imageAssets,
       nameController.text,
       drinkType,
@@ -240,6 +239,8 @@ class _PostPageState extends State<PostPage> {
       priceController.text == '' ? 0 : int.parse(priceController.text),
       placeController.text,
     );
+
+    await widget.user.incrementUploadCount(drinkType);
     await widget.status.incrementUploadCount(drinkType);
 
     Navigator.of(context).pop(true);

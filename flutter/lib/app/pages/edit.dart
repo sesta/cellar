@@ -1,3 +1,4 @@
+import 'package:cellar/domain/entities/status.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/drink.dart';
@@ -9,10 +10,12 @@ import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 class EditPage extends StatefulWidget {
   EditPage({
     Key key,
+    this.status,
     this.user,
     this.drink,
   }) : super(key: key);
 
+  final Status status;
   final User user;
   final Drink drink;
 
@@ -83,22 +86,21 @@ class _EditPageState extends State<EditPage> {
       this.uploading = true;
     });
 
-    if (drinkType != widget.drink.drinkType) {
-      widget.user.drinkTypeUploadCounts[drinkType.index] ++;
-      if (widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index] > 0) {
-        widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index] --;
-      }
-    }
-    widget.drink.drinkName = nameController.text;
-    widget.drink.drinkType = drinkType;
-    widget.drink.subDrinkType = subDrinkType;
-    widget.drink.score =  score;
-    widget.drink.memo = memoController.text;
-    widget.drink.price = priceController.text == '' ? 0 : int.parse(priceController.text);
-    widget.drink.place = placeController.text;
+    final oldDrinkType = widget.drink.drinkType;
 
-    await widget.drink.update();
-    await widget.user.updateUploadCount();
+    await widget.drink.update(
+      nameController.text,
+      drinkType,
+      subDrinkType,
+      score,
+      memoController.text,
+      priceController.text == '' ? 0 : int.parse(priceController.text),
+      placeController.text,
+    );
+    if (drinkType != oldDrinkType) {
+      await widget.user.moveUploadCount(oldDrinkType, drinkType);
+      await widget.status.moveUploadCount(oldDrinkType, drinkType);
+    }
 
     Navigator.of(context).pop(false);
   }
@@ -167,11 +169,10 @@ class _EditPageState extends State<EditPage> {
       this.uploading = true;
     });
 
-    if (widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index] > 0) {
-      widget.user.drinkTypeUploadCounts[widget.drink.drinkType.index]--;
-      await widget.user.updateName();
-    }
     await widget.drink.delete();
+    await widget.user.decrementUploadCount(drinkType);
+    await widget.status.decrementUploadCount(drinkType);
+
     Navigator.of(context).pop(true);
   }
 

@@ -32,8 +32,24 @@ class User {
     return types.cast<DrinkType>();
   }
 
-  incrementUploadCount(DrinkType drinkType) {
-    this.drinkTypeUploadCounts[drinkType.index] ++;
+  Future<void> incrementUploadCount(DrinkType drinkType) async {
+    drinkTypeUploadCounts[drinkType.index] ++;
+    await UserRepository().updateUserUploadCount(userId, drinkTypeUploadCounts);
+  }
+
+  Future<void> decrementUploadCount(DrinkType drinkType) async {
+    if (drinkTypeUploadCounts[drinkType.index] > 0) {
+      drinkTypeUploadCounts[drinkType.index] --;
+      await UserRepository().updateUserUploadCount(userId, drinkTypeUploadCounts);
+    }
+  }
+
+  Future<void> moveUploadCount(
+      DrinkType oldDrinkType,
+      DrinkType newDrinkType,
+  ) async {
+    await decrementUploadCount(oldDrinkType);
+    await incrementUploadCount(newDrinkType);
   }
 
   Future<void> create() async {
@@ -47,11 +63,6 @@ class User {
     await UserRepository().updateUserName(userId, userName);
     // batch処理なので、awaitしない
     DrinkRepository().updateUserName(userId, userName);
-  }
-
-  Future<void> updateUploadCount() async {
-    await UserRepository().updateUserUploadCount(userId, drinkTypeUploadCounts);
-    // TODO: statusも更新する
   }
 
   @override

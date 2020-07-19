@@ -13,10 +13,25 @@ class Status {
   }
 
   Future<void> incrementUploadCount(DrinkType drinkType) async {
-    await StatusRepository().incrementUploadCount(
-      'production',
-      drinkType,
-    );
+    drinkTypeUploadCounts[drinkType.index] ++;
+    // DBの個数とずれるかもしれないが完全に同期できないので諦める
+    await StatusRepository().incrementUploadCount(drinkType);
+  }
+
+  Future<void> decrementUploadCount(DrinkType drinkType) async {
+    if (drinkTypeUploadCounts[drinkType.index] > 0) {
+      drinkTypeUploadCounts[drinkType.index] --;
+      // DBの個数とずれるかもしれないが完全に同期できないので諦める
+      await StatusRepository().decrementUploadCount(drinkType);
+    }
+  }
+
+  Future<void> moveUploadCount(
+    DrinkType oldDrinkType,
+    DrinkType newDrinkType,
+  ) async {
+    await decrementUploadCount(oldDrinkType);
+    await incrementUploadCount(newDrinkType);
   }
 
   @override
