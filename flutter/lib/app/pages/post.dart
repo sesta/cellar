@@ -171,7 +171,7 @@ class _PostPageState extends State<PostPage> {
 
   _getImageList() async {
     final status = await Permission.photos.status;
-    if (status == PermissionStatus.undetermined) {
+    if (status == PermissionStatus.denied) {
       _confirmOpenSetting();
       return;
     }
@@ -248,7 +248,7 @@ class _PostPageState extends State<PostPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<SubDrinkType> subDrinkTypes = drinkType == null ? [SubDrinkType.Empty] : drinkTypeMapToSub[drinkType];
+    final List<SubDrinkType> subDrinkTypes = drinkType == null ? [SubDrinkType.Empty] : drinkType.subDrinkTypes;
 
     return Scaffold(
       appBar: AppBar(
@@ -322,7 +322,7 @@ class _PostPageState extends State<PostPage> {
                                       constraints: BoxConstraints(
                                         minWidth: 80,
                                       ),
-                                      child: NormalText(drinkTypeMapToLabel[type], bold: true),
+                                      child: NormalText(type.label, bold: true),
                                     ),
                                   )
                                 ).toList(),
@@ -350,7 +350,7 @@ class _PostPageState extends State<PostPage> {
                                       constraints: BoxConstraints(
                                         minWidth: 100,
                                       ),
-                                      child: NormalText(subDrinkTypeMapToLabel[type], bold: true)
+                                      child: NormalText(type.label, bold: true)
                                     ),
                                   )
                                 ).toList(),

@@ -192,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         children: <Widget>[
                           NormalText(
-                            drinkTypeMapToLabel[userDrinkType],
+                            userDrinkType.label,
                             bold: drinkType == userDrinkType,
                           ),
                           Padding(padding: EdgeInsets.only(right: 4)),

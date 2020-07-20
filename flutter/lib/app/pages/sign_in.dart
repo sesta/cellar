@@ -28,6 +28,9 @@ class _SignInState extends State<SignInPage> {
     final firebaseUser = await signIn();
     if (firebaseUser == null) {
       print('SignInに失敗しました');
+      setState(() {
+        this.loading = false;
+      });
       return;
     }
 

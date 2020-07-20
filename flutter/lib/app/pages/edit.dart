@@ -178,7 +178,7 @@ class _EditPageState extends State<EditPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<SubDrinkType> subDrinkTypes = drinkType == null ? [SubDrinkType.Empty] : drinkTypeMapToSub[drinkType];
+    final List<SubDrinkType> subDrinkTypes = drinkType == null ? [SubDrinkType.Empty] : drinkType.subDrinkTypes;
 
     return Scaffold(
       appBar: AppBar(
@@ -247,7 +247,7 @@ class _EditPageState extends State<EditPage> {
                                         constraints: BoxConstraints(
                                           minWidth: 80,
                                         ),
-                                        child: NormalText(drinkTypeMapToLabel[type], bold: true),
+                                        child: NormalText(type.label, bold: true),
                                       ),
                                     )
                                 ).toList(),
@@ -275,7 +275,7 @@ class _EditPageState extends State<EditPage> {
                                           constraints: BoxConstraints(
                                             minWidth: 100,
                                           ),
-                                          child: NormalText(subDrinkTypeMapToLabel[type], bold: true)
+                                          child: NormalText(type.label, bold: true)
                                       ),
                                     )
                                 ).toList(),

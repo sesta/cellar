@@ -29,10 +29,14 @@ class _SplashPageState extends State<SplashPage> {
 
   _checkSignIn() async {
     final userId = await getSignInUserId();
+    if (userId == null) {
+      Navigator.pushReplacementNamed(context, '/signIn');
+      return ;
+    }
+
     final user = await UserRepository().getUser(userId);
     if (user == null) {
       Navigator.pushReplacementNamed(context, '/signIn');
-
       return ;
     }
 

@@ -55,14 +55,6 @@ class Drink {
     });
   }
 
-  get drinkTypeLabel {
-    return drinkTypeMapToLabel[drinkType];
-  }
-
-  get subDrinkTypeLabel {
-    return subDrinkTypeMapToLabel[subDrinkType];
-  }
-
   get priceString {
     final formatter = NumberFormat('#,###');
     return "¥${formatter.format(price)}";
@@ -154,19 +146,117 @@ enum DrinkType {
   Other,
 }
 
-final Map<DrinkType, String> drinkTypeMapToLabel = {
-  DrinkType.Sake: '日本酒',
-  DrinkType.Shochu: '焼酎',
-  DrinkType.Beer: 'ビール',
-  DrinkType.Wine: 'ワイン',
-  DrinkType.Cidre: 'シードル',
-  DrinkType.Brandy: 'ブランデー',
-  DrinkType.Whisky: 'ウイスキー',
-  DrinkType.Vodka: 'ウォッカ',
-  DrinkType.Gin: 'ジン',
-  DrinkType.Liqueur: 'リキュール',
-  DrinkType.Other: 'その他',
-};
+extension DrinkTypeExtension on DrinkType {
+  String get label {
+    switch(this) {
+      case DrinkType.Sake: return '日本酒';
+      case DrinkType.Shochu: return '焼酎';
+      case DrinkType.Beer: return 'ビール';
+      case DrinkType.Wine: return 'ワイン';
+      case DrinkType.Cidre: return 'シードル';
+      case DrinkType.Brandy: return 'ブランデー';
+      case DrinkType.Whisky: return 'ウイスキー';
+      case DrinkType.Vodka: return 'ウォッカ';
+      case DrinkType.Gin: return 'ジン';
+      case DrinkType.Liqueur: return 'リキュール';
+      case DrinkType.Other: return 'その他';
+    }
+
+    throw '予期せぬDrinkTypeです: $this';
+  }
+
+  List<SubDrinkType> get subDrinkTypes {
+    switch(this) {
+      case DrinkType.Sake: return [
+        SubDrinkType.Empty,
+        SubDrinkType.SakeDaiginjo,
+        SubDrinkType.SakeGinjo,
+        SubDrinkType.SakeTokubetuHonzojo,
+        SubDrinkType.SakeHonzojo,
+        SubDrinkType.SakeJunmaiDaiginjo,
+        SubDrinkType.SakeJunmaiGinjo,
+        SubDrinkType.SakeTokubetsuJunmai,
+        SubDrinkType.SakeJunmai,
+      ];
+      case DrinkType.Shochu: return [
+        SubDrinkType.Empty,
+        SubDrinkType.ShochuKome,
+        SubDrinkType.ShochuMugi,
+        SubDrinkType.ShochuImo,
+        SubDrinkType.ShochuKokuto,
+        SubDrinkType.ShochuSoba,
+        SubDrinkType.ShochuKuri,
+        SubDrinkType.ShochuPotato,
+        SubDrinkType.ShochuToumorokoshi,
+        SubDrinkType.ShochuAwamori,
+      ];
+      case DrinkType.Beer: return [
+        SubDrinkType.Empty,
+        SubDrinkType.BeerBohemianPilsner,
+        SubDrinkType.BeerGermanPilsner,
+        SubDrinkType.BeerSchwarz,
+        SubDrinkType.BeerDortmunder,
+        SubDrinkType.BeerAmericanLager,
+        SubDrinkType.BeerViennaLager,
+        SubDrinkType.BeerDoppelbock,
+        SubDrinkType.BeerPaleAle,
+        SubDrinkType.BeerIpa,
+        SubDrinkType.BeerStout,
+        SubDrinkType.BeerTrappist,
+        SubDrinkType.BeerWhiteAle,
+        SubDrinkType.BeerBarleyWine,
+        SubDrinkType.BeerWeizen,
+        SubDrinkType.BeerPorter,
+        SubDrinkType.BeerFlandersAle,
+        SubDrinkType.BeerHefeweizen,
+        SubDrinkType.BeerScotchAle,
+      ];
+      case DrinkType.Wine: return [
+        SubDrinkType.Empty,
+        SubDrinkType.WineWhite,
+        SubDrinkType.WineRed,
+        SubDrinkType.WineRose,
+        SubDrinkType.WineSparkling,
+        SubDrinkType.WineDessert,
+      ];
+      case DrinkType.Cidre: return [
+        SubDrinkType.Empty,
+      ];
+      case DrinkType.Brandy: return [
+        SubDrinkType.Empty,
+        SubDrinkType.BrandyCognac,
+        SubDrinkType.BrandyArmagnac,
+        SubDrinkType.BrandyCalvados,
+      ];
+      case DrinkType.Whisky: return [
+        SubDrinkType.Empty,
+        SubDrinkType.WhiskyScotch,
+        SubDrinkType.WhiskyCanadian,
+        SubDrinkType.WhiskyIrish,
+        SubDrinkType.WhiskyAmerican,
+        SubDrinkType.WhiskyJapanese,
+      ];
+      case DrinkType.Vodka: return [
+        SubDrinkType.Empty,
+      ];
+      case DrinkType.Gin: return [
+        SubDrinkType.Empty,
+        SubDrinkType.GinDry,
+        SubDrinkType.GinJenever,
+        SubDrinkType.GinOldTom,
+        SubDrinkType.GinSteinhager,
+      ];
+      case DrinkType.Liqueur: return [
+        SubDrinkType.Empty,
+      ];
+      case DrinkType.Other: return [
+        SubDrinkType.Empty,
+      ];
+    }
+
+    throw '予期せぬDrinkTypeです: $this';
+  }
+}
 
 enum SubDrinkType {
   SakeDaiginjo,
@@ -224,153 +314,73 @@ enum SubDrinkType {
   Empty,
 }
 
-final Map<SubDrinkType, String> subDrinkTypeMapToLabel = {
-  SubDrinkType.SakeDaiginjo: '大吟醸酒',
-  SubDrinkType.SakeGinjo: '吟醸酒',
-  SubDrinkType.SakeTokubetuHonzojo: '特別本醸造酒',
-  SubDrinkType.SakeHonzojo: '本醸造酒',
-  SubDrinkType.SakeJunmaiDaiginjo: '純米大吟醸酒',
-  SubDrinkType.SakeJunmaiGinjo: '純米吟醸酒',
-  SubDrinkType.SakeTokubetsuJunmai: '特別純米酒',
-  SubDrinkType.SakeJunmai: '純米酒',
 
-  SubDrinkType.ShochuKome: '米焼酎',
-  SubDrinkType.ShochuMugi: '麦焼酎',
-  SubDrinkType.ShochuImo: '芋焼酎',
-  SubDrinkType.ShochuKokuto: '黒糖焼酎',
-  SubDrinkType.ShochuSoba: 'そば焼酎',
-  SubDrinkType.ShochuKuri: '栗焼酎',
-  SubDrinkType.ShochuPotato: 'ジャガイモ焼酎',
-  SubDrinkType.ShochuToumorokoshi: 'トウモロコシ焼酎',
-  SubDrinkType.ShochuAwamori: '泡盛',
 
-  SubDrinkType.BeerBohemianPilsner: 'ボヘミアン・ピルスナー',
-  SubDrinkType.BeerGermanPilsner: 'ジャーマン・ピルスナー',
-  SubDrinkType.BeerSchwarz: 'シュバルツ',
-  SubDrinkType.BeerDortmunder: 'ドルトムンダー',
-  SubDrinkType.BeerAmericanLager: 'アメリカンラガー',
-  SubDrinkType.BeerViennaLager: 'ウィンナーラガー',
-  SubDrinkType.BeerDoppelbock: 'ドッペルボック',
-  SubDrinkType.BeerPaleAle: 'ペールエール',
-  SubDrinkType.BeerIpa: 'IPA',
-  SubDrinkType.BeerStout: 'スタウト',
-  SubDrinkType.BeerTrappist: '修道院ビール',
-  SubDrinkType.BeerWhiteAle: 'ホワイトエール',
-  SubDrinkType.BeerBarleyWine: 'バーレイワイン',
-  SubDrinkType.BeerWeizen: 'ヴァイツェン',
-  SubDrinkType.BeerPorter: 'ポーター',
-  SubDrinkType.BeerFlandersAle: 'フランダース・エール',
-  SubDrinkType.BeerHefeweizen: 'ヘーフェヴァイツェン',
-  SubDrinkType.BeerScotchAle: 'スコッチエール',
+extension SubDrinkTypeExtension on SubDrinkType {
+  String get label {
+    switch(this) {
+      case SubDrinkType.SakeDaiginjo: return '大吟醸酒';
+      case SubDrinkType.SakeGinjo: return '吟醸酒';
+      case SubDrinkType.SakeTokubetuHonzojo: return '特別本醸造酒';
+      case SubDrinkType.SakeHonzojo: return '本醸造酒';
+      case SubDrinkType.SakeJunmaiDaiginjo: return '純米大吟醸酒';
+      case SubDrinkType.SakeJunmaiGinjo: return '純米吟醸酒';
+      case SubDrinkType.SakeTokubetsuJunmai: return '特別純米酒';
+      case SubDrinkType.SakeJunmai: return '純米酒';
 
-  SubDrinkType.WineRed: '赤ワイン',
-  SubDrinkType.WineWhite: '白ワイン',
-  SubDrinkType.WineRose: 'ロゼワイン',
-  SubDrinkType.WineSparkling: 'スパークリングワイン',
-  SubDrinkType.WineDessert: 'デザートワイン',
+      case SubDrinkType.ShochuKome: return '米焼酎';
+      case SubDrinkType.ShochuMugi: return '麦焼酎';
+      case SubDrinkType.ShochuImo: return '芋焼酎';
+      case SubDrinkType.ShochuKokuto: return '黒糖焼酎';
+      case SubDrinkType.ShochuSoba: return 'そば焼酎';
+      case SubDrinkType.ShochuKuri: return '栗焼酎';
+      case SubDrinkType.ShochuPotato: return 'ジャガイモ焼酎';
+      case SubDrinkType.ShochuToumorokoshi: return 'トウモロコシ焼酎';
+      case SubDrinkType.ShochuAwamori: return '泡盛';
 
-  SubDrinkType.BrandyCognac: 'コニャック',
-  SubDrinkType.BrandyArmagnac: 'アルマニャック',
-  SubDrinkType.BrandyCalvados: 'カルバドス',
+      case SubDrinkType.BeerBohemianPilsner: return 'ボヘミアン・ピルスナー';
+      case SubDrinkType.BeerGermanPilsner: return 'ジャーマン・ピルスナー';
+      case SubDrinkType.BeerSchwarz: return 'シュバルツ';
+      case SubDrinkType.BeerDortmunder: return 'ドルトムンダー';
+      case SubDrinkType.BeerAmericanLager: return 'アメリカンラガー';
+      case SubDrinkType.BeerViennaLager: return 'ウィンナーラガー';
+      case SubDrinkType.BeerDoppelbock: return 'ドッペルボック';
+      case SubDrinkType.BeerPaleAle: return 'ペールエール';
+      case SubDrinkType.BeerIpa: return 'IPA';
+      case SubDrinkType.BeerStout: return 'スタウト';
+      case SubDrinkType.BeerTrappist: return '修道院ビール';
+      case SubDrinkType.BeerWhiteAle: return 'ホワイトエール';
+      case SubDrinkType.BeerBarleyWine: return 'バーレイワイン';
+      case SubDrinkType.BeerWeizen: return 'ヴァイツェン';
+      case SubDrinkType.BeerPorter: return 'ポーター';
+      case SubDrinkType.BeerFlandersAle: return 'フランダース・エール';
+      case SubDrinkType.BeerHefeweizen: return 'ヘーフェヴァイツェン';
+      case SubDrinkType.BeerScotchAle: return 'スコッチエール';
 
-  SubDrinkType.WhiskyScotch: 'スコッチウイスキー',
-  SubDrinkType.WhiskyCanadian: 'カナディアンウイスキー',
-  SubDrinkType.WhiskyIrish: 'アイリッシュウイスキー',
-  SubDrinkType.WhiskyAmerican: 'アメリカンウイスキー',
-  SubDrinkType.WhiskyJapanese: 'ジャパニーズウイスキー',
+      case SubDrinkType.WineRed: return '赤ワイン';
+      case SubDrinkType.WineWhite: return '白ワイン';
+      case SubDrinkType.WineRose: return 'ロゼワイン';
+      case SubDrinkType.WineSparkling: return 'スパークリングワイン';
+      case SubDrinkType.WineDessert: return 'デザートワイン';
 
-  SubDrinkType.GinDry: 'ドライ・ジン',
-  SubDrinkType.GinJenever: 'イェネーバ',
-  SubDrinkType.GinOldTom: 'オールド・トム・ジン',
-  SubDrinkType.GinSteinhager: 'シュタインヘーガー',
+      case SubDrinkType.BrandyCognac: return 'コニャック';
+      case SubDrinkType.BrandyArmagnac: return 'アルマニャック';
+      case SubDrinkType.BrandyCalvados: return 'カルバドス';
 
-  SubDrinkType.Empty: '-',
-};
+      case SubDrinkType.WhiskyScotch: return 'スコッチウイスキー';
+      case SubDrinkType.WhiskyCanadian: return 'カナディアンウイスキー';
+      case SubDrinkType.WhiskyIrish: return 'アイリッシュウイスキー';
+      case SubDrinkType.WhiskyAmerican: return 'アメリカンウイスキー';
+      case SubDrinkType.WhiskyJapanese: return 'ジャパニーズウイスキー';
 
-final Map<DrinkType, List<SubDrinkType>> drinkTypeMapToSub = {
-  DrinkType.Sake: [
-    SubDrinkType.Empty,
-    SubDrinkType.SakeDaiginjo,
-    SubDrinkType.SakeGinjo,
-    SubDrinkType.SakeTokubetuHonzojo,
-    SubDrinkType.SakeHonzojo,
-    SubDrinkType.SakeJunmaiDaiginjo,
-    SubDrinkType.SakeJunmaiGinjo,
-    SubDrinkType.SakeTokubetsuJunmai,
-    SubDrinkType.SakeJunmai,
-  ],
-  DrinkType.Shochu: [
-    SubDrinkType.Empty,
-    SubDrinkType.ShochuKome,
-    SubDrinkType.ShochuMugi,
-    SubDrinkType.ShochuImo,
-    SubDrinkType.ShochuKokuto,
-    SubDrinkType.ShochuSoba,
-    SubDrinkType.ShochuKuri,
-    SubDrinkType.ShochuPotato,
-    SubDrinkType.ShochuToumorokoshi,
-    SubDrinkType.ShochuAwamori,
-  ],
-  DrinkType.Beer: [
-    SubDrinkType.Empty,
-    SubDrinkType.BeerBohemianPilsner,
-    SubDrinkType.BeerGermanPilsner,
-    SubDrinkType.BeerSchwarz,
-    SubDrinkType.BeerDortmunder,
-    SubDrinkType.BeerAmericanLager,
-    SubDrinkType.BeerViennaLager,
-    SubDrinkType.BeerDoppelbock,
-    SubDrinkType.BeerPaleAle,
-    SubDrinkType.BeerIpa,
-    SubDrinkType.BeerStout,
-    SubDrinkType.BeerTrappist,
-    SubDrinkType.BeerWhiteAle,
-    SubDrinkType.BeerBarleyWine,
-    SubDrinkType.BeerWeizen,
-    SubDrinkType.BeerPorter,
-    SubDrinkType.BeerFlandersAle,
-    SubDrinkType.BeerHefeweizen,
-    SubDrinkType.BeerScotchAle,
-  ],
-  DrinkType.Wine: [
-    SubDrinkType.Empty,
-    SubDrinkType.WineWhite,
-    SubDrinkType.WineRed,
-    SubDrinkType.WineRose,
-    SubDrinkType.WineSparkling,
-    SubDrinkType.WineDessert,
-  ],
-  DrinkType.Cidre: [
-    SubDrinkType.Empty,
-  ],
-  DrinkType.Brandy: [
-    SubDrinkType.Empty,
-    SubDrinkType.BrandyCognac,
-    SubDrinkType.BrandyArmagnac,
-    SubDrinkType.BrandyCalvados,
-  ],
-  DrinkType.Whisky: [
-    SubDrinkType.Empty,
-    SubDrinkType.WhiskyScotch,
-    SubDrinkType.WhiskyCanadian,
-    SubDrinkType.WhiskyIrish,
-    SubDrinkType.WhiskyAmerican,
-    SubDrinkType.WhiskyJapanese,
-  ],
-  DrinkType.Vodka: [
-    SubDrinkType.Empty,
-  ],
-  DrinkType.Gin: [
-    SubDrinkType.Empty,
-    SubDrinkType.GinDry,
-    SubDrinkType.GinJenever,
-    SubDrinkType.GinOldTom,
-    SubDrinkType.GinSteinhager,
-  ],
-  DrinkType.Liqueur: [
-    SubDrinkType.Empty,
-  ],
-  DrinkType.Other: [
-    SubDrinkType.Empty,
-  ],
-};
+      case SubDrinkType.GinDry: return 'ドライ・ジン';
+      case SubDrinkType.GinJenever: return 'イェネーバ';
+      case SubDrinkType.GinOldTom: return 'オールド・トム・ジン';
+      case SubDrinkType.GinSteinhager: return 'シュタインヘーガー';
+
+      case SubDrinkType.Empty: return '-';
+    }
+
+    throw '予期せぬDrinkTypeです: $this';
+  }
+}
