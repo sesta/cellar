@@ -55,10 +55,6 @@ class Drink {
     });
   }
 
-  get drinkTypeLabel {
-    return drinkTypeMapToLabel[drinkType];
-  }
-
   get subDrinkTypeLabel {
     return subDrinkTypeMapToLabel[subDrinkType];
   }
@@ -154,19 +150,25 @@ enum DrinkType {
   Other,
 }
 
-final Map<DrinkType, String> drinkTypeMapToLabel = {
-  DrinkType.Sake: '日本酒',
-  DrinkType.Shochu: '焼酎',
-  DrinkType.Beer: 'ビール',
-  DrinkType.Wine: 'ワイン',
-  DrinkType.Cidre: 'シードル',
-  DrinkType.Brandy: 'ブランデー',
-  DrinkType.Whisky: 'ウイスキー',
-  DrinkType.Vodka: 'ウォッカ',
-  DrinkType.Gin: 'ジン',
-  DrinkType.Liqueur: 'リキュール',
-  DrinkType.Other: 'その他',
-};
+extension DrinkTypeExtension on DrinkType {
+  String get label {
+    switch(this) {
+      case DrinkType.Sake: return '日本酒';
+      case DrinkType.Shochu: return '焼酎';
+      case DrinkType.Beer: return 'ビール';
+      case DrinkType.Wine: return 'ワイン';
+      case DrinkType.Cidre: return 'シードル';
+      case DrinkType.Brandy: return 'ブランデー';
+      case DrinkType.Whisky: return 'ウイスキー';
+      case DrinkType.Vodka: return 'ウォッカ';
+      case DrinkType.Gin: return 'ジン';
+      case DrinkType.Liqueur: return 'リキュール';
+      case DrinkType.Other: return 'その他';
+    }
+
+    throw '予期せぬDrinkTypeです: $this';
+  }
+}
 
 enum SubDrinkType {
   SakeDaiginjo,
