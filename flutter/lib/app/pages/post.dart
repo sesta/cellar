@@ -171,7 +171,7 @@ class _PostPageState extends State<PostPage> {
 
   _getImageList() async {
     final status = await Permission.photos.status;
-    if (status == PermissionStatus.undetermined) {
+    if (status == PermissionStatus.denied) {
       _confirmOpenSetting();
       return;
     }
