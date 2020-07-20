@@ -275,7 +275,7 @@ class _EditPageState extends State<EditPage> {
                                           constraints: BoxConstraints(
                                             minWidth: 100,
                                           ),
-                                          child: NormalText(subDrinkTypeMapToLabel[type], bold: true)
+                                          child: NormalText(type.label, bold: true)
                                       ),
                                     )
                                 ).toList(),

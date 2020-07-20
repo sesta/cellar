@@ -350,7 +350,7 @@ class _PostPageState extends State<PostPage> {
                                       constraints: BoxConstraints(
                                         minWidth: 100,
                                       ),
-                                      child: NormalText(subDrinkTypeMapToLabel[type], bold: true)
+                                      child: NormalText(type.label, bold: true)
                                     ),
                                   )
                                 ).toList(),
