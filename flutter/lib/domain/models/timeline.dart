@@ -42,12 +42,14 @@ Future<List<Drink>> getTimelineDrinks(
         userId,
         drinkType,
         orderType != OrderType.Older,
+        orderType == OrderType.Score,
       );
       break;
     case TimelineType.All:
       drinks = await DrinkRepository().getPublicDrinks(
         drinkType,
         orderType != OrderType.Older,
+        orderType == OrderType.Score,
       );
       break;
   }
