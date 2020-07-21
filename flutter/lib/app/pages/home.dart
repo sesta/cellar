@@ -53,8 +53,9 @@ class _HomePageState extends State<HomePage> {
       this.drinks = [];
     });
 
-    final drinks = await getTimelineImageUrls(
+    final drinks = await getTimelineDrinks(
       timelineType,
+      orderType,
       drinkType: drinkType,
       userId: widget.user.userId,
     );
@@ -98,6 +99,8 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       this.orderType = orderType;
     });
+
+    _updateTimeline();
   }
 
   Future<void> _refresh() async {

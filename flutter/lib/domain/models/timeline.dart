@@ -26,18 +26,29 @@ extension OrderTypeExtension on OrderType {
   }
 }
 
-Future<List<Drink>> getTimelineImageUrls(TimelineType timelineType, {
-  DrinkType drinkType,
-  String userId,
-}) async {
+Future<List<Drink>> getTimelineDrinks(
+  TimelineType timelineType,
+  OrderType orderType,
+  {
+    DrinkType drinkType,
+    String userId,
+  }
+) async {
   List<Drink> drinks;
 
   switch (timelineType) {
     case TimelineType.Mine:
-      drinks = await DrinkRepository().getUserDrinks(userId, drinkType);
+      drinks = await DrinkRepository().getUserDrinks(
+        userId,
+        drinkType,
+        orderType != OrderType.Older,
+      );
       break;
     case TimelineType.All:
-      drinks = await DrinkRepository().getPublicDrinks(drinkType);
+      drinks = await DrinkRepository().getPublicDrinks(
+        drinkType,
+        orderType != OrderType.Older,
+      );
       break;
   }
 

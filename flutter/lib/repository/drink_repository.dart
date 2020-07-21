@@ -16,6 +16,7 @@ class DrinkRepository extends DB {
 
   Future<List<Drink>> getPublicDrinks (
     DrinkType drinkType,
+    bool isDescTimestamp,
   ) async {
     Query query = db.collection(DRINK_COLLECTION_NAME);
 
@@ -26,7 +27,7 @@ class DrinkRepository extends DB {
       );
     }
 
-    query = query.orderBy('postTimestamp', descending: true);
+    query = query.orderBy('postTimestamp', descending: isDescTimestamp);
     query = query.limit(PAGE_LIMIT);
 
     final snapshot = await query.getDocuments();
@@ -36,6 +37,7 @@ class DrinkRepository extends DB {
   Future<List<Drink>> getUserDrinks (
     String userId,
     DrinkType drinkType,
+    bool isDescTimestamp,
   ) async {
     Query query = db.collection(DRINK_COLLECTION_NAME)
       .where('userId', isEqualTo: userId);
@@ -47,7 +49,7 @@ class DrinkRepository extends DB {
       );
     }
 
-    query = query.orderBy('postTimestamp', descending: true);
+    query = query.orderBy('postTimestamp', descending: isDescTimestamp);
     query = query.limit(PAGE_LIMIT);
 
     final snapshot = await query.getDocuments();
