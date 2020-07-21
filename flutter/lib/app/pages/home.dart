@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   List<Drink> drinks = [];
   TimelineType timelineType = TimelineType.Mine;
   DrinkType drinkType;
+  OrderType orderType = OrderType.Newer;
   bool loading = true;
 
   @override
@@ -87,6 +88,16 @@ class _HomePageState extends State<HomePage> {
     });
 
     _updateTimeline();
+  }
+
+  _updateOrderType(OrderType orderType) {
+    if (this.orderType == orderType) {
+      return;
+    }
+
+    setState(() {
+      this.orderType = orderType;
+    });
   }
 
   Future<void> _refresh() async {
@@ -214,20 +225,20 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: PopupMenuButton(
-                  onSelected: (value) => print(value),
-                  icon: Icon(Icons.sort),
-                  itemBuilder: (BuildContext context) =>
-                    OrderType.values.map((type) =>
-                      PopupMenuItem(
-                        value: type,
-                        child: NormalText(type.label),
-                      )
-                    ).toList(),
+              PopupMenuButton(
+                onSelected: _updateOrderType,
+                icon: Icon(Icons.sort),
+                itemBuilder: (BuildContext context) =>
+                  OrderType.values.map((type) =>
+                    PopupMenuItem(
+                      value: type,
+                      child: NormalText(
+                        type.label,
+                        bold: type == orderType,
+                      ),
+                    )
+                  ).toList(),
                 ),
-              ),
             ],
           ),
           Expanded(
