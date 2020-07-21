@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   List<Drink> drinks = [];
   TimelineType timelineType = TimelineType.Mine;
   DrinkType drinkType;
+  OrderType orderType = OrderType.Newer;
   bool loading = true;
 
   @override
@@ -52,8 +53,9 @@ class _HomePageState extends State<HomePage> {
       this.drinks = [];
     });
 
-    final drinks = await getTimelineImageUrls(
+    final drinks = await getTimelineDrinks(
       timelineType,
+      orderType,
       drinkType: drinkType,
       userId: widget.user.userId,
     );
@@ -84,6 +86,18 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       this.drinkType = drinkType;
+    });
+
+    _updateTimeline();
+  }
+
+  _updateOrderType(OrderType orderType) {
+    if (this.orderType == orderType) {
+      return;
+    }
+
+    setState(() {
+      this.orderType = orderType;
     });
 
     _updateTimeline();
@@ -147,68 +161,88 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Padding(padding: EdgeInsets.only(bottom: 16)),
-          Container(
-            height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                ButtonTheme(
-                  minWidth: 40,
-                  child: FlatButton(
-                    textColor: drinkType == null
-                      ? Colors.white
-                      : Colors.white38,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: <Widget>[
-                        NormalText(
-                          '全て',
-                          bold: drinkType == null,
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  height: 40,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      ButtonTheme(
+                        minWidth: 40,
+                        child: FlatButton(
+                          textColor: drinkType == null
+                            ? Colors.white
+                            : Colors.white38,
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            children: <Widget>[
+                              NormalText(
+                                '全て',
+                                bold: drinkType == null,
+                              ),
+                              Padding(padding: EdgeInsets.only(right: 4)),
+                              LabelText(
+                                getUploadCount(null).toString(),
+                                size: 'small',
+                                single: true,
+                              ),
+                            ],
+                          ),
+                          onPressed: () => _updateDrinkType(null),
                         ),
-                        Padding(padding: EdgeInsets.only(right: 4)),
-                        LabelText(
-                          getUploadCount(null).toString(),
-                          size: 'small',
-                          single: true,
-                        ),
-                      ],
-                    ),
-                    onPressed: () => _updateDrinkType(null),
+                      ),
+                      ...widget.user.drinkTypesByMany.map((userDrinkType) {
+                        final count = getUploadCount(userDrinkType);
+                        if (count == 0) {
+                          return Container();
+                        }
+
+                        return ButtonTheme(
+                          minWidth: 40,
+                          child: FlatButton(
+                            textColor: drinkType == userDrinkType
+                                ? Colors.white
+                                : Colors.white38,
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              children: <Widget>[
+                                NormalText(
+                                  userDrinkType.label,
+                                  bold: drinkType == userDrinkType,
+                                ),
+                                Padding(padding: EdgeInsets.only(right: 4)),
+                                LabelText(
+                                  count.toString(),
+                                  size: 'small',
+                                  single: true,
+                                ),
+                              ],
+                            ),
+                            onPressed: () => _updateDrinkType(userDrinkType),
+                          ),
+                        );
+                      }).toList()
+                    ],
                   ),
                 ),
-                ...widget.user.drinkTypesByMany.map((userDrinkType) {
-                  final count = getUploadCount(userDrinkType);
-                  if (count == 0) {
-                    return Container();
-                  }
-
-                  return ButtonTheme(
-                    minWidth: 40,
-                    child: FlatButton(
-                      textColor: drinkType == userDrinkType
-                          ? Colors.white
-                          : Colors.white38,
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: <Widget>[
-                          NormalText(
-                            userDrinkType.label,
-                            bold: drinkType == userDrinkType,
-                          ),
-                          Padding(padding: EdgeInsets.only(right: 4)),
-                          LabelText(
-                            count.toString(),
-                            size: 'small',
-                            single: true,
-                          ),
-                        ],
+              ),
+              PopupMenuButton(
+                onSelected: _updateOrderType,
+                icon: Icon(Icons.sort),
+                itemBuilder: (BuildContext context) =>
+                  OrderType.values.map((type) =>
+                    PopupMenuItem(
+                      value: type,
+                      child: NormalText(
+                        type.label,
+                        bold: type == orderType,
                       ),
-                      onPressed: () => _updateDrinkType(userDrinkType),
-                    ),
-                  );
-                }).toList()
-              ],
-            ),
+                    )
+                  ).toList(),
+                ),
+            ],
           ),
           Expanded(
             child: loading

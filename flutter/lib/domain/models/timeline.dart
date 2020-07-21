@@ -8,18 +8,49 @@ enum TimelineType {
   All,
 }
 
-Future<List<Drink>> getTimelineImageUrls(TimelineType timelineType, {
-  DrinkType drinkType,
-  String userId,
-}) async {
+enum OrderType {
+  Newer,
+  Older,
+  Score,
+}
+
+extension OrderTypeExtension on OrderType {
+  String get label {
+    switch(this) {
+      case OrderType.Newer: return '新しい順';
+      case OrderType.Older: return '古い順';
+      case OrderType.Score: return 'スコア順';
+    }
+
+    throw '不明なTypeです。: $this';
+  }
+}
+
+Future<List<Drink>> getTimelineDrinks(
+  TimelineType timelineType,
+  OrderType orderType,
+  {
+    DrinkType drinkType,
+    String userId,
+  }
+) async {
   List<Drink> drinks;
 
   switch (timelineType) {
     case TimelineType.Mine:
-      drinks = await DrinkRepository().getUserDrinks(userId, drinkType);
+      drinks = await DrinkRepository().getUserDrinks(
+        userId,
+        drinkType,
+        orderType != OrderType.Older,
+        orderType == OrderType.Score,
+      );
       break;
     case TimelineType.All:
-      drinks = await DrinkRepository().getPublicDrinks(drinkType);
+      drinks = await DrinkRepository().getPublicDrinks(
+        drinkType,
+        orderType != OrderType.Older,
+        orderType == OrderType.Score,
+      );
       break;
   }
 
