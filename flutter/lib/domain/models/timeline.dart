@@ -8,6 +8,24 @@ enum TimelineType {
   All,
 }
 
+enum OrderType {
+  Newer,
+  Older,
+  Score,
+}
+
+extension OrderTypeExtension on OrderType {
+  String get label {
+    switch(this) {
+      case OrderType.Newer: return '新しい順';
+      case OrderType.Older: return '古い順';
+      case OrderType.Score: return 'スコア順';
+    }
+
+    throw '不明なTypeです。: $this';
+  }
+}
+
 Future<List<Drink>> getTimelineImageUrls(TimelineType timelineType, {
   DrinkType drinkType,
   String userId,
