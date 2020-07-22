@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -34,6 +35,8 @@ class _HomePageState extends State<HomePage> {
   List<Drink> mineAllDrinks;
   Map<DrinkType, List<Drink>> publicDrinkMap = {};
   Map<DrinkType, List<Drink>> mineDrinkMap = {};
+
+  ScrollController _scrollController = new ScrollController();
 
   @override
   initState() {
@@ -107,7 +110,7 @@ class _HomePageState extends State<HomePage> {
     _updateTimeline();
   }
 
-  _updateDrinkType(DrinkType drinkType) {
+  _updateDrinkType(DrinkType drinkType, int index) {
     if (this.drinkType == drinkType) {
       return;
     }
@@ -116,6 +119,13 @@ class _HomePageState extends State<HomePage> {
       this.drinkType = drinkType;
     });
 
+    if (index != null) {
+      _scrollController.animateTo(
+        min(index * 80.0, _scrollController.position.maxScrollExtent),
+        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 300),
+      );
+    }
     _updateTimeline();
   }
 
@@ -209,9 +219,10 @@ class _HomePageState extends State<HomePage> {
                   height: 40,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
+                    controller: _scrollController,
                     children: <Widget>[
                       ButtonTheme(
-                        minWidth: 40,
+                        minWidth: 80,
                         child: FlatButton(
                           textColor: drinkType == null
                             ? Colors.white
@@ -231,7 +242,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          onPressed: () => _updateDrinkType(null),
+                          onPressed: () => _updateDrinkType(null, null),
                         ),
                       ),
                       ...widget.user.drinkTypesByMany.map((userDrinkType) {
@@ -241,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                         }
 
                         return ButtonTheme(
-                          minWidth: 40,
+                          minWidth: 80,
                           child: FlatButton(
                             textColor: drinkType == userDrinkType
                                 ? Colors.white
@@ -261,7 +272,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                            onPressed: () => _updateDrinkType(userDrinkType),
+                            onPressed: () => _updateDrinkType(userDrinkType, null),
                           ),
                         );
                       }).toList()
@@ -291,6 +302,14 @@ class _HomePageState extends State<HomePage> {
                 height: MediaQuery.of(context).size.height,
                 viewportFraction: 1,
                 enableInfiniteScroll: false,
+                onPageChanged: (int index, _) {
+                  if (index == 0) {
+                    _updateDrinkType(null, 0);
+                    return;
+                  }
+
+                  _updateDrinkType(widget.user.drinkTypesByMany[index - 1], index);
+                },
               ),
               items: [
                 Timeline(null),
