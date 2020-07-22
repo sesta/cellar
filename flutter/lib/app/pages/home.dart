@@ -36,7 +36,8 @@ class _HomePageState extends State<HomePage> {
   Map<DrinkType, List<Drink>> publicDrinkMap = {};
   Map<DrinkType, List<Drink>> mineDrinkMap = {};
 
-  ScrollController _scrollController = new ScrollController();
+  ScrollController _scrollController = ScrollController();
+  CarouselController _carouselController = CarouselController();
 
   @override
   initState() {
@@ -242,10 +243,14 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          onPressed: () => _updateDrinkType(null, null),
+                          onPressed: () {
+                            _updateDrinkType(null, null);
+                            _carouselController.animateToPage(0);
+                          },
                         ),
                       ),
-                      ...widget.user.drinkTypesByMany.map((userDrinkType) {
+                      ...List.generate(DrinkType.values.length, (i)=> i).map((index) {
+                        final userDrinkType = widget.user.drinkTypesByMany[index];
                         final count = getUploadCount(userDrinkType);
                         if (count == 0) {
                           return Container();
@@ -272,7 +277,10 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                            onPressed: () => _updateDrinkType(userDrinkType, null),
+                            onPressed: () {
+                              _updateDrinkType(userDrinkType, null);
+                              _carouselController.animateToPage(index + 1);
+                            },
                           ),
                         );
                       }).toList()
@@ -298,6 +306,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             child: CarouselSlider(
+              carouselController: _carouselController,
               options: CarouselOptions(
                 height: MediaQuery.of(context).size.height,
                 viewportFraction: 1,
