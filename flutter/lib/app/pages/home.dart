@@ -168,10 +168,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _updateDrink(int index, bool isDelete) {
-    if (isDelete) {
-      return;
-    }
-
+    // TODO: 全てのタイムラインから消すのは難しいので方法を考える
     setState(() {});
   }
 
