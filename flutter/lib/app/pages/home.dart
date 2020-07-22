@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
@@ -8,7 +9,6 @@ import 'package:cellar/domain/models/timeline.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
-import 'package:cellar/app/widget/atoms/main_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,11 +26,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Drink> drinks = [];
   TimelineType timelineType = TimelineType.Mine;
   DrinkType drinkType;
   OrderType orderType = OrderType.Newer;
   bool loading = true;
+  List<Drink> publicAllDrinks;
+  List<Drink> mineAllDrinks;
+  Map<DrinkType, List<Drink>> publicDrinkMap = {};
+  Map<DrinkType, List<Drink>> mineDrinkMap = {};
 
   @override
   initState() {
@@ -48,22 +51,47 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _updateTimeline() async {
-    setState(() {
-      this.loading = true;
-      this.drinks = [];
-    });
+    if (_getTargetDrinks(drinkType) == null) {
+      final drinks = await getTimelineDrinks(
+        timelineType,
+        orderType,
+        drinkType: drinkType,
+        userId: widget.user.userId,
+      );
+      _setDrinks(drinks);
+    }
+  }
 
-    final drinks = await getTimelineDrinks(
-      timelineType,
-      orderType,
-      drinkType: drinkType,
-      userId: widget.user.userId,
-    );
+  _setDrinks(List<Drink> drinks) {
+    if (drinkType == null) {
+      switch(timelineType) {
+        case TimelineType.All:
+          setState(() {
+            this.publicAllDrinks = drinks;
+          });
+          return;
+        case TimelineType.Mine:
+          setState(() {
+            this.mineAllDrinks = drinks;
+          });
+          return;
+      }
+    }
 
-    setState(() {
-      this.drinks = drinks;
-      this.loading = false;
-    });
+    switch(timelineType) {
+      case TimelineType.All:
+        setState(() {
+          this.publicDrinkMap[drinkType] = drinks;
+        });
+        return;
+      case TimelineType.Mine:
+        setState(() {
+          this.mineDrinkMap[drinkType] = drinks;
+        });
+        return;
+    }
+
+    throw '予期せぬtypeです。 $timelineType';
   }
 
   _updateTimelineType(TimelineType timelineType) {
@@ -129,13 +157,26 @@ class _HomePageState extends State<HomePage> {
 
   _updateDrink(int index, bool isDelete) {
     if (isDelete) {
-      setState(() {
-        this.drinks.removeAt(index);
-      });
       return;
     }
 
     setState(() {});
+  }
+
+  List<Drink> _getTargetDrinks(DrinkType targetDrinkType) {
+    if (targetDrinkType == null) {
+      switch(timelineType) {
+        case TimelineType.All: return publicAllDrinks;
+        case TimelineType.Mine: return mineAllDrinks;
+      }
+    }
+
+    switch(timelineType) {
+      case TimelineType.All: return publicDrinkMap[targetDrinkType];
+      case TimelineType.Mine: return mineDrinkMap[targetDrinkType];
+    }
+
+    throw '予期せぬtypeです。 $timelineType';
   }
 
   @override
@@ -245,42 +286,20 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Expanded(
-            child: loading
-              ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(40),
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
-                ],
-              )
-              : RefreshIndicator(
-                onRefresh: _refresh,
-                child: drinks.length == 0
-                  ? SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 200,
-                        bottom: 100,
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          NormalText('投稿したお酒が表示されます'),
-                          Padding(padding: EdgeInsets.only(bottom: 140)),
-                          MainText('投稿はこちら'),
-                          Padding(padding: EdgeInsets.only(bottom: 16)),
-                          Icon(Icons.arrow_downward),
-                        ],
-                      ),
-                    ),
-                  )
-                  : DrinkGrid(drinks: drinks, updateDrink: _updateDrink),
+            child: CarouselSlider(
+              options: CarouselOptions(
+                height: MediaQuery.of(context).size.height,
+                viewportFraction: 1,
+                enableInfiniteScroll: false,
               ),
+              items: [
+                Timeline(null),
+                ...widget.user.drinkTypesByMany
+                  .where((type) => getUploadCount(type) > 0)
+                  .map((type) => Timeline(type))
+                  .toList()
+              ],
+            ),
           ),
         ],
       ),
@@ -350,6 +369,48 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+
+  Widget Timeline(DrinkType targetDrinkType) {
+    final drinks = _getTargetDrinks(targetDrinkType);
+
+    if (drinks == null) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(40),
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          )
+        ],
+      );
+    }
+
+    Widget content = SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 200,
+          bottom: 100,
+        ),
+        child: Column(
+          children: <Widget>[
+            NormalText('投稿したお酒が表示されます'),
+          ],
+        ),
+      ),
+    );
+    if (drinks.length > 0) {
+      content = DrinkGrid(drinks: drinks, updateDrink: _updateDrink);
+    }
+
+    return RefreshIndicator(
+      onRefresh: _refresh,
+      child: content,
     );
   }
 }
