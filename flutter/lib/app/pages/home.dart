@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
     _updateTimeline();
   }
 
-  _updateDrinkType(DrinkType drinkType, int index) {
+  _updateDrinkType(DrinkType drinkType) {
     if (this.drinkType == drinkType) {
       return;
     }
@@ -120,14 +120,15 @@ class _HomePageState extends State<HomePage> {
       this.drinkType = drinkType;
     });
 
-    if (index != null) {
-      _scrollController.animateTo(
-        min(index * 80.0, _scrollController.position.maxScrollExtent),
-        curve: Curves.easeOut,
-        duration: const Duration(milliseconds: 300),
-      );
-    }
     _updateTimeline();
+  }
+
+  _scrollToDrinkType(int index) {
+    _scrollController.animateTo(
+      min(index * 80.0, _scrollController.position.maxScrollExtent),
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
   _updateOrderType(OrderType orderType) {
@@ -244,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           onPressed: () {
-                            _updateDrinkType(null, null);
+                            _updateDrinkType(null);
                             _carouselController.animateToPage(0);
                           },
                         ),
@@ -278,7 +279,7 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                             onPressed: () {
-                              _updateDrinkType(userDrinkType, null);
+                              _updateDrinkType(userDrinkType);
                               _carouselController.animateToPage(index + 1);
                             },
                           ),
@@ -313,14 +314,16 @@ class _HomePageState extends State<HomePage> {
                 enableInfiniteScroll: false,
                 onPageChanged: (int index, _) {
                   if (index == 0) {
-                    _updateDrinkType(null, 0);
+                    _updateDrinkType(null);
+                    _scrollToDrinkType(0);
                     return;
                   }
 
                   final targetDrinkTypes = widget.user.drinkTypesByMany
                     .where((type) => getUploadCount(type) > 0)
                     .toList();
-                  _updateDrinkType(targetDrinkTypes[index - 1], index);
+                  _updateDrinkType(targetDrinkTypes[index - 1]);
+                  _scrollToDrinkType(index);
                 },
               ),
               items: [
@@ -344,7 +347,11 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 flex: 1,
                 child: IconButton(
-                  onPressed: () => _updateTimelineType(TimelineType.Mine),
+                  onPressed: () {
+                    _updateTimelineType(TimelineType.Mine);
+                    _scrollToDrinkType(0);
+                    _carouselController.jumpToPage(0);
+                  },
                   icon: Icon(
                     Icons.home,
                     size: 32,
@@ -357,7 +364,11 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 flex: 1,
                 child: IconButton(
-                  onPressed: () => _updateTimelineType(TimelineType.All),
+                  onPressed: () {
+                    _updateTimelineType(TimelineType.All);
+                    _scrollToDrinkType(0);
+                    _carouselController.jumpToPage(0);
+                  },
                   icon: Icon(
                     Icons.people,
                     size: 32,
