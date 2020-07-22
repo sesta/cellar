@@ -54,8 +54,11 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _updateTimeline() async {
-    if (_getTargetDrinks(drinkType) == null) {
+  Future<void> _updateTimeline({ bool isForceUpdate }) async {
+    if (
+      _getTargetDrinks(drinkType) == null
+      || (isForceUpdate != null && isForceUpdate)
+    ) {
       final drinks = await getTimelineDrinks(
         timelineType,
         orderType,
@@ -144,7 +147,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _refresh() async {
-    await _updateTimeline();
+    _setDrinks(null);
+    await _updateTimeline(isForceUpdate: true);
   }
 
   int getUploadCount(DrinkType drinkType) {
