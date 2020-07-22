@@ -317,7 +317,10 @@ class _HomePageState extends State<HomePage> {
                     return;
                   }
 
-                  _updateDrinkType(widget.user.drinkTypesByMany[index - 1], index);
+                  final targetDrinkTypes = widget.user.drinkTypesByMany
+                    .where((type) => getUploadCount(type) > 0)
+                    .toList();
+                  _updateDrinkType(targetDrinkTypes[index - 1], index);
                 },
               ),
               items: [
