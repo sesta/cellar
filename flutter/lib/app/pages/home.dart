@@ -148,6 +148,11 @@ class _HomePageState extends State<HomePage> {
     _updateTimeline();
   }
 
+  _updateDrink() {
+    // editなどによるDrinkの更新を反映させるため
+    setState(() {});
+  }
+
   _scrollToDrinkType(int index) {
     _scrollController.animateTo(
       min(index * 80.0, _scrollController.position.maxScrollExtent),
@@ -392,7 +397,7 @@ class _HomePageState extends State<HomePage> {
 
     return RefreshIndicator(
       onRefresh: _refresh,
-      child: DrinkGrid(drinks: drinks, updateDrink: () => setState(() {})),
+      child: DrinkGrid(drinks: drinks, updateDrink: _updateDrink),
     );
   }
 

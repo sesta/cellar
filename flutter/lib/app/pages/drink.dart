@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -26,20 +25,20 @@ class DrinkPage extends StatefulWidget {
 }
 
 class _DrinkPageState extends State<DrinkPage> {
-  bool imageLoaded = false;
-  int carouselPage = 0;
-  ScrollController scrollController = ScrollController();
+  bool _imageLoaded = false;
+  int _carouselPage = 0;
+  ScrollController _scrollController = ScrollController();
   // 連続でpopが発生しないように、状態を持っておく
-  bool isPop = false;
+  bool _isPop = false;
 
   @override
   initState() {
     super.initState();
 
-    scrollController.addListener(_popPage);
+    _scrollController.addListener(_popPage);
 
     setState(() {
-      this.imageLoaded = widget.drink.imageUrls != null;
+      _imageLoaded = widget.drink.imageUrls != null;
     });
 
     if (widget.drink.imageUrls == null) {
@@ -47,23 +46,23 @@ class _DrinkPageState extends State<DrinkPage> {
     }
   }
 
-  _loadImage() async {
-    await widget.drink.getImageUrls();
-    setState(() {
-      this.imageLoaded = true;
-    });
-  }
-
   _updatePage(int index, _) {
     setState(() {
-      this.carouselPage = index;
+      _carouselPage = index;
     });
   }
 
-  _editDrink() async{
+  Future<void> _loadImage() async {
+    await widget.drink.getImageUrls();
+    setState(() {
+      _imageLoaded = true;
+    });
+  }
+
+  Future<void> _editDrink() async{
     final isDelete = await Navigator.of(context).pushNamed('/edit', arguments: widget.drink);
 
-    if (isDelete != null && isDelete) {
+    if (isDelete == true) {
       Navigator.of(context).pop(true);
       return;
     }
@@ -72,12 +71,12 @@ class _DrinkPageState extends State<DrinkPage> {
   }
 
   Future<void> _popPage() async {
-    if (scrollController.position.pixels > -100 || isPop) {
+    if (_scrollController.position.pixels > -80 || _isPop) {
       return;
     }
 
     setState(() {
-      this.isPop = true;
+      _isPop = true;
     });
     Navigator.of(context).pop(false);
   }
@@ -89,7 +88,7 @@ class _DrinkPageState extends State<DrinkPage> {
 
     return Scaffold(
       body:  SingleChildScrollView(
-        controller: scrollController,
+        controller: _scrollController,
         physics: AlwaysScrollableScrollPhysics(),
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -116,7 +115,7 @@ class _DrinkPageState extends State<DrinkPage> {
                           ),
                         );
 
-                        if (imageLoaded) {
+                        if (_imageLoaded) {
                           content = CachedNetworkImage(
                             placeholder: (context, url) => Center(
                               child: CircularProgressIndicator(
@@ -132,7 +131,7 @@ class _DrinkPageState extends State<DrinkPage> {
                         if (index == 0) {
                           content = Hero(
                             tag: widget.drink.thumbImagePath,
-                            child: imageLoaded
+                            child: _imageLoaded
                               ? CachedNetworkImage(
                                 placeholder: (context, url) => Image(
                                     image: NetworkImage(
@@ -211,7 +210,7 @@ class _DrinkPageState extends State<DrinkPage> {
                       right: 0,
                       child: Padding(
                         padding: EdgeInsets.all(16),
-                        child: NormalText("${carouselPage + 1} / $imageLength"),
+                        child: NormalText("${_carouselPage + 1} / $imageLength"),
                       ),
                     ),
                 ],

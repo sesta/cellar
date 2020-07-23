@@ -14,8 +14,8 @@ class DrinkGrid extends StatelessWidget {
   });
 
   _pop(BuildContext context, int index, Drink drink) async {
-    final isDelete = await Navigator.of(context).pushNamed('/drink', arguments: drink);
-    updateDrink(index, isDelete);
+    await Navigator.of(context).pushNamed('/drink', arguments: drink);
+    updateDrink();
   }
 
   @override
