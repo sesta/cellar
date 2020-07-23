@@ -141,6 +141,10 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       this.orderType = orderType;
+      this.publicAllDrinks = null;
+      this.mineAllDrinks = null;
+      this.publicDrinkMap = {};
+      this.mineDrinkMap = {};
     });
 
     _updateTimeline();
