@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   TimelineType _timelineType = TimelineType.Mine;
   DrinkType _drinkType;
   OrderType _orderType = OrderType.Newer;
+
   List<Drink> _publicAllDrinks;
   List<Drink> _mineAllDrinks;
   Map<DrinkType, List<Drink>> _publicDrinkMap = {};
@@ -44,17 +45,12 @@ class _HomePageState extends State<HomePage> {
     _updateTimeline();
   }
 
-  Future<void> _movePostPage() async {
-    final isPosted = await Navigator.of(context).pushNamed('/post');
-    if (isPosted == null) {
-      return;
-    }
-
-    setState(() {
-      this._mineAllDrinks = null;
-      this._mineDrinkMap = {};
-    });
-    _updateTimeline();
+  Iterable<MapEntry<int, DrinkType>> get _postedDrinkTypeEntries {
+    return widget.user.drinkTypesByMany
+      .where((drinkType) => _getUploadCount(drinkType) > 0)
+      .toList()
+      .asMap()
+      .entries;
   }
 
   Future<void> _updateTimeline({ bool isForceUpdate }) async {
@@ -74,17 +70,22 @@ class _HomePageState extends State<HomePage> {
     _setDrinks(drinks);
   }
 
+  Future<void> _refresh() async {
+    _setDrinks(null);
+    await _updateTimeline(isForceUpdate: true);
+  }
+
   _setDrinks(List<Drink> drinks) {
     if (_drinkType == null) {
       switch(_timelineType) {
         case TimelineType.All:
           setState(() {
-            this._publicAllDrinks = drinks;
+            _publicAllDrinks = drinks;
           });
           return;
         case TimelineType.Mine:
           setState(() {
-            this._mineAllDrinks = drinks;
+            _mineAllDrinks = drinks;
           });
           return;
       }
@@ -93,12 +94,12 @@ class _HomePageState extends State<HomePage> {
     switch(_timelineType) {
       case TimelineType.All:
         setState(() {
-          this._publicDrinkMap[_drinkType] = drinks;
+          _publicDrinkMap[_drinkType] = drinks;
         });
         return;
       case TimelineType.Mine:
         setState(() {
-          this._mineDrinkMap[_drinkType] = drinks;
+          _mineDrinkMap[_drinkType] = drinks;
         });
         return;
     }
@@ -107,25 +108,41 @@ class _HomePageState extends State<HomePage> {
   }
 
   _updateTimelineType(TimelineType timelineType) {
-    if (this._timelineType == timelineType) {
+    if (_timelineType == timelineType) {
       return;
     }
 
     setState(() {
-      this._timelineType = timelineType;
-      this._drinkType = null;
+      _timelineType = timelineType;
+      _drinkType = null;
     });
 
     _updateTimeline();
   }
 
   _updateDrinkType(DrinkType drinkType) {
-    if (this._drinkType == drinkType) {
+    if (_drinkType == drinkType) {
       return;
     }
 
     setState(() {
-      this._drinkType = drinkType;
+      _drinkType = drinkType;
+    });
+
+    _updateTimeline();
+  }
+
+  _updateOrderType(OrderType orderType) {
+    if (_orderType == orderType) {
+      return;
+    }
+
+    setState(() {
+      _orderType = orderType;
+      _publicAllDrinks = null;
+      _mineAllDrinks = null;
+      _publicDrinkMap = {};
+      _mineDrinkMap = {};
     });
 
     _updateTimeline();
@@ -135,29 +152,8 @@ class _HomePageState extends State<HomePage> {
     _scrollController.animateTo(
       min(index * 80.0, _scrollController.position.maxScrollExtent),
       curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
     );
-  }
-
-  _updateOrderType(OrderType orderType) {
-    if (this._orderType == orderType) {
-      return;
-    }
-
-    setState(() {
-      this._orderType = orderType;
-      this._publicAllDrinks = null;
-      this._mineAllDrinks = null;
-      this._publicDrinkMap = {};
-      this._mineDrinkMap = {};
-    });
-
-    _updateTimeline();
-  }
-
-  Future<void> _refresh() async {
-    _setDrinks(null);
-    await _updateTimeline(isForceUpdate: true);
   }
 
   int _getUploadCount(DrinkType drinkType) {
@@ -180,13 +176,8 @@ class _HomePageState extends State<HomePage> {
     throw 'timelineTypeの考慮漏れです';
   }
 
-  _updateDrink(int index, bool isDelete) {
-    // TODO: 全てのタイムラインから消すのは難しいので方法を考える
-    setState(() {});
-  }
-
-  List<Drink> _getTargetDrinks(DrinkType targetDrinkType) {
-    if (targetDrinkType == null) {
+  List<Drink> _getTargetDrinks(DrinkType drinkType) {
+    if (drinkType == null) {
       switch(_timelineType) {
         case TimelineType.All: return _publicAllDrinks;
         case TimelineType.Mine: return _mineAllDrinks;
@@ -194,19 +185,24 @@ class _HomePageState extends State<HomePage> {
     }
 
     switch(_timelineType) {
-      case TimelineType.All: return _publicDrinkMap[targetDrinkType];
-      case TimelineType.Mine: return _mineDrinkMap[targetDrinkType];
+      case TimelineType.All: return _publicDrinkMap[drinkType];
+      case TimelineType.Mine: return _mineDrinkMap[drinkType];
     }
 
     throw '予期せぬtypeです。 $_timelineType';
   }
 
-  Iterable<MapEntry<int, DrinkType>> get _postedDrinksList {
-    return widget.user.drinkTypesByMany
-      .where((type) => _getUploadCount(type) > 0)
-      .toList()
-      .asMap()
-      .entries;
+  Future<void> _movePostPage() async {
+    final isPosted = await Navigator.of(context).pushNamed('/post');
+    if (isPosted == null) {
+      return;
+    }
+
+    setState(() {
+      _mineAllDrinks = null;
+      _mineDrinkMap = {};
+    });
+    _updateTimeline();
   }
 
   @override
@@ -273,14 +269,14 @@ class _HomePageState extends State<HomePage> {
                     return;
                   }
 
-                  final targetDrinkTypes = _postedDrinksList.toList();
+                  final targetDrinkTypes = _postedDrinkTypeEntries.toList();
                   _updateDrinkType(targetDrinkTypes[index - 1].value);
                   _scrollToDrinkType(index);
                 },
               ),
               items: [
                 _timeline(null),
-                ..._postedDrinksList
+                ..._postedDrinkTypeEntries
                   .map((entry) => _timeline(entry.value))
                   .toList()
               ],
@@ -398,7 +394,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
     if (drinks.length > 0) {
-      content = DrinkGrid(drinks: drinks, updateDrink: _updateDrink);
+      content = DrinkGrid(drinks: drinks, updateDrink: () => setState(() {}));
     }
 
     return RefreshIndicator(
@@ -439,7 +435,7 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
-        ..._postedDrinksList.map((entry) {
+        ..._postedDrinkTypeEntries.map((entry) {
           final index = entry.key;
           final userDrinkType = entry.value;
 
