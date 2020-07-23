@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'package:cellar/app/widget/drink_form.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -11,11 +11,6 @@ import 'package:cellar/domain/models/post.dart';
 
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
-
-enum UploadMethods {
-  Camera,
-  Library,
-}
 
 class PostPage extends StatefulWidget {
   PostPage({
@@ -32,98 +27,52 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
-  List<Asset> imageAssets = [];
-  List<List<int>> images = [];
-  DrinkType drinkType;
-  SubDrinkType subDrinkType = SubDrinkType.Empty;
-  int score = 3;
-  bool loading = false;
+  List<Asset> _imageAssets = [];
+  List<List<int>> _images = [];
+  DrinkType _drinkType;
+  SubDrinkType _subDrinkType = SubDrinkType.Empty;
+  int _score = 3;
+  bool _loading = false;
 
-  final nameController = TextEditingController();
-  final memoController = TextEditingController();
-  final priceController = TextEditingController();
-  final placeController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _memoController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _placeController = TextEditingController();
 
   @override
   initState() {
     super.initState();
+
+    _nameController.addListener(() => setState(() {}));
 
     // 初期化が終わってからにするために少し遅らせる
     Future.delayed(Duration(milliseconds: 300))
       .then((_) => _getImageList());
   }
 
+  get disablePost {
+    return _images.length == 0
+        || _nameController.text == ''
+        || _drinkType == null;
+  }
+
   _updateDrinkType(DrinkType drinkType) {
     setState(() {
-      this.drinkType = drinkType;
-      this.subDrinkType = SubDrinkType.Empty;
+      _drinkType = drinkType;
+      _subDrinkType = SubDrinkType.Empty;
     });
   }
 
   _updateSubDrinkType(SubDrinkType subDrinkType) {
     setState(() {
-      this.subDrinkType = subDrinkType;
+      _subDrinkType = subDrinkType;
     });
   }
 
   _updateScore(int score) {
     setState(() {
-      this.score = score;
+      _score = score;
     });
-  }
-
-  _selectUploadMethod() async { // カメラは大変なのであとで
-    final uploadMethod = await showModalBottomSheet<UploadMethods>(
-        context: context,
-        builder: (BuildContext context){
-          return Container(
-            height: 180,
-            padding: EdgeInsets.all(24.0),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: NormalText('どの写真を使いますか'),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    FlatButton(
-                      onPressed: () => Navigator.pop(context, UploadMethods.Camera),
-                      child: Text(
-                        '写真を撮る',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColorDark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    ),
-                    FlatButton(
-                      onPressed: () => Navigator.pop(context, UploadMethods.Library),
-                      child: Text(
-                        'カメラロール',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColorDark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    ),
-                  ],
-                )
-              ],
-            ),
-          );
-        }
-    );
-
-    switch(uploadMethod) {
-      case UploadMethods.Camera:
-        print('camera');
-        break;
-      case UploadMethods.Library:
-        _getImageList();
-        break;
-    }
   }
 
   _confirmOpenSetting() {
@@ -169,7 +118,7 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
-  _getImageList() async {
+  Future<void> _getImageList() async {
     final status = await Permission.photos.status;
     if (status == PermissionStatus.denied) {
       _confirmOpenSetting();
@@ -179,76 +128,71 @@ class _PostPageState extends State<PostPage> {
     List<Asset> resultList;
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 5 - this.images.length,
+        maxImages: 5 - _images.length,
       );
     } catch (e) {
-      return ;
+      return;
     }
 
     if (resultList == null || resultList.length == 0) {
-      return ;
+      return;
     }
 
     setState(() {
-      this.loading = true;
+      _loading = true;
     });
 
-    List<List<int>> images = this.images;
+    List<List<int>> images = _images;
     await Future.forEach(resultList, (Asset result) async {
       final data = await result.getByteData();
       images.add(data.buffer.asUint8List());
     });
 
     setState(() {
-      this.imageAssets = this.imageAssets + resultList;
-      this.images = images;
-      this.loading = false;
+      _imageAssets = _imageAssets + resultList;
+      _images = images;
+      _loading = false;
     });
   }
 
-  get disablePost {
-    return images.length == 0
-      || nameController.text == ''
-      || drinkType == null;
-  }
 
   _removeImage(int index) {
     setState(() {
-      this.imageAssets.removeAt(index);
-      this.images.removeAt(index);
+      _imageAssets.removeAt(index);
+      _images.removeAt(index);
     });
   }
 
-  _postDrink() async {
+  Future<void> _postDrink() async {
     if (disablePost) {
       return;
     }
 
     setState(() {
-      this.loading = true;
+      _loading = true;
     });
 
     await post(
       widget.user,
-      imageAssets,
-      nameController.text,
-      drinkType,
-      subDrinkType,
-      score,
-      memoController.text,
-      priceController.text == '' ? 0 : int.parse(priceController.text),
-      placeController.text,
+      _imageAssets,
+      _nameController.text,
+      _drinkType,
+      _subDrinkType,
+      _score,
+      _memoController.text,
+      _priceController.text == '' ? 0 : int.parse(_priceController.text),
+      _placeController.text,
     );
 
-    await widget.user.incrementUploadCount(drinkType);
-    await widget.status.incrementUploadCount(drinkType);
+    await widget.user.incrementUploadCount(_drinkType);
+    await widget.status.incrementUploadCount(_drinkType);
 
     Navigator.of(context).pop(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<SubDrinkType> subDrinkTypes = drinkType == null ? [SubDrinkType.Empty] : drinkType.subDrinkTypes;
+    final List<SubDrinkType> subDrinkTypes = _drinkType == null ? [SubDrinkType.Empty] : _drinkType.subDrinkTypes;
 
     return Scaffold(
       appBar: AppBar(
@@ -264,170 +208,46 @@ class _PostPageState extends State<PostPage> {
             child: Column(
               children: [
                 ImagePreview(
-                  images: images,
+                  images: _images,
                   addImage: _getImageList,
                   removeImage: _removeImage,
                 ),
+                Padding(padding: EdgeInsets.only(bottom: 32)),
 
-                Padding(
-                  padding: EdgeInsets.only(top: 32, right: 16, left: 16, bottom: 80),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      NormalText('名前 *'),
-                      NormalTextField(
-                        nameController,
-                        onChanged: (_) => setState(() {}),
-                        bold: true,
-                      ),
-                      Padding(padding: EdgeInsets.only(bottom: 24)),
+                DrinkForm(
+                  user: widget.user,
+                  nameController: _nameController,
+                  priceController: _priceController,
+                  placeController: _placeController,
+                  memoController: _memoController,
+                  score: _score,
+                  drinkType: _drinkType,
+                  subDrinkType: _subDrinkType,
+                  updateDrinkType: _updateDrinkType,
+                  updateSubDrinkType: _updateSubDrinkType,
+                  updateScore: _updateScore,
+                ),
+                Padding(padding: EdgeInsets.only(bottom: 64)),
 
-                      NormalText('評価 *'),
-                      Padding(padding: const EdgeInsets.only(bottom: 8)),
-                      Row(
-                        children: List.generate(5, (i)=> i).map<Widget>((index) =>
-                            SizedBox(
-                              height: 32,
-                              width: 32,
-                              child: IconButton(
-                                padding: EdgeInsets.all(4),
-                                onPressed: () => _updateScore(index + 1),
-                                icon: Icon(index < score ? Icons.star : Icons.star_border),
-                                color: Colors.orangeAccent,
-                              ),
-                            )
-                        ).toList(),
-                      ),
-                      Padding(padding: EdgeInsets.only(bottom: 24)),
-
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              NormalText('種類 *'),
-                              DropdownButton(
-                                value: drinkType,
-                                onChanged: _updateDrinkType,
-                                icon: Icon(Icons.arrow_drop_down),
-                                underline: Container(
-                                  height: 1,
-                                  color: Colors.white38,
-                                ),
-                                items: widget.user.drinkTypesByMany.map((DrinkType type) =>
-                                  DropdownMenuItem(
-                                    value: type,
-                                    child: ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                        minWidth: 80,
-                                      ),
-                                      child: NormalText(type.label, bold: true),
-                                    ),
-                                  )
-                                ).toList(),
-                              ),
-                            ],
-                          ),
-                          Padding(padding: EdgeInsets.only(right: 24)),
-
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              NormalText('種類の詳細'),
-                              DropdownButton(
-                                value: subDrinkType,
-                                onChanged: _updateSubDrinkType,
-                                icon: Icon(Icons.arrow_drop_down),
-                                underline: Container(
-                                  height: 1,
-                                  color: Colors.white38,
-                                ),
-                                items: subDrinkTypes.map((type) =>
-                                  DropdownMenuItem(
-                                    value: type,
-                                    child: ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                        minWidth: 100,
-                                      ),
-                                      child: NormalText(type.label, bold: true)
-                                    ),
-                                  )
-                                ).toList(),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Padding(padding: EdgeInsets.only(bottom: 24)),
-
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            width: 104,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                NormalText('価格'),
-                                NormalTextField(
-                                  priceController,
-                                  bold: true,
-                                  inputType: InputType.Number,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(padding: EdgeInsets.only(right: 24)),
-
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                NormalText('購入した場所'),
-                                NormalTextField(
-                                  placeController,
-                                  bold: true,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Padding(padding: EdgeInsets.only(bottom: 24)),
-
-                      NormalText('メモ'),
-                      NormalTextField(
-                        memoController,
-                        bold: true,
-                        maxLines: 3,
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.only(top: 64),
-                        child: Center(
-                          child: RaisedButton(
-                            onPressed: disablePost ? null : _postDrink,
-                            child: Text(
-                              '投稿する',
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                            color: Theme.of(context).accentColor,
-                            textColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                Center(
+                  child: RaisedButton(
+                    onPressed: disablePost ? null : _postDrink,
+                    child: NormalText(
+                      '投稿する',
+                      bold: true,
+                    ),
+                    color: Theme.of(context).accentColor,
+                    textColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                   ),
                 ),
+                Padding(padding: EdgeInsets.only(bottom: 120)),
               ],
             ),
           ),
-          loading ? Container(
+          _loading ? Container(
             color: Colors.black38,
             alignment: Alignment.center,
             child: CircularProgressIndicator(
@@ -458,11 +278,11 @@ class ImagePreview extends StatefulWidget {
 }
 
 class _ImagePreviewState extends State<ImagePreview> {
-  List<int> bigImage;
+  List<int> _bigImage;
 
   _updateIndex(image) {
     setState(() {
-      this.bigImage = image;
+      _bigImage = image;
     });
   }
 
@@ -470,15 +290,15 @@ class _ImagePreviewState extends State<ImagePreview> {
     widget.removeImage(index);
 
     setState(() {
-      this.bigImage = widget.images.length == 0 ? null : widget.images[0];
+      _bigImage = widget.images.length == 0 ? null : widget.images[0];
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (bigImage == null && widget.images.length > 0) {
+    if (_bigImage == null && widget.images.length > 0) {
       setState(() {
-        this.bigImage = widget.images[0];
+        _bigImage = widget.images[0];
       });
     }
 
@@ -488,7 +308,7 @@ class _ImagePreviewState extends State<ImagePreview> {
           padding: const EdgeInsets.all(16.0),
           child: AspectRatio(
             aspectRatio: IMAGE_ASPECT_RATIO,
-            child: bigImage == null ? (
+            child: _bigImage == null ? (
               GestureDetector(
                 child: Material(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
@@ -503,7 +323,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 clipBehavior: Clip.antiAlias,
                 child: Image(
-                  image: MemoryImage(bigImage),
+                  image: MemoryImage(_bigImage),
                   fit: BoxFit.cover,
                 ),
               )
@@ -528,7 +348,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                           child: Image(
                             image: MemoryImage(widget.images[index]),
                             fit: BoxFit.cover,
-                            color: Color.fromRGBO(255, 255, 255, widget.images[index] == bigImage ? 1 : 0.3),
+                            color: Color.fromRGBO(255, 255, 255, widget.images[index] == _bigImage ? 1 : 0.3),
                             colorBlendMode: BlendMode.modulate,
                           ),
                         ),

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -26,20 +25,20 @@ class DrinkPage extends StatefulWidget {
 }
 
 class _DrinkPageState extends State<DrinkPage> {
-  bool imageLoaded = false;
-  int carouselPage = 0;
-  ScrollController scrollController = ScrollController();
+  bool _imageLoaded = false;
+  int _carouselPage = 0;
+  ScrollController _scrollController = ScrollController();
   // 連続でpopが発生しないように、状態を持っておく
-  bool isPop = false;
+  bool _isPop = false;
 
   @override
   initState() {
     super.initState();
 
-    scrollController.addListener(_popPage);
+    _scrollController.addListener(_popPage);
 
     setState(() {
-      this.imageLoaded = widget.drink.imageUrls != null;
+      _imageLoaded = widget.drink.imageUrls != null;
     });
 
     if (widget.drink.imageUrls == null) {
@@ -47,23 +46,23 @@ class _DrinkPageState extends State<DrinkPage> {
     }
   }
 
-  _loadImage() async {
-    await widget.drink.getImageUrls();
-    setState(() {
-      this.imageLoaded = true;
-    });
-  }
-
   _updatePage(int index, _) {
     setState(() {
-      this.carouselPage = index;
+      _carouselPage = index;
     });
   }
 
-  _editDrink() async{
+  Future<void> _loadImage() async {
+    await widget.drink.getImageUrls();
+    setState(() {
+      _imageLoaded = true;
+    });
+  }
+
+  Future<void> _editDrink() async{
     final isDelete = await Navigator.of(context).pushNamed('/edit', arguments: widget.drink);
 
-    if (isDelete != null && isDelete) {
+    if (isDelete == true) {
       Navigator.of(context).pop(true);
       return;
     }
@@ -72,25 +71,24 @@ class _DrinkPageState extends State<DrinkPage> {
   }
 
   Future<void> _popPage() async {
-    if (scrollController.position.pixels > -100 || isPop) {
+    if (_scrollController.position.pixels > -80 || _isPop) {
       return;
     }
 
     setState(() {
-      this.isPop = true;
+      _isPop = true;
     });
     Navigator.of(context).pop(false);
   }
 
   @override
   Widget build(BuildContext context) {
-    final imageRatio = widget.drink.firstImageWidth/widget.drink.firstImageHeight;
     final imageLength = widget.drink.imagePaths.length;
 
     return Scaffold(
       body:  SingleChildScrollView(
-        controller: scrollController,
         physics: AlwaysScrollableScrollPhysics(),
+        controller: _scrollController,
         child: ConstrainedBox(
           constraints: BoxConstraints(
             minHeight: MediaQuery.of(context).size.height,
@@ -99,71 +97,10 @@ class _DrinkPageState extends State<DrinkPage> {
             children: <Widget>[
               Stack(
                 children: <Widget>[
-                  Container(
-                    color: Theme.of(context).primaryColor,
-                    child: CarouselSlider(
-                      options: CarouselOptions(
-                        aspectRatio: imageRatio,
-                        viewportFraction: 1,
-                        enableInfiniteScroll: false,
-                        onPageChanged: _updatePage,
-                      ),
-                      items: List.generate(imageLength, (index) {
-                        Widget content = Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        );
-
-                        if (imageLoaded) {
-                          content = CachedNetworkImage(
-                            placeholder: (context, url) => Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            ),
-                            imageUrl: widget.drink.imageUrls[index],
-                            fit: BoxFit.contain,
-                          );
-                        }
-
-                        if (index == 0) {
-                          content = Hero(
-                            tag: widget.drink.thumbImagePath,
-                            child: imageLoaded
-                              ? CachedNetworkImage(
-                                placeholder: (context, url) => Image(
-                                    image: NetworkImage(
-                                  widget.drink.thumbImageUrl,
-                                ),
-                                  fit: BoxFit.contain,
-                                  ),
-                                imageUrl: widget.drink.imageUrls.first,
-                                fit: BoxFit.contain,
-                              )
-                              : Image(
-                                image: NetworkImage(
-                                  widget.drink.thumbImageUrl,
-                                ),
-                                fit: BoxFit.contain,
-                              ),
-                          );
-                        }
-
-                        return AspectRatio(
-                          aspectRatio: imageRatio,
-                          child: content,
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).padding.top,
-                      left: 16,
-                    ),
+                  _drinkImageContainer(),
+                  Positioned(
+                    top: MediaQuery.of(context).padding.top,
+                    left: 16,
                     child: Container(
                       height: 40,
                       width: 40,
@@ -187,7 +124,6 @@ class _DrinkPageState extends State<DrinkPage> {
                       top: MediaQuery.of(context).padding.top,
                       right: 16,
                       child: Container(
-                        alignment: Alignment.topRight,
                         height: 40,
                         width: 40,
                         decoration: BoxDecoration(
@@ -211,78 +147,56 @@ class _DrinkPageState extends State<DrinkPage> {
                       right: 0,
                       child: Padding(
                         padding: EdgeInsets.all(16),
-                        child: NormalText("${carouselPage + 1} / $imageLength"),
+                        child: NormalText("${_carouselPage + 1} / $imageLength"),
                       ),
                     ),
                 ],
               ),
+              Padding(padding: EdgeInsets.only(bottom: 16)),
+
               Padding(
-                padding: EdgeInsets.only(
-                  top: 16,
-                  left: 16,
-                  right: 16,
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 4.0),
-                      child: Icon(
-                        Icons.person,
-                        color: Theme.of(context).accentColor,
-                      ),
-                    ),
-                    Expanded(
-                      child: NormalText(widget.drink.userName),
-                    ),
-                    NormalText(widget.drink.postDatetimeString),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 24,
-                  left: 16,
-                  right: 16,
-                ),
-                child: MainText(
-                  widget.drink.drinkName,
-                  bold: true,
-                  multiLine: true,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 8,
-                  left: 16,
-                  right: 16,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (i)=> i).map<Widget>((index) =>
-                    Padding(
-                      padding: EdgeInsets.only(left: 4, right: 4),
-                      child: Icon(
-                        index < widget.drink.score ? Icons.star : Icons.star_border,
-                        color: Colors.orangeAccent,
-                      ),
-                    )
-                  ).toList(),
-                ),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.only(
-                  top: 32,
-                  left: 16,
-                  right: 16,
-                  bottom: 64,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 8),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person,
+                          color: Theme.of(context).accentColor,
+                        ),
+                        Padding(padding: EdgeInsets.only(right: 4)),
+                        NormalText(widget.drink.userName),
+                        Expanded(child: Container()),
+
+                        NormalText(widget.drink.postDatetimeString),
+                      ],
+                    ),
+                    Padding(padding: EdgeInsets.only(bottom: 24)),
+
+                    MainText(
+                      widget.drink.drinkName,
+                      bold: true,
+                      multiLine: true,
+                      textAlign: TextAlign.center,
+                    ),
+                    Padding(padding: EdgeInsets.only(bottom: 8)),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(5, (i)=> i).map((index) =>
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4),
+                          child: Icon(
+                            index < widget.drink.score ? Icons.star : Icons.star_border,
+                            color: Colors.orangeAccent,
+                          ),
+                        )
+                      ).toList(),
+                    ),
+                    Padding(padding: EdgeInsets.only(bottom: 32)),
+
+                    Container(
+                      alignment: Alignment.centerLeft,
                       child: Wrap(
                         children: <Widget>[
                           LabelText(widget.drink.drinkType.label),
@@ -292,17 +206,89 @@ class _DrinkPageState extends State<DrinkPage> {
                         ],
                       ),
                     ),
-                    NormalText(
-                      widget.drink.memo,
-                      multiLine: true,
+                    Padding(padding: EdgeInsets.only(bottom: 8)),
+
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: NormalText(
+                        widget.drink.memo,
+                        multiLine: true,
+                      ),
                     ),
                   ],
-                )
-              )
+                ),
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 80)),
             ]
           ),
         ),
       )
+    );
+  }
+
+  Widget _drinkImageContainer() {
+    final imageRatio = widget.drink.firstImageWidth/widget.drink.firstImageHeight;
+    final imageLength = widget.drink.imagePaths.length;
+
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: CarouselSlider(
+        options: CarouselOptions(
+          aspectRatio: imageRatio,
+          viewportFraction: 1,
+          enableInfiniteScroll: false,
+          onPageChanged: _updatePage,
+        ),
+        items: List.generate(imageLength, (index) {
+          Widget content = Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          );
+
+          if (_imageLoaded) {
+            content = CachedNetworkImage(
+              placeholder: (context, url) => Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+              imageUrl: widget.drink.imageUrls[index],
+              fit: BoxFit.contain,
+            );
+          }
+
+          if (index == 0) {
+            content = Hero(
+              tag: widget.drink.thumbImagePath,
+              child: _imageLoaded
+                  ? CachedNetworkImage(
+                placeholder: (context, url) => Image(
+                  image: NetworkImage(
+                    widget.drink.thumbImageUrl,
+                  ),
+                  fit: BoxFit.contain,
+                ),
+                imageUrl: widget.drink.imageUrls.first,
+                fit: BoxFit.contain,
+              )
+                  : Image(
+                image: NetworkImage(
+                  widget.drink.thumbImageUrl,
+                ),
+                fit: BoxFit.contain,
+              ),
+            );
+          }
+
+          return AspectRatio(
+            aspectRatio: imageRatio,
+            child: content,
+          );
+        }).toList(),
+      ),
     );
   }
 }

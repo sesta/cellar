@@ -19,6 +19,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  // TODO: 処理をapp.dartに寄せてstatelessにできないか考える
   @override
   initState() {
     super.initState();
