@@ -41,10 +41,11 @@ class _EditPageState extends State<EditPage> {
     _nameController.text = widget.drink.drinkName;
     _memoController.text = widget.drink.memo;
     _placeController.text = widget.drink.place;
-
     if (widget.drink.price > 0) {
       _priceController.text = widget.drink.price.toString();
     }
+
+    _nameController.addListener(() => setState(() {}));
 
     setState(() {
       _drinkType = widget.drink.drinkType;
