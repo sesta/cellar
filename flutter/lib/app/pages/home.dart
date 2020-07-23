@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -27,14 +26,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TimelineType timelineType = TimelineType.Mine;
-  DrinkType drinkType;
-  OrderType orderType = OrderType.Newer;
-  bool loading = true;
-  List<Drink> publicAllDrinks;
-  List<Drink> mineAllDrinks;
-  Map<DrinkType, List<Drink>> publicDrinkMap = {};
-  Map<DrinkType, List<Drink>> mineDrinkMap = {};
+  TimelineType _timelineType = TimelineType.Mine;
+  DrinkType _drinkType;
+  OrderType _orderType = OrderType.Newer;
+  List<Drink> _publicAllDrinks;
+  List<Drink> _mineAllDrinks;
+  Map<DrinkType, List<Drink>> _publicDrinkMap = {};
+  Map<DrinkType, List<Drink>> _mineDrinkMap = {};
 
   ScrollController _scrollController = ScrollController();
   CarouselController _carouselController = CarouselController();
@@ -46,7 +44,7 @@ class _HomePageState extends State<HomePage> {
     _updateTimeline();
   }
 
-  _movePostPage() async {
+  Future<void> _movePostPage() async {
     final isPosted = await Navigator.of(context).pushNamed('/post');
 
     if (isPosted != null) {
@@ -56,13 +54,13 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _updateTimeline({ bool isForceUpdate }) async {
     if (
-      _getTargetDrinks(drinkType) == null
+      _getTargetDrinks(_drinkType) == null
       || (isForceUpdate != null && isForceUpdate)
     ) {
       final drinks = await getTimelineDrinks(
-        timelineType,
-        orderType,
-        drinkType: drinkType,
+        _timelineType,
+        _orderType,
+        drinkType: _drinkType,
         userId: widget.user.userId,
       );
       _setDrinks(drinks);
@@ -70,57 +68,57 @@ class _HomePageState extends State<HomePage> {
   }
 
   _setDrinks(List<Drink> drinks) {
-    if (drinkType == null) {
-      switch(timelineType) {
+    if (_drinkType == null) {
+      switch(_timelineType) {
         case TimelineType.All:
           setState(() {
-            this.publicAllDrinks = drinks;
+            this._publicAllDrinks = drinks;
           });
           return;
         case TimelineType.Mine:
           setState(() {
-            this.mineAllDrinks = drinks;
+            this._mineAllDrinks = drinks;
           });
           return;
       }
     }
 
-    switch(timelineType) {
+    switch(_timelineType) {
       case TimelineType.All:
         setState(() {
-          this.publicDrinkMap[drinkType] = drinks;
+          this._publicDrinkMap[_drinkType] = drinks;
         });
         return;
       case TimelineType.Mine:
         setState(() {
-          this.mineDrinkMap[drinkType] = drinks;
+          this._mineDrinkMap[_drinkType] = drinks;
         });
         return;
     }
 
-    throw '予期せぬtypeです。 $timelineType';
+    throw '予期せぬtypeです。 $_timelineType';
   }
 
   _updateTimelineType(TimelineType timelineType) {
-    if (this.timelineType == timelineType) {
+    if (this._timelineType == timelineType) {
       return;
     }
 
     setState(() {
-      this.timelineType = timelineType;
-      this.drinkType = null;
+      this._timelineType = timelineType;
+      this._drinkType = null;
     });
 
     _updateTimeline();
   }
 
   _updateDrinkType(DrinkType drinkType) {
-    if (this.drinkType == drinkType) {
+    if (this._drinkType == drinkType) {
       return;
     }
 
     setState(() {
-      this.drinkType = drinkType;
+      this._drinkType = drinkType;
     });
 
     _updateTimeline();
@@ -135,16 +133,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   _updateOrderType(OrderType orderType) {
-    if (this.orderType == orderType) {
+    if (this._orderType == orderType) {
       return;
     }
 
     setState(() {
-      this.orderType = orderType;
-      this.publicAllDrinks = null;
-      this.mineAllDrinks = null;
-      this.publicDrinkMap = {};
-      this.mineDrinkMap = {};
+      this._orderType = orderType;
+      this._publicAllDrinks = null;
+      this._mineAllDrinks = null;
+      this._publicDrinkMap = {};
+      this._mineDrinkMap = {};
     });
 
     _updateTimeline();
@@ -155,9 +153,9 @@ class _HomePageState extends State<HomePage> {
     await _updateTimeline(isForceUpdate: true);
   }
 
-  int getUploadCount(DrinkType drinkType) {
+  int _getUploadCount(DrinkType drinkType) {
     if (drinkType == null) {
-      switch(timelineType) {
+      switch(_timelineType) {
         case TimelineType.All:
           return widget.status.uploadCount;
         case TimelineType.Mine:
@@ -165,7 +163,7 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
-    switch(timelineType) {
+    switch(_timelineType) {
       case TimelineType.All:
         return widget.status.drinkTypeUploadCounts[drinkType.index];
       case TimelineType.Mine:
@@ -182,23 +180,23 @@ class _HomePageState extends State<HomePage> {
 
   List<Drink> _getTargetDrinks(DrinkType targetDrinkType) {
     if (targetDrinkType == null) {
-      switch(timelineType) {
-        case TimelineType.All: return publicAllDrinks;
-        case TimelineType.Mine: return mineAllDrinks;
+      switch(_timelineType) {
+        case TimelineType.All: return _publicAllDrinks;
+        case TimelineType.Mine: return _mineAllDrinks;
       }
     }
 
-    switch(timelineType) {
-      case TimelineType.All: return publicDrinkMap[targetDrinkType];
-      case TimelineType.Mine: return mineDrinkMap[targetDrinkType];
+    switch(_timelineType) {
+      case TimelineType.All: return _publicDrinkMap[targetDrinkType];
+      case TimelineType.Mine: return _mineDrinkMap[targetDrinkType];
     }
 
-    throw '予期せぬtypeです。 $timelineType';
+    throw '予期せぬtypeです。 $_timelineType';
   }
 
   Iterable<MapEntry<int, DrinkType>> get _postedDrinksList {
     return widget.user.drinkTypesByMany
-      .where((type) => getUploadCount(type) > 0)
+      .where((type) => _getUploadCount(type) > 0)
       .toList()
       .asMap()
       .entries;
@@ -232,7 +230,7 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 child: Container(
                   height: 40,
-                  child: drinkTypeList,
+                  child: _drinkTypeList(),
                 ),
               ),
               PopupMenuButton(
@@ -244,7 +242,7 @@ class _HomePageState extends State<HomePage> {
                       value: type,
                       child: NormalText(
                         type.label,
-                        bold: type == orderType,
+                        bold: type == _orderType,
                       ),
                     )
                   ).toList(),
@@ -274,9 +272,9 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               items: [
-                timeline(null),
+                _timeline(null),
                 ..._postedDrinksList
-                  .map((entry) => timeline(entry.value))
+                  .map((entry) => _timeline(entry.value))
                   .toList()
               ],
             ),
@@ -301,7 +299,7 @@ class _HomePageState extends State<HomePage> {
                   icon: Icon(
                     Icons.home,
                     size: 32,
-                    color: timelineType == TimelineType.Mine
+                    color: _timelineType == TimelineType.Mine
                       ? Colors.white
                       : Theme.of(context).primaryColorLight,
                   ),
@@ -318,7 +316,7 @@ class _HomePageState extends State<HomePage> {
                   icon: Icon(
                     Icons.people,
                     size: 32,
-                    color: timelineType == TimelineType.All
+                    color: _timelineType == TimelineType.All
                       ? Colors.white
                       : Theme.of(context).primaryColorLight,
                   ),
@@ -360,7 +358,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget timeline(DrinkType targetDrinkType) {
+  Widget _timeline(DrinkType targetDrinkType) {
     final drinks = _getTargetDrinks(targetDrinkType);
 
     if (drinks == null) {
@@ -402,7 +400,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget get drinkTypeList =>
+  Widget _drinkTypeList() =>
     ListView(
       scrollDirection: Axis.horizontal,
       controller: _scrollController,
@@ -410,7 +408,7 @@ class _HomePageState extends State<HomePage> {
         ButtonTheme(
           minWidth: 80,
           child: FlatButton(
-            textColor: drinkType == null
+            textColor: _drinkType == null
                 ? Colors.white
                 : Colors.white38,
             padding: EdgeInsets.symmetric(horizontal: 16),
@@ -418,11 +416,11 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 NormalText(
                   '全て',
-                  bold: drinkType == null,
+                  bold: _drinkType == null,
                 ),
                 Padding(padding: EdgeInsets.only(right: 4)),
                 LabelText(
-                  getUploadCount(null).toString(),
+                  _getUploadCount(null).toString(),
                   size: 'small',
                   single: true,
                 ),
@@ -441,7 +439,7 @@ class _HomePageState extends State<HomePage> {
           return ButtonTheme(
             minWidth: 80,
             child: FlatButton(
-              textColor: drinkType == userDrinkType
+              textColor: _drinkType == userDrinkType
                   ? Colors.white
                   : Colors.white38,
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -449,11 +447,11 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   NormalText(
                     userDrinkType.label,
-                    bold: drinkType == userDrinkType,
+                    bold: _drinkType == userDrinkType,
                   ),
                   Padding(padding: EdgeInsets.only(right: 4)),
                   LabelText(
-                    getUploadCount(userDrinkType).toString(),
+                    _getUploadCount(userDrinkType).toString(),
                     size: 'small',
                     single: true,
                   ),
