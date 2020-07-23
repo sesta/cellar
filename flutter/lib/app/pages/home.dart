@@ -59,17 +59,19 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _updateTimeline({ bool isForceUpdate }) async {
     if (
-      _getTargetDrinks(_drinkType) == null
-      || (isForceUpdate != null && isForceUpdate)
+      _getTargetDrinks(_drinkType) != null
+      && isForceUpdate != true
     ) {
-      final drinks = await getTimelineDrinks(
-        _timelineType,
-        _orderType,
-        drinkType: _drinkType,
-        userId: widget.user.userId,
-      );
-      _setDrinks(drinks);
+      return;
     }
+
+    final drinks = await getTimelineDrinks(
+      _timelineType,
+      _orderType,
+      drinkType: _drinkType,
+      userId: widget.user.userId,
+    );
+    _setDrinks(drinks);
   }
 
   _setDrinks(List<Drink> drinks) {
