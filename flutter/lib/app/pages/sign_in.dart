@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/repository/user_repository.dart';
 import 'package:cellar/repository/provider/auth.dart';
 
+import 'package:cellar/app/widget/atoms/small_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 
@@ -80,6 +82,7 @@ class _SignInState extends State<SignInPage> {
                   multiLine: true,
                 ),
                 Padding(padding: EdgeInsets.only(bottom: 32)),
+
                 RaisedButton(
                   onPressed: _checkSignIn,
                   child: Text(
@@ -93,6 +96,35 @@ class _SignInState extends State<SignInPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                   ),
+                ),
+                Padding(padding: EdgeInsets.only(bottom: 32)),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SmallText(
+                      '※',
+                      multiLine: true,
+                    ),
+                    Padding(padding: EdgeInsets.only(right: 4)),
+                    SmallText(
+                      'プライバシーポリシーに\n同意の上認証をしてください。',
+                      multiLine: true,
+                    ),
+                  ],
+                ),
+
+                FlatButton(
+                  child: Text(
+                    'プライバシーポリシー',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                  onPressed: () => launch('https://cellar.sesta.dev/policy'),
                 ),
               ]
             ) : UserForm(createUser: _createUser),
