@@ -210,24 +210,22 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Column(
         children: [
-          Padding(
+          Container(
             padding: EdgeInsets.only(
               top: MediaQuery.of(context).padding.top + 8,
               left: 16,
-              right: 16,
             ),
-            child: Container(
-              alignment: Alignment.topLeft,
-              child: Text(
-                'Cellar',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Cellar',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                height: 1,
               ),
             ),
           ),
-          Padding(padding: EdgeInsets.only(bottom: 16)),
+          Padding(padding: EdgeInsets.only(bottom: 8)),
           Row(
             children: <Widget>[
               Expanded(
@@ -236,20 +234,7 @@ class _HomePageState extends State<HomePage> {
                   child: _drinkTypeList(),
                 ),
               ),
-              PopupMenuButton(
-                onSelected: _updateOrderType,
-                icon: Icon(Icons.sort),
-                itemBuilder: (BuildContext context) =>
-                  OrderType.values.map((type) =>
-                    PopupMenuItem(
-                      value: type,
-                      child: NormalText(
-                        type.label,
-                        bold: type == _orderType,
-                      ),
-                    )
-                  ).toList(),
-                ),
+              _orderMenu(),
             ],
           ),
           Expanded(
@@ -263,6 +248,7 @@ class _HomePageState extends State<HomePage> {
                   if (reason == CarouselPageChangedReason.controller) {
                     return;
                   }
+
                   if (index == 0) {
                     _updateDrinkType(null);
                     _scrollToDrinkType(0);
@@ -288,7 +274,7 @@ class _HomePageState extends State<HomePage> {
         color: Theme.of(context).accentColor,
         shape: CircularNotchedRectangle(),
         child: Padding(
-          padding: const EdgeInsets.only(top: 16.0, left: 16, right: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -350,7 +336,6 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _movePostPage,
-        tooltip: 'Increment',
         backgroundColor: Theme.of(context).accentColor,
         child: Icon(
           Icons.add,
@@ -365,41 +350,49 @@ class _HomePageState extends State<HomePage> {
     final drinks = _getTargetDrinks(targetDrinkType);
 
     if (drinks == null) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(40),
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-          )
-        ],
+      return Padding(
+        padding: EdgeInsets.only(bottom: 40),
+        child: Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ),
       );
     }
 
-    Widget content = SingleChildScrollView(
-      physics: AlwaysScrollableScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 200,
-          bottom: 100,
-        ),
+    if (drinks.length == 0) {
+      return Padding(
+        padding: EdgeInsets.only(bottom: 40),
         child: Column(
-          children: <Widget>[
-            NormalText('投稿したお酒が表示されます'),
-          ],
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: _timelineType == TimelineType.Mine
+            ? <Widget>[
+              NormalText(
+                'あなたのお酒が表示されます',
+                bold: true,
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 24)),
+              NormalText(
+                '飲んだお酒を投稿してみましょう',
+                bold: true,
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 24)),
+              Icon(Icons.arrow_downward),
+            ]
+          : <Widget>[
+              NormalText(
+                'お酒が見つかりませんでした',
+                bold: true,
+              ),
+            ],
         ),
-      ),
-    );
-    if (drinks.length > 0) {
-      content = DrinkGrid(drinks: drinks, updateDrink: () => setState(() {}));
+      );
     }
 
     return RefreshIndicator(
       onRefresh: _refresh,
-      child: content,
+      child: DrinkGrid(drinks: drinks, updateDrink: () => setState(() {})),
     );
   }
 
@@ -468,5 +461,21 @@ class _HomePageState extends State<HomePage> {
           );
         }).toList()
       ],
+    );
+
+  Widget _orderMenu() =>
+    PopupMenuButton(
+      onSelected: _updateOrderType,
+      icon: Icon(Icons.sort),
+      itemBuilder: (BuildContext context) =>
+        OrderType.values.map((orderType) =>
+          PopupMenuItem(
+            value: orderType,
+            child: NormalText(
+              orderType.label,
+              bold: orderType == _orderType,
+            ),
+          )
+        ).toList(),
     );
 }
