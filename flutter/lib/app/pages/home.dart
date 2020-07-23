@@ -46,10 +46,15 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _movePostPage() async {
     final isPosted = await Navigator.of(context).pushNamed('/post');
-
-    if (isPosted != null) {
-      _updateTimeline();
+    if (isPosted == null) {
+      return;
     }
+
+    setState(() {
+      this._mineAllDrinks = null;
+      this._mineDrinkMap = {};
+    });
+    _updateTimeline();
   }
 
   Future<void> _updateTimeline({ bool isForceUpdate }) async {
