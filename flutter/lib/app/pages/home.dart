@@ -328,10 +328,10 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               items: [
-                Timeline(null),
+                timeline(null),
                 ...widget.user.drinkTypesByMany
                   .where((type) => getUploadCount(type) > 0)
-                  .map((type) => Timeline(type))
+                  .map((type) => timeline(type))
                   .toList()
               ],
             ),
@@ -415,7 +415,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget Timeline(DrinkType targetDrinkType) {
+  Widget timeline(DrinkType targetDrinkType) {
     final drinks = _getTargetDrinks(targetDrinkType);
 
     if (drinks == null) {
