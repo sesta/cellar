@@ -141,6 +141,10 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       this.orderType = orderType;
+      this.publicAllDrinks = null;
+      this.mineAllDrinks = null;
+      this.publicDrinkMap = {};
+      this.mineDrinkMap = {};
     });
 
     _updateTimeline();
@@ -192,6 +196,14 @@ class _HomePageState extends State<HomePage> {
     throw '予期せぬtypeです。 $timelineType';
   }
 
+  Iterable<MapEntry<int, DrinkType>> get _postedDrinksList {
+    return widget.user.drinkTypesByMany
+      .where((type) => getUploadCount(type) > 0)
+      .toList()
+      .asMap()
+      .entries;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -220,74 +232,7 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 child: Container(
                   height: 40,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    controller: _scrollController,
-                    children: <Widget>[
-                      ButtonTheme(
-                        minWidth: 80,
-                        child: FlatButton(
-                          textColor: drinkType == null
-                            ? Colors.white
-                            : Colors.white38,
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            children: <Widget>[
-                              NormalText(
-                                '全て',
-                                bold: drinkType == null,
-                              ),
-                              Padding(padding: EdgeInsets.only(right: 4)),
-                              LabelText(
-                                getUploadCount(null).toString(),
-                                size: 'small',
-                                single: true,
-                              ),
-                            ],
-                          ),
-                          onPressed: () {
-                            _updateDrinkType(null);
-                            _carouselController.animateToPage(0);
-                          },
-                        ),
-                      ),
-                      ...List.generate(DrinkType.values.length, (i)=> i).map((index) {
-                        final userDrinkType = widget.user.drinkTypesByMany[index];
-                        final count = getUploadCount(userDrinkType);
-                        if (count == 0) {
-                          return Container();
-                        }
-
-                        return ButtonTheme(
-                          minWidth: 80,
-                          child: FlatButton(
-                            textColor: drinkType == userDrinkType
-                                ? Colors.white
-                                : Colors.white38,
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Row(
-                              children: <Widget>[
-                                NormalText(
-                                  userDrinkType.label,
-                                  bold: drinkType == userDrinkType,
-                                ),
-                                Padding(padding: EdgeInsets.only(right: 4)),
-                                LabelText(
-                                  count.toString(),
-                                  size: 'small',
-                                  single: true,
-                                ),
-                              ],
-                            ),
-                            onPressed: () {
-                              _updateDrinkType(userDrinkType);
-                              _carouselController.animateToPage(index + 1);
-                            },
-                          ),
-                        );
-                      }).toList()
-                    ],
-                  ),
+                  child: drinkTypeList,
                 ),
               ),
               PopupMenuButton(
@@ -313,25 +258,25 @@ class _HomePageState extends State<HomePage> {
                 height: MediaQuery.of(context).size.height,
                 viewportFraction: 1,
                 enableInfiniteScroll: false,
-                onPageChanged: (int index, _) {
+                onPageChanged: (int index, CarouselPageChangedReason reason) {
+                  if (reason == CarouselPageChangedReason.controller) {
+                    return;
+                  }
                   if (index == 0) {
                     _updateDrinkType(null);
                     _scrollToDrinkType(0);
                     return;
                   }
 
-                  final targetDrinkTypes = widget.user.drinkTypesByMany
-                    .where((type) => getUploadCount(type) > 0)
-                    .toList();
-                  _updateDrinkType(targetDrinkTypes[index - 1]);
+                  final targetDrinkTypes = _postedDrinksList.toList();
+                  _updateDrinkType(targetDrinkTypes[index - 1].value);
                   _scrollToDrinkType(index);
                 },
               ),
               items: [
-                Timeline(null),
-                ...widget.user.drinkTypesByMany
-                  .where((type) => getUploadCount(type) > 0)
-                  .map((type) => Timeline(type))
+                timeline(null),
+                ..._postedDrinksList
+                  .map((entry) => timeline(entry.value))
                   .toList()
               ],
             ),
@@ -415,7 +360,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget Timeline(DrinkType targetDrinkType) {
+  Widget timeline(DrinkType targetDrinkType) {
     final drinks = _getTargetDrinks(targetDrinkType);
 
     if (drinks == null) {
@@ -456,4 +401,71 @@ class _HomePageState extends State<HomePage> {
       child: content,
     );
   }
+
+  Widget get drinkTypeList =>
+    ListView(
+      scrollDirection: Axis.horizontal,
+      controller: _scrollController,
+      children: <Widget>[
+        ButtonTheme(
+          minWidth: 80,
+          child: FlatButton(
+            textColor: drinkType == null
+                ? Colors.white
+                : Colors.white38,
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: <Widget>[
+                NormalText(
+                  '全て',
+                  bold: drinkType == null,
+                ),
+                Padding(padding: EdgeInsets.only(right: 4)),
+                LabelText(
+                  getUploadCount(null).toString(),
+                  size: 'small',
+                  single: true,
+                ),
+              ],
+            ),
+            onPressed: () {
+              _updateDrinkType(null);
+              _carouselController.animateToPage(0);
+            },
+          ),
+        ),
+        ..._postedDrinksList.map((entry) {
+          final index = entry.key;
+          final userDrinkType = entry.value;
+
+          return ButtonTheme(
+            minWidth: 80,
+            child: FlatButton(
+              textColor: drinkType == userDrinkType
+                  ? Colors.white
+                  : Colors.white38,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: <Widget>[
+                  NormalText(
+                    userDrinkType.label,
+                    bold: drinkType == userDrinkType,
+                  ),
+                  Padding(padding: EdgeInsets.only(right: 4)),
+                  LabelText(
+                    getUploadCount(userDrinkType).toString(),
+                    size: 'small',
+                    single: true,
+                  ),
+                ],
+              ),
+              onPressed: () {
+                _updateDrinkType(userDrinkType);
+                _carouselController.animateToPage(index + 1);
+              },
+            ),
+          );
+        }).toList()
+      ],
+    );
 }
