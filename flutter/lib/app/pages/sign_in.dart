@@ -17,19 +17,19 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInState extends State<SignInPage> {
-  String userId;
-  bool loading = false;
+  String _userId;
+  bool _loading = false;
 
   _checkSignIn() async {
     setState(() {
-      this.loading = true;
+      _loading = true;
     });
 
     final firebaseUser = await signIn();
     if (firebaseUser == null) {
       print('SignInに失敗しました');
       setState(() {
-        this.loading = false;
+        _loading = false;
       });
       return;
     }
@@ -43,21 +43,21 @@ class _SignInState extends State<SignInPage> {
     }
 
     setState(() {
-      this.userId = firebaseUser.uid;
-      this.loading = false;
+      _userId = firebaseUser.uid;
+      _loading = false;
     });
   }
 
   _createUser(String userName) async {
-    if (userId == null || userName == '') {
+    if (_userId == null || userName == '') {
       return;
     }
 
     setState(() {
-      this.loading = true;
+      _loading = true;
     });
 
-    final user = User(userId, userName);
+    final user = User(_userId, userName);
     await user.create();
     widget.setUser(user);
     Navigator.pushReplacementNamed(context, '/home');
@@ -67,12 +67,12 @@ class _SignInState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(userId == null ? 'ログイン' : '新規登録'),
+        title: Text(_userId == null ? 'ログイン' : '新規登録'),
       ),
       body: Stack(
         children: <Widget>[
           Center(
-            child: userId == null ? Column(
+            child: _userId == null ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 NormalText(
@@ -97,7 +97,7 @@ class _SignInState extends State<SignInPage> {
               ]
             ) : UserForm(createUser: _createUser),
           ),
-          loading ? Container(
+          _loading ? Container(
             color: Colors.black38,
             alignment: Alignment.center,
             child: CircularProgressIndicator(
@@ -124,7 +124,7 @@ class UserForm extends StatefulWidget {
 }
 
 class _UserFormState extends State<UserForm> {
-  final nameController = TextEditingController();
+  final _nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +135,7 @@ class _UserFormState extends State<UserForm> {
         children: <Widget>[
           NormalText('ニックネーム'),
           NormalTextField(
-            nameController,
+            _nameController,
             onChanged: (_) => setState(() {}),
             bold: true,
           ),
@@ -143,9 +143,9 @@ class _UserFormState extends State<UserForm> {
 
           Center(
             child: RaisedButton(
-              onPressed: nameController.text == ''
+              onPressed: _nameController.text == ''
                 ? null
-                : () => widget.createUser(nameController.text),
+                : () => widget.createUser(_nameController.text),
               child: Text(
                 '登録を完了する',
                 style: TextStyle(
