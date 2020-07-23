@@ -1,4 +1,3 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -27,18 +26,18 @@ class Cellar extends StatefulWidget {
 
 class _CellarState extends State<Cellar> {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
-  Status status;
-  User user;
+  Status _status;
+  User _user;
 
   _setStatus(Status status) {
     setState(() {
-      this.status = status;
+      _status = status;
     });
   }
 
   _setUser(User user) {
     setState(() {
-      this.user = user;
+      _user = user;
     });
   }
 
@@ -55,24 +54,24 @@ class _CellarState extends State<Cellar> {
       ],
       onGenerateRoute: (settings) {
         if (settings.name == '/home') {
-          return fadeInRoute(HomePage(status: status, user: user));
+          return fadeInRoute(HomePage(status: _status, user: _user));
         }
         if (settings.name == '/signIn') {
           return fadeInRoute(SignInPage(setUser: _setUser));
         }
         if (settings.name == '/drink') {
           final Drink drink = settings.arguments;
-          return slideUpRoute(DrinkPage(user: user, drink: drink));
+          return slideUpRoute(DrinkPage(user: _user, drink: drink));
         }
         if (settings.name == '/post') {
-          return slideUpRoute(PostPage(status: status, user: user));
+          return slideUpRoute(PostPage(status: _status, user: _user));
         }
         if (settings.name == '/edit') {
           final Drink drink = settings.arguments;
-          return slideUpRoute(EditPage(status: status, user: user, drink: drink));
+          return slideUpRoute(EditPage(status: _status, user: _user, drink: drink));
         }
         if (settings.name == '/setting') {
-          return slideUpRoute(SettingPage(user: user));
+          return slideUpRoute(SettingPage(user: _user));
         }
 
         return MaterialPageRoute(builder: (context) => SplashPage(setStatus: _setStatus, setUser: _setUser));
