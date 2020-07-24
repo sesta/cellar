@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 
 import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
+import 'package:cellar/repository/analytics_repository.dart';
 
 import 'package:cellar/app/pages/splash.dart';
 import 'package:cellar/app/pages/home.dart';
@@ -25,7 +24,6 @@ class Cellar extends StatefulWidget {
 }
 
 class _CellarState extends State<Cellar> {
-  static FirebaseAnalytics analytics = FirebaseAnalytics();
   Status _status;
   User _user;
 
@@ -39,6 +37,8 @@ class _CellarState extends State<Cellar> {
     setState(() {
       _user = user;
     });
+
+    AnalyticsRepository().setUser(user.userId);
   }
 
   @override
@@ -50,28 +50,47 @@ class _CellarState extends State<Cellar> {
       ),
       color: Theme.of(context).accentColor,
       navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: analytics),
+        AnalyticsRepository().observer,
       ],
       onGenerateRoute: (settings) {
-        if (settings.name == '/home') {
-          return fadeInRoute(HomePage(status: _status, user: _user));
-        }
-        if (settings.name == '/signIn') {
-          return fadeInRoute(SignInPage(setUser: _setUser));
-        }
-        if (settings.name == '/drink') {
-          final Drink drink = settings.arguments;
-          return slideUpRoute(DrinkPage(user: _user, drink: drink));
-        }
-        if (settings.name == '/post') {
-          return slideUpRoute(PostPage(status: _status, user: _user));
-        }
-        if (settings.name == '/edit') {
-          final Drink drink = settings.arguments;
-          return slideUpRoute(EditPage(status: _status, user: _user, drink: drink));
-        }
-        if (settings.name == '/setting') {
-          return slideUpRoute(SettingPage(user: _user));
+        switch(settings.name) {
+          case '/home':
+            return fadeInRoute(
+              'home',
+              HomePage(status: _status, user: _user),
+            );
+
+          case '/signIn':
+            return fadeInRoute(
+              'signIn',
+              SignInPage(setUser: _setUser),
+            );
+
+          case '/drink':
+            final Drink drink = settings.arguments;
+            return slideUpRoute(
+              'drink',
+              DrinkPage(user: _user, drink: drink),
+            );
+
+          case '/post':
+            return slideUpRoute(
+              'post',
+              PostPage(status: _status, user: _user),
+            );
+
+          case '/edit':
+            final Drink drink = settings.arguments;
+            return slideUpRoute(
+              'edit',
+              EditPage(status: _status, user: _user, drink: drink),
+            );
+
+          case '/setting':
+            return slideUpRoute(
+              'setting',
+              SettingPage(user: _user),
+            );
         }
 
         return MaterialPageRoute(builder: (context) => SplashPage(setStatus: _setStatus, setUser: _setUser));

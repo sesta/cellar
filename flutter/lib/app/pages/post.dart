@@ -1,4 +1,3 @@
-import 'package:cellar/app/widget/drink_form.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -8,9 +7,10 @@ import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/models/post.dart';
+import 'package:cellar/repository/analytics_repository.dart';
 
+import 'package:cellar/app/widget/drink_form.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
-import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 
 class PostPage extends StatefulWidget {
   PostPage({
@@ -187,6 +187,7 @@ class _PostPageState extends State<PostPage> {
     await widget.user.incrementUploadCount(_drinkType);
     await widget.status.incrementUploadCount(_drinkType);
 
+    AnalyticsRepository().sendEvent(EventType.PostDrink, {});
     Navigator.of(context).pop(true);
   }
 

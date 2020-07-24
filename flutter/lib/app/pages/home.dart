@@ -6,6 +6,7 @@ import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/models/timeline.dart';
+import 'package:cellar/repository/analytics_repository.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
@@ -72,6 +73,15 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _refresh() async {
     _setDrinks(null);
+
+    AnalyticsRepository().sendEvent(
+      EventType.ReloadTimeline,
+      {
+        'timelineType': _timelineType.toString(),
+        'drinkType': _drinkType.toString(),
+        'orderType': _orderType.toString(),
+      },
+    );
     await _updateTimeline(isForceUpdate: true);
   }
 
@@ -117,10 +127,18 @@ class _HomePageState extends State<HomePage> {
       _drinkType = null;
     });
 
+    AnalyticsRepository().sendEvent(
+      EventType.ChangeTimelineType,
+      {
+        'timelineType': timelineType.toString(),
+        'drinkType': _drinkType.toString(),
+        'orderType': _orderType.toString(),
+      },
+    );
     _updateTimeline();
   }
 
-  _updateDrinkType(DrinkType drinkType) {
+  _updateDrinkType(DrinkType drinkType, String from) {
     if (_drinkType == drinkType) {
       return;
     }
@@ -129,6 +147,15 @@ class _HomePageState extends State<HomePage> {
       _drinkType = drinkType;
     });
 
+    AnalyticsRepository().sendEvent(
+      EventType.ChangeDrinkType,
+      {
+        'timelineType': _timelineType.toString(),
+        'drinkType': drinkType.toString(),
+        'orderType': _orderType.toString(),
+        'from': from,
+      },
+    );
     _updateTimeline();
   }
 
@@ -145,6 +172,14 @@ class _HomePageState extends State<HomePage> {
       _mineDrinkMap = {};
     });
 
+    AnalyticsRepository().sendEvent(
+      EventType.ChangeOrderType,
+      {
+        'timelineType': _timelineType.toString(),
+        'drinkType': _drinkType.toString(),
+        'orderType': orderType.toString(),
+      },
+    );
     _updateTimeline();
   }
 
@@ -255,13 +290,13 @@ class _HomePageState extends State<HomePage> {
                   }
 
                   if (index == 0) {
-                    _updateDrinkType(null);
+                    _updateDrinkType(null, 'carousel');
                     _scrollToDrinkType(0);
                     return;
                   }
 
                   final targetDrinkTypes = _postedDrinkTypeEntries.toList();
-                  _updateDrinkType(targetDrinkTypes[index - 1].value);
+                  _updateDrinkType(targetDrinkTypes[index - 1].value, 'carousel');
                   _scrollToDrinkType(index);
                 },
               ),
@@ -428,7 +463,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             onPressed: () {
-              _updateDrinkType(null);
+              _updateDrinkType(null, 'button');
               _carouselController.animateToPage(
                 0,
                 curve: Curves.easeOut,
@@ -463,7 +498,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               onPressed: () {
-                _updateDrinkType(userDrinkType);
+                _updateDrinkType(userDrinkType, 'button');
                 _carouselController.animateToPage(index + 1);
               },
             ),
