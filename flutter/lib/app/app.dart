@@ -53,43 +53,44 @@ class _CellarState extends State<Cellar> {
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
       onGenerateRoute: (settings) {
-        if (settings.name == '/home') {
-          return fadeInRoute(
-            'home',
-            HomePage(status: _status, user: _user),
-          );
-        }
-        if (settings.name == '/signIn') {
-          return fadeInRoute(
-            'signIn',
-            SignInPage(setUser: _setUser),
-          );
-        }
-        if (settings.name == '/drink') {
-          final Drink drink = settings.arguments;
-          return slideUpRoute(
-            'drink',
-            DrinkPage(user: _user, drink: drink),
-          );
-        }
-        if (settings.name == '/post') {
-          return slideUpRoute(
-            'post',
-            PostPage(status: _status, user: _user),
-          );
-        }
-        if (settings.name == '/edit') {
-          final Drink drink = settings.arguments;
-          return slideUpRoute(
-            'edit',
-            EditPage(status: _status, user: _user, drink: drink),
-          );
-        }
-        if (settings.name == '/setting') {
-          return slideUpRoute(
-            'setting',
-            SettingPage(user: _user),
-          );
+        switch(settings.name) {
+          case '/home':
+            return fadeInRoute(
+              'home',
+              HomePage(status: _status, user: _user),
+            );
+
+          case '/signIn':
+            return fadeInRoute(
+              'signIn',
+              SignInPage(setUser: _setUser),
+            );
+
+          case '/drink':
+            final Drink drink = settings.arguments;
+            return slideUpRoute(
+              'drink',
+              DrinkPage(user: _user, drink: drink),
+            );
+
+          case '/post':
+            return slideUpRoute(
+              'post',
+              PostPage(status: _status, user: _user),
+            );
+
+          case '/edit':
+            final Drink drink = settings.arguments;
+            return slideUpRoute(
+              'edit',
+              EditPage(status: _status, user: _user, drink: drink),
+            );
+
+          case '/setting':
+            return slideUpRoute(
+              'setting',
+              SettingPage(user: _user),
+            );
         }
 
         return MaterialPageRoute(builder: (context) => SplashPage(setStatus: _setStatus, setUser: _setUser));
