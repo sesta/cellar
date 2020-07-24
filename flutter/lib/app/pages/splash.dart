@@ -1,3 +1,5 @@
+import 'package:cellar/domain/entities/status.dart';
+import 'package:cellar/domain/entities/user.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/repository/status_repository.dart';
@@ -23,26 +25,32 @@ class _SplashPageState extends State<SplashPage> {
   @override
   initState() {
     super.initState();
-
-    _checkSignIn();
-    StatusRepository().getStatus().then((status) => widget.setStatus(status));
+    _fetch();
   }
 
-  _checkSignIn() async {
+  Future<void> _fetch() async {
+    User user = await _checkSignIn();
+    if (user != null) {
+      widget.setUser(user);
+    }
+    Status status = await StatusRepository().getStatus();
+    widget.setStatus(status);
+
+    Navigator.pushReplacementNamed(context, '/home');
+  }
+
+  Future<User> _checkSignIn() async {
     final userId = await getSignInUserId();
     if (userId == null) {
-      Navigator.pushReplacementNamed(context, '/signIn');
-      return ;
+      return null;
     }
 
     final user = await UserRepository().getUser(userId);
     if (user == null) {
-      Navigator.pushReplacementNamed(context, '/signIn');
-      return ;
+      return null;
     }
 
-    widget.setUser(user);
-    Navigator.pushReplacementNamed(context, '/home');
+    return user;
   }
 
   @override

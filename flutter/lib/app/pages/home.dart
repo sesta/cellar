@@ -47,6 +47,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Iterable<MapEntry<int, DrinkType>> get _postedDrinkTypeEntries {
+    if (widget.user == null) {
+      return DrinkType.values
+        .where((drinkType) => _getUploadCount(drinkType) > 0)
+        .toList()
+        .asMap()
+        .entries;
+    }
+
     return widget.user.drinkTypesByMany
       .where((drinkType) => _getUploadCount(drinkType) > 0)
       .toList()
@@ -55,6 +63,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _updateTimeline({ bool isForceUpdate }) async {
+    if (widget.user == null && _timelineType == TimelineType.Mine) {
+      return;
+    }
+
     if (
       _getTargetDrinks(_drinkType) != null
       && isForceUpdate != true
@@ -66,7 +78,7 @@ class _HomePageState extends State<HomePage> {
       _timelineType,
       _orderType,
       drinkType: _drinkType,
-      userId: widget.user.userId,
+      userId: widget.user == null ? null : widget.user.userId,
     );
     _setDrinks(drinks);
   }
@@ -197,6 +209,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   int _getUploadCount(DrinkType drinkType) {
+    if (widget.user == null && _timelineType == TimelineType.Mine) {
+      return 0;
+    }
+
     if (drinkType == null) {
       switch(_timelineType) {
         case TimelineType.All:
@@ -278,35 +294,37 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Expanded(
-            child: CarouselSlider(
-              carouselController: _carouselController,
-              options: CarouselOptions(
-                height: MediaQuery.of(context).size.height,
-                viewportFraction: 1,
-                enableInfiniteScroll: false,
-                onPageChanged: (int index, CarouselPageChangedReason reason) {
-                  if (reason == CarouselPageChangedReason.controller) {
-                    return;
-                  }
+            child: widget.user == null && _timelineType == TimelineType.Mine
+              ? Text('as')
+              : CarouselSlider(
+                carouselController: _carouselController,
+                options: CarouselOptions(
+                  height: MediaQuery.of(context).size.height,
+                  viewportFraction: 1,
+                  enableInfiniteScroll: false,
+                  onPageChanged: (int index, CarouselPageChangedReason reason) {
+                    if (reason == CarouselPageChangedReason.controller) {
+                      return;
+                    }
 
-                  if (index == 0) {
-                    _updateDrinkType(null, 'carousel');
-                    _scrollToDrinkType(0);
-                    return;
-                  }
+                    if (index == 0) {
+                      _updateDrinkType(null, 'carousel');
+                      _scrollToDrinkType(0);
+                      return;
+                    }
 
-                  final targetDrinkTypes = _postedDrinkTypeEntries.toList();
-                  _updateDrinkType(targetDrinkTypes[index - 1].value, 'carousel');
-                  _scrollToDrinkType(index);
-                },
+                    final targetDrinkTypes = _postedDrinkTypeEntries.toList();
+                    _updateDrinkType(targetDrinkTypes[index - 1].value, 'carousel');
+                    _scrollToDrinkType(index);
+                  },
+                ),
+                items: [
+                  _timeline(null),
+                  ..._postedDrinkTypeEntries
+                    .map((entry) => _timeline(entry.value))
+                    .toList()
+                ],
               ),
-              items: [
-                _timeline(null),
-                ..._postedDrinkTypeEntries
-                  .map((entry) => _timeline(entry.value))
-                  .toList()
-              ],
-            ),
           ),
         ],
       ),
@@ -323,7 +341,9 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     _updateTimelineType(TimelineType.Mine);
                     _scrollToDrinkType(0);
-                    _carouselController.jumpToPage(0);
+                    if (widget.user != null) {
+                      _carouselController.jumpToPage(0);
+                    }
                   },
                   icon: Icon(
                     Icons.home,
@@ -340,7 +360,9 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     _updateTimelineType(TimelineType.All);
                     _scrollToDrinkType(0);
-                    _carouselController.jumpToPage(0);
+                    if (widget.user != null) {
+                      _carouselController.jumpToPage(0);
+                    }
                   },
                   icon: Icon(
                     Icons.people,
@@ -361,14 +383,16 @@ class _HomePageState extends State<HomePage> {
               ),
               Expanded(
                 flex: 1,
-                child: IconButton(
-                  onPressed: () => Navigator.of(context).pushNamed('/setting'),
-                  icon: Icon(
-                    Icons.settings,
-                    size: 32,
-                    color: Theme.of(context).primaryColorLight,
+                child: widget.user == null
+                  ? Container(height: 0)
+                  : IconButton(
+                    onPressed: () => Navigator.of(context).pushNamed('/setting'),
+                    icon: Icon(
+                      Icons.settings,
+                      size: 32,
+                      color: Theme.of(context).primaryColorLight,
+                    ),
                   ),
-                ),
               ),
             ],
           ),
