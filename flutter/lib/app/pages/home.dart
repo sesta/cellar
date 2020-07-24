@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
     _updateTimeline();
   }
 
-  _updateDrinkType(DrinkType drinkType) {
+  _updateDrinkType(DrinkType drinkType, String from) {
     if (_drinkType == drinkType) {
       return;
     }
@@ -153,6 +153,7 @@ class _HomePageState extends State<HomePage> {
         'timelineType': _timelineType.toString(),
         'drinkType': drinkType.toString(),
         'orderType': _orderType.toString(),
+        'from': from,
       },
     );
     _updateTimeline();
@@ -289,13 +290,13 @@ class _HomePageState extends State<HomePage> {
                   }
 
                   if (index == 0) {
-                    _updateDrinkType(null);
+                    _updateDrinkType(null, 'carousel');
                     _scrollToDrinkType(0);
                     return;
                   }
 
                   final targetDrinkTypes = _postedDrinkTypeEntries.toList();
-                  _updateDrinkType(targetDrinkTypes[index - 1].value);
+                  _updateDrinkType(targetDrinkTypes[index - 1].value, 'carousel');
                   _scrollToDrinkType(index);
                 },
               ),
@@ -462,7 +463,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             onPressed: () {
-              _updateDrinkType(null);
+              _updateDrinkType(null, 'button');
               _carouselController.animateToPage(
                 0,
                 curve: Curves.easeOut,
@@ -497,7 +498,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               onPressed: () {
-                _updateDrinkType(userDrinkType);
+                _updateDrinkType(userDrinkType, 'button');
                 _carouselController.animateToPage(index + 1);
               },
             ),
