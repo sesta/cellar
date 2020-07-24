@@ -422,11 +422,11 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _movePostPage,
+        onPressed: widget.user == null ? null : _movePostPage,
         backgroundColor: Theme.of(context).accentColor,
         child: Icon(
           Icons.add,
-          color: Colors.white,
+          color: widget.user == null ? Theme.of(context).primaryColorLight : Colors.white,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
