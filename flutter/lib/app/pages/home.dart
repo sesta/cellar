@@ -45,6 +45,8 @@ class _HomePageState extends State<HomePage> {
   ScrollController _scrollController = ScrollController();
   CarouselController _carouselController = CarouselController();
 
+  bool _loadingSignIn = false;
+
   @override
   initState() {
     super.initState();
@@ -215,6 +217,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _checkSignIn() async {
+    setState(() {
+      this._loadingSignIn = true;
+    });
     final firebaseUser = await signIn();
     if (firebaseUser == null) {
       print('SignInに失敗しました');
@@ -223,6 +228,10 @@ class _HomePageState extends State<HomePage> {
 
     final userId = await getSignInUserId();
     final user = await UserRepository().getUser(userId);
+    setState(() {
+      this._loadingSignIn = false;
+    });
+
     if (user != null) {
       Navigator.of(context).pushReplacementNamed('/home');
       return;
@@ -571,59 +580,72 @@ class _HomePageState extends State<HomePage> {
     );
 
   Widget _signInContainer() =>
-    Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    Stack(
       children: <Widget>[
-        NormalText(
-          'お酒を投稿するには\nアカウント認証が必要です。',
-          multiLine: true,
-        ),
-        Padding(padding: EdgeInsets.only(bottom: 32)),
-
-        RaisedButton(
-          onPressed: _checkSignIn,
-          child: Text(
-            'Googleで認証する',
-            style: TextStyle(
-              fontSize: 14,
-            ),
-          ),
-          color: Theme.of(context).accentColor,
-          textColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
-        Padding(padding: EdgeInsets.only(bottom: 32)),
-
-        Row(
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SmallText(
-              '※',
+            NormalText(
+              'お酒を投稿するには\nアカウント認証が必要です。',
               multiLine: true,
             ),
-            Padding(padding: EdgeInsets.only(right: 4)),
-            SmallText(
-              'プライバシーポリシーに\n同意の上認証をしてください。',
-              multiLine: true,
-            ),
-          ],
-        ),
+            Padding(padding: EdgeInsets.only(bottom: 32)),
 
-        FlatButton(
-          child: Text(
-            'プライバシーポリシー',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.blueAccent,
+            RaisedButton(
+              onPressed: _checkSignIn,
+              child: Text(
+                'Googleで認証する',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
             ),
-          ),
-          onPressed: () => launch('https://cellar.sesta.dev/policy'),
+            Padding(padding: EdgeInsets.only(bottom: 32)),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SmallText(
+                  '※',
+                  multiLine: true,
+                ),
+                Padding(padding: EdgeInsets.only(right: 4)),
+                SmallText(
+                  'プライバシーポリシーに\n同意の上認証をしてください。',
+                  multiLine: true,
+                ),
+              ],
+            ),
+
+            FlatButton(
+              child: Text(
+                'プライバシーポリシー',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                ),
+              ),
+              onPressed: () => launch('https://cellar.sesta.dev/policy'),
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 80)),
+          ]
         ),
-        Padding(padding: EdgeInsets.only(bottom: 80)),
-      ]
+        _loadingSignIn ? Container(
+          padding: EdgeInsets.only(bottom: 80),
+          color: Colors.black38,
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ) : Container(),
+      ],
     );
 }
