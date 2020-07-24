@@ -5,21 +5,25 @@ import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 
-class SignInPage extends StatefulWidget {
-  SignInPage({Key key, this.setUser}) : super(key: key);
+class SignUpPage extends StatefulWidget {
+  SignUpPage({
+    Key key,
+    this.userId,
+    this.setUser,
+  }) : super(key: key);
 
+  final String userId;
   final setUser;
 
   @override
-  _SignInState createState() => _SignInState();
+  _SignUpState createState() => _SignUpState();
 }
 
-class _SignInState extends State<SignInPage> {
-  String _userId;
+class _SignUpState extends State<SignUpPage> {
   bool _loading = false;
 
   _createUser(String userName) async {
-    if (_userId == null || userName == '') {
+    if (userName == '') {
       return;
     }
 
@@ -27,17 +31,19 @@ class _SignInState extends State<SignInPage> {
       _loading = true;
     });
 
-    final user = User(_userId, userName);
+    final user = User(widget.userId, userName);
     await user.create();
-    widget.setUser(user);
-    Navigator.pushReplacementNamed(context, '/home');
+    await widget.setUser(user);
+    Navigator.of(context).pop();
+    // ユーザー情報を渡し直すためreplace
+    Navigator.of(context).pushReplacementNamed('/home');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_userId == null ? 'ログイン' : '新規登録'),
+        title: Text('新規登録'),
       ),
       body: Stack(
         children: <Widget>[

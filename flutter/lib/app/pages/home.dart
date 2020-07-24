@@ -214,7 +214,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _checkSignIn() async {
+  Future<void> _checkSignIn() async {
     final firebaseUser = await signIn();
     if (firebaseUser == null) {
       print('SignInに失敗しました');
@@ -224,9 +224,11 @@ class _HomePageState extends State<HomePage> {
     final userId = await getSignInUserId();
     final user = await UserRepository().getUser(userId);
     if (user != null) {
-      widget.setUser(user);
+      Navigator.of(context).pushReplacementNamed('/home');
       return;
     }
+
+    Navigator.of(context).pushNamed('/signUp', arguments: userId);
   }
 
   int _getUploadCount(DrinkType drinkType) {

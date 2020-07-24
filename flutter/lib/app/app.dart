@@ -10,7 +10,7 @@ import 'package:cellar/app/pages/home.dart';
 import 'package:cellar/app/pages/drink.dart';
 import 'package:cellar/app/pages/post.dart';
 import 'package:cellar/app/pages/edit.dart';
-import 'package:cellar/app/pages/sign_in.dart';
+import 'package:cellar/app/pages/sign_up.dart';
 import 'package:cellar/app/pages/setting.dart';
 
 import 'package:cellar/app/widget/transitions/fade_in_route.dart';
@@ -60,10 +60,11 @@ class _CellarState extends State<Cellar> {
               HomePage(status: _status, user: _user, setUser: _setUser),
             );
 
-          case '/signIn':
+          case '/signUp':
+            final String userId = settings.arguments;
             return fadeInRoute(
-              'signIn',
-              SignInPage(setUser: _setUser),
+              'signUp',
+              SignUpPage(userId: userId, setUser: _setUser),
             );
 
           case '/drink':
