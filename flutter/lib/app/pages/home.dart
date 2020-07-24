@@ -429,7 +429,11 @@ class _HomePageState extends State<HomePage> {
             ),
             onPressed: () {
               _updateDrinkType(null);
-              _carouselController.animateToPage(0);
+              _carouselController.animateToPage(
+                0,
+                curve: Curves.easeOut,
+                duration: Duration(milliseconds: 300),
+              );
             },
           ),
         ),
