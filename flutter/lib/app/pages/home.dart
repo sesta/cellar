@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cellar/app/widget/atoms/small_text.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -6,21 +7,26 @@ import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/models/timeline.dart';
+import 'package:cellar/repository/user_repository.dart';
 import 'package:cellar/repository/analytics_repository.dart';
+import 'package:cellar/repository/provider/auth.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
     Key key,
     this.user,
     this.status,
+    this.setUser,
   }) : super(key: key);
 
-  final Status status;
   final User user;
+  final Status status;
+  final setUser;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -208,6 +214,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  _checkSignIn() async {
+    final firebaseUser = await signIn();
+    if (firebaseUser == null) {
+      print('SignInに失敗しました');
+      return;
+    }
+
+    final userId = await getSignInUserId();
+    final user = await UserRepository().getUser(userId);
+    if (user != null) {
+      widget.setUser(user);
+      return;
+    }
+  }
+
   int _getUploadCount(DrinkType drinkType) {
     if (widget.user == null && _timelineType == TimelineType.Mine) {
       return 0;
@@ -295,7 +316,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             child: widget.user == null && _timelineType == TimelineType.Mine
-              ? Text('as')
+              ? _signInContainer()
               : CarouselSlider(
                 carouselController: _carouselController,
                 options: CarouselOptions(
@@ -545,5 +566,62 @@ class _HomePageState extends State<HomePage> {
             ),
           )
         ).toList(),
+    );
+
+  Widget _signInContainer() =>
+    Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        NormalText(
+          'お酒を投稿するには\nアカウント認証が必要です。',
+          multiLine: true,
+        ),
+        Padding(padding: EdgeInsets.only(bottom: 32)),
+
+        RaisedButton(
+          onPressed: _checkSignIn,
+          child: Text(
+            'Googleで認証する',
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+          color: Theme.of(context).accentColor,
+          textColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+        Padding(padding: EdgeInsets.only(bottom: 32)),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SmallText(
+              '※',
+              multiLine: true,
+            ),
+            Padding(padding: EdgeInsets.only(right: 4)),
+            SmallText(
+              'プライバシーポリシーに\n同意の上認証をしてください。',
+              multiLine: true,
+            ),
+          ],
+        ),
+
+        FlatButton(
+          child: Text(
+            'プライバシーポリシー',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.blueAccent,
+            ),
+          ),
+          onPressed: () => launch('https://cellar.sesta.dev/policy'),
+        ),
+        Padding(padding: EdgeInsets.only(bottom: 80)),
+      ]
     );
 }

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:cellar/domain/entities/user.dart';
-import 'package:cellar/repository/user_repository.dart';
-import 'package:cellar/repository/provider/auth.dart';
 
-import 'package:cellar/app/widget/atoms/small_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 
@@ -21,34 +17,6 @@ class SignInPage extends StatefulWidget {
 class _SignInState extends State<SignInPage> {
   String _userId;
   bool _loading = false;
-
-  _checkSignIn() async {
-    setState(() {
-      _loading = true;
-    });
-
-    final firebaseUser = await signIn();
-    if (firebaseUser == null) {
-      print('SignInに失敗しました');
-      setState(() {
-        _loading = false;
-      });
-      return;
-    }
-
-    final userId = await getSignInUserId();
-    final user = await UserRepository().getUser(userId);
-    if (user != null) {
-      widget.setUser(user);
-      Navigator.of(context).pushReplacementNamed('/home');
-      return;
-    }
-
-    setState(() {
-      _userId = firebaseUser.uid;
-      _loading = false;
-    });
-  }
 
   _createUser(String userName) async {
     if (_userId == null || userName == '') {
@@ -74,60 +42,7 @@ class _SignInState extends State<SignInPage> {
       body: Stack(
         children: <Widget>[
           Center(
-            child: _userId == null ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                NormalText(
-                  'Cellarの利用には\nアカウント認証が必要です。',
-                  multiLine: true,
-                ),
-                Padding(padding: EdgeInsets.only(bottom: 32)),
-
-                RaisedButton(
-                  onPressed: _checkSignIn,
-                  child: Text(
-                    'Googleで認証する',
-                    style: TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                  color: Theme.of(context).accentColor,
-                  textColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-                Padding(padding: EdgeInsets.only(bottom: 32)),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SmallText(
-                      '※',
-                      multiLine: true,
-                    ),
-                    Padding(padding: EdgeInsets.only(right: 4)),
-                    SmallText(
-                      'プライバシーポリシーに\n同意の上認証をしてください。',
-                      multiLine: true,
-                    ),
-                  ],
-                ),
-
-                FlatButton(
-                  child: Text(
-                    'プライバシーポリシー',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blueAccent,
-                    ),
-                  ),
-                  onPressed: () => launch('https://cellar.sesta.dev/policy'),
-                ),
-              ]
-            ) : UserForm(createUser: _createUser),
+            child: UserForm(createUser: _createUser),
           ),
           _loading ? Container(
             color: Colors.black38,

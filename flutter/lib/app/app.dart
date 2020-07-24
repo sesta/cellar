@@ -57,7 +57,7 @@ class _CellarState extends State<Cellar> {
           case '/home':
             return fadeInRoute(
               'home',
-              HomePage(status: _status, user: _user),
+              HomePage(status: _status, user: _user, setUser: _setUser),
             );
 
           case '/signIn':
