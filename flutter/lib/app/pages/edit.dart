@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/repository/analytics_repository.dart';
 
 import 'package:cellar/app/widget/drink_form.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
@@ -103,6 +104,10 @@ class _EditPageState extends State<EditPage> {
       await widget.status.moveUploadCount(oldDrinkType, _drinkType);
     }
 
+    AnalyticsRepository().sendEvent(
+      EventType.EditDrink,
+      { 'drinkId': widget.drink.drinkId },
+    );
     Navigator.of(context).pop(false);
   }
 
@@ -174,6 +179,10 @@ class _EditPageState extends State<EditPage> {
     await widget.user.decrementUploadCount(_drinkType);
     await widget.status.decrementUploadCount(_drinkType);
 
+    AnalyticsRepository().sendEvent(
+      EventType.DeleteDrink,
+      { 'drinkId': widget.drink.drinkId },
+    );
     Navigator.of(context).pop(true);
   }
 

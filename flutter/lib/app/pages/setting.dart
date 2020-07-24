@@ -1,3 +1,4 @@
+import 'package:cellar/repository/analytics_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/user.dart';
@@ -37,6 +38,7 @@ class _SettingState extends State<SettingPage> {
     widget.user.userName = _nameController.text;
     await widget.user.updateName();
 
+    AnalyticsRepository().sendEvent(EventType.EditUserName, {});
     Navigator.of(context).pop();
   }
 

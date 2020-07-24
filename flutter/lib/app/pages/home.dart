@@ -6,6 +6,7 @@ import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/models/timeline.dart';
+import 'package:cellar/repository/analytics_repository.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
@@ -72,6 +73,15 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _refresh() async {
     _setDrinks(null);
+
+    AnalyticsRepository().sendEvent(
+      EventType.ReloadTimeline,
+      {
+        'timelineType': _timelineType.toString(),
+        'drinkType': _drinkType.toString(),
+        'orderType': _orderType.toString(),
+      },
+    );
     await _updateTimeline(isForceUpdate: true);
   }
 
@@ -117,6 +127,14 @@ class _HomePageState extends State<HomePage> {
       _drinkType = null;
     });
 
+    AnalyticsRepository().sendEvent(
+      EventType.ChangeTimelineType,
+      {
+        'timelineType': timelineType.toString(),
+        'drinkType': _drinkType.toString(),
+        'orderType': _orderType.toString(),
+      },
+    );
     _updateTimeline();
   }
 
@@ -129,6 +147,14 @@ class _HomePageState extends State<HomePage> {
       _drinkType = drinkType;
     });
 
+    AnalyticsRepository().sendEvent(
+      EventType.ChangeDrinkType,
+      {
+        'timelineType': _timelineType.toString(),
+        'drinkType': drinkType.toString(),
+        'orderType': _orderType.toString(),
+      },
+    );
     _updateTimeline();
   }
 
@@ -145,6 +171,14 @@ class _HomePageState extends State<HomePage> {
       _mineDrinkMap = {};
     });
 
+    AnalyticsRepository().sendEvent(
+      EventType.ChangeOrderType,
+      {
+        'timelineType': _timelineType.toString(),
+        'drinkType': _drinkType.toString(),
+        'orderType': orderType.toString(),
+      },
+    );
     _updateTimeline();
   }
 
