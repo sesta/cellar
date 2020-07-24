@@ -6,21 +6,27 @@ import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/models/timeline.dart';
+import 'package:cellar/repository/user_repository.dart';
 import 'package:cellar/repository/analytics_repository.dart';
+import 'package:cellar/repository/provider/auth.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
+import 'package:cellar/app/widget/atoms/small_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
     Key key,
     this.user,
     this.status,
+    this.setUser,
   }) : super(key: key);
 
-  final Status status;
   final User user;
+  final Status status;
+  final setUser;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -39,6 +45,8 @@ class _HomePageState extends State<HomePage> {
   ScrollController _scrollController = ScrollController();
   CarouselController _carouselController = CarouselController();
 
+  bool _loadingSignIn = false;
+
   @override
   initState() {
     super.initState();
@@ -47,6 +55,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Iterable<MapEntry<int, DrinkType>> get _postedDrinkTypeEntries {
+    if (widget.user == null) {
+      return DrinkType.values
+        .where((drinkType) => _getUploadCount(drinkType) > 0)
+        .toList()
+        .asMap()
+        .entries;
+    }
+
     return widget.user.drinkTypesByMany
       .where((drinkType) => _getUploadCount(drinkType) > 0)
       .toList()
@@ -55,6 +71,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _updateTimeline({ bool isForceUpdate }) async {
+    if (widget.user == null && _timelineType == TimelineType.Mine) {
+      return;
+    }
+
     if (
       _getTargetDrinks(_drinkType) != null
       && isForceUpdate != true
@@ -66,7 +86,7 @@ class _HomePageState extends State<HomePage> {
       _timelineType,
       _orderType,
       drinkType: _drinkType,
-      userId: widget.user.userId,
+      userId: widget.user == null ? null : widget.user.userId,
     );
     _setDrinks(drinks);
   }
@@ -196,7 +216,35 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<void> _checkSignIn() async {
+    setState(() {
+      this._loadingSignIn = true;
+    });
+    final firebaseUser = await signIn();
+    if (firebaseUser == null) {
+      print('SignInに失敗しました');
+      return;
+    }
+
+    final userId = await getSignInUserId();
+    final user = await UserRepository().getUser(userId);
+    setState(() {
+      this._loadingSignIn = false;
+    });
+
+    if (user != null) {
+      Navigator.of(context).pushReplacementNamed('/home');
+      return;
+    }
+
+    Navigator.of(context).pushNamed('/signUp', arguments: userId);
+  }
+
   int _getUploadCount(DrinkType drinkType) {
+    if (widget.user == null && _timelineType == TimelineType.Mine) {
+      return 0;
+    }
+
     if (drinkType == null) {
       switch(_timelineType) {
         case TimelineType.All:
@@ -278,35 +326,37 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Expanded(
-            child: CarouselSlider(
-              carouselController: _carouselController,
-              options: CarouselOptions(
-                height: MediaQuery.of(context).size.height,
-                viewportFraction: 1,
-                enableInfiniteScroll: false,
-                onPageChanged: (int index, CarouselPageChangedReason reason) {
-                  if (reason == CarouselPageChangedReason.controller) {
-                    return;
-                  }
+            child: widget.user == null && _timelineType == TimelineType.Mine
+              ? _signInContainer()
+              : CarouselSlider(
+                carouselController: _carouselController,
+                options: CarouselOptions(
+                  height: MediaQuery.of(context).size.height,
+                  viewportFraction: 1,
+                  enableInfiniteScroll: false,
+                  onPageChanged: (int index, CarouselPageChangedReason reason) {
+                    if (reason == CarouselPageChangedReason.controller) {
+                      return;
+                    }
 
-                  if (index == 0) {
-                    _updateDrinkType(null, 'carousel');
-                    _scrollToDrinkType(0);
-                    return;
-                  }
+                    if (index == 0) {
+                      _updateDrinkType(null, 'carousel');
+                      _scrollToDrinkType(0);
+                      return;
+                    }
 
-                  final targetDrinkTypes = _postedDrinkTypeEntries.toList();
-                  _updateDrinkType(targetDrinkTypes[index - 1].value, 'carousel');
-                  _scrollToDrinkType(index);
-                },
+                    final targetDrinkTypes = _postedDrinkTypeEntries.toList();
+                    _updateDrinkType(targetDrinkTypes[index - 1].value, 'carousel');
+                    _scrollToDrinkType(index);
+                  },
+                ),
+                items: [
+                  _timeline(null),
+                  ..._postedDrinkTypeEntries
+                    .map((entry) => _timeline(entry.value))
+                    .toList()
+                ],
               ),
-              items: [
-                _timeline(null),
-                ..._postedDrinkTypeEntries
-                  .map((entry) => _timeline(entry.value))
-                  .toList()
-              ],
-            ),
           ),
         ],
       ),
@@ -323,7 +373,9 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     _updateTimelineType(TimelineType.Mine);
                     _scrollToDrinkType(0);
-                    _carouselController.jumpToPage(0);
+                    if (widget.user != null) {
+                      _carouselController.jumpToPage(0);
+                    }
                   },
                   icon: Icon(
                     Icons.home,
@@ -340,7 +392,9 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     _updateTimelineType(TimelineType.All);
                     _scrollToDrinkType(0);
-                    _carouselController.jumpToPage(0);
+                    if (widget.user != null) {
+                      _carouselController.jumpToPage(0);
+                    }
                   },
                   icon: Icon(
                     Icons.people,
@@ -361,25 +415,27 @@ class _HomePageState extends State<HomePage> {
               ),
               Expanded(
                 flex: 1,
-                child: IconButton(
-                  onPressed: () => Navigator.of(context).pushNamed('/setting'),
-                  icon: Icon(
-                    Icons.settings,
-                    size: 32,
-                    color: Theme.of(context).primaryColorLight,
+                child: widget.user == null
+                  ? Container(height: 0)
+                  : IconButton(
+                    onPressed: () => Navigator.of(context).pushNamed('/setting'),
+                    icon: Icon(
+                      Icons.settings,
+                      size: 32,
+                      color: Theme.of(context).primaryColorLight,
+                    ),
                   ),
-                ),
               ),
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _movePostPage,
+        onPressed: widget.user == null ? null : _movePostPage,
         backgroundColor: Theme.of(context).accentColor,
         child: Icon(
           Icons.add,
-          color: Colors.white,
+          color: widget.user == null ? Theme.of(context).primaryColorLight : Colors.white,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -521,5 +577,75 @@ class _HomePageState extends State<HomePage> {
             ),
           )
         ).toList(),
+    );
+
+  Widget _signInContainer() =>
+    Stack(
+      children: <Widget>[
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            NormalText(
+              'お酒を投稿するには\nアカウント認証が必要です。',
+              multiLine: true,
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 32)),
+
+            RaisedButton(
+              onPressed: _checkSignIn,
+              child: Text(
+                'Googleで認証する',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 32)),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SmallText(
+                  '※',
+                  multiLine: true,
+                ),
+                Padding(padding: EdgeInsets.only(right: 4)),
+                SmallText(
+                  'プライバシーポリシーに\n同意の上認証をしてください。',
+                  multiLine: true,
+                ),
+              ],
+            ),
+
+            FlatButton(
+              child: Text(
+                'プライバシーポリシー',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                ),
+              ),
+              onPressed: () => launch('https://cellar.sesta.dev/policy'),
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 80)),
+          ]
+        ),
+        _loadingSignIn ? Container(
+          padding: EdgeInsets.only(bottom: 80),
+          color: Colors.black38,
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ) : Container(),
+      ],
     );
 }
