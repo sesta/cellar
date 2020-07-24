@@ -18,6 +18,10 @@ class AnalyticsRepository {
     analytics: _analytics,
   );
 
+  Future<void> setUser(String userId) async {
+    await _analytics.setUserId(userId);
+  }
+
   Future<void> sendEvent(
     EventType eventType,
     Map<String, String> parameters,
