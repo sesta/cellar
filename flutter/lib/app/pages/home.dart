@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:cellar/app/widget/atoms/small_text.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -14,6 +13,7 @@ import 'package:cellar/repository/provider/auth.dart';
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
+import 'package:cellar/app/widget/atoms/small_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
