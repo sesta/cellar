@@ -54,24 +54,42 @@ class _CellarState extends State<Cellar> {
       ],
       onGenerateRoute: (settings) {
         if (settings.name == '/home') {
-          return fadeInRoute(HomePage(status: _status, user: _user));
+          return fadeInRoute(
+            'home',
+            HomePage(status: _status, user: _user),
+          );
         }
         if (settings.name == '/signIn') {
-          return fadeInRoute(SignInPage(setUser: _setUser));
+          return fadeInRoute(
+            'signIn',
+            SignInPage(setUser: _setUser),
+          );
         }
         if (settings.name == '/drink') {
           final Drink drink = settings.arguments;
-          return slideUpRoute(DrinkPage(user: _user, drink: drink));
+          return slideUpRoute(
+            'drink',
+            DrinkPage(user: _user, drink: drink),
+          );
         }
         if (settings.name == '/post') {
-          return slideUpRoute(PostPage(status: _status, user: _user));
+          return slideUpRoute(
+            'post',
+            PostPage(status: _status, user: _user),
+          );
         }
         if (settings.name == '/edit') {
           final Drink drink = settings.arguments;
-          return slideUpRoute(EditPage(status: _status, user: _user, drink: drink));
+          return slideUpRoute(
+            'edit',
+            EditPage(status: _status, user: _user, drink: drink),
+          );
         }
         if (settings.name == '/setting') {
-          return slideUpRoute(SettingPage(user: _user));
+          return slideUpRoute(
+            'setting',
+            SettingPage(user: _user),
+          );
         }
 
         return MaterialPageRoute(builder: (context) => SplashPage(setStatus: _setStatus, setUser: _setUser));

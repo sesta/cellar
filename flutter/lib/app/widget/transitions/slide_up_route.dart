@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-Route slideUpRoute(Widget page) {
+Route slideUpRoute(String pageName, Widget page) {
   return PageRouteBuilder(
+    settings: RouteSettings(name: pageName),
     pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
