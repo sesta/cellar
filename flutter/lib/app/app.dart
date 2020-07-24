@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 
 import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
+import 'package:cellar/repository/analytics_repository.dart';
 
 import 'package:cellar/app/pages/splash.dart';
 import 'package:cellar/app/pages/home.dart';
@@ -25,7 +24,6 @@ class Cellar extends StatefulWidget {
 }
 
 class _CellarState extends State<Cellar> {
-  static FirebaseAnalytics analytics = FirebaseAnalytics();
   Status _status;
   User _user;
 
@@ -50,7 +48,7 @@ class _CellarState extends State<Cellar> {
       ),
       color: Theme.of(context).accentColor,
       navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: analytics),
+        AnalyticsRepository().observer,
       ],
       onGenerateRoute: (settings) {
         switch(settings.name) {
