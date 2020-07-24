@@ -1,9 +1,0 @@
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /post_images/{userId}/{multiSegment=**}  {
-      allow get: if request.auth != null;
-      allow create: if request.auth.uid == userId;
-    }
-  }
-}
-
