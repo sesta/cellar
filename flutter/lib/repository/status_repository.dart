@@ -1,13 +1,14 @@
 import 'dart:async';
-import 'package:cellar/domain/entities/drink.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entities/status.dart';
+import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/repository/provider/firestore.dart';
 
 class StatusRepository extends DB {
-  static String _environment = 'production';
+  static String _environment = kReleaseMode ? 'production' : 'development';
 
   Future<Status> getStatus() async {
     final statusRef = db.collection(STATUS_COLLECTION_NAME)
