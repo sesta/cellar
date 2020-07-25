@@ -1,11 +1,13 @@
+import 'package:flutter/foundation.dart';
+
 // Storage Setting
 const String BASE_IMAGE_PATH =  'post_images';
 
 // Firestore Setting
 const PAGE_LIMIT = 50;
 const STATUS_COLLECTION_NAME = 'status';
-const DRINK_COLLECTION_NAME = 'drinks';
-const USER_COLLECTION_NAME = 'users';
+const DRINK_COLLECTION_NAME = kReleaseMode ? 'drinks' : 'dev-drinks';
+const USER_COLLECTION_NAME = kReleaseMode ? 'users' : 'dev-users';
 
 // Image Setting
 // スマホに表示する場合に安心できそうな横幅サイズ
