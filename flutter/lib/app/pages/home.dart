@@ -237,6 +237,7 @@ class _HomePageState extends State<HomePage> {
     });
 
     if (user != null) {
+      widget.setUser(user);
       Navigator.of(context).pushReplacementNamed('/home');
       return;
     }
