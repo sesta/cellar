@@ -7,11 +7,26 @@ import 'package:cellar/repository/provider/firestore.dart';
 
 class DrinkRepository extends DB {
   Future<void> createDrink(
-    Object data,
+    Drink drink,
   ) async {
     await db.collection(DRINK_COLLECTION_NAME)
       .document()
-      .setData(data);
+      .setData({
+        'userId': drink.userId,
+        'userName': drink.userName,
+        'drinkName': drink.drinkName,
+        'drinkType': drink.drinkType.toString(),
+        'subDrinkType': drink.subDrinkType.toString(),
+        'score': drink.score,
+        'memo': drink.memo,
+        'price': drink.price,
+        'place': drink.place,
+        'postTimestamp': drink.postDatetime.millisecondsSinceEpoch,
+        'thumbImagePath': drink.thumbImagePath,
+        'imagePaths': drink.imagePaths,
+        'firstImageWidth': drink.firstImageWidth,
+        'firstImageHeight': drink.firstImageHeight,
+      });
   }
 
   Future<List<Drink>> getPublicDrinks (
@@ -65,12 +80,19 @@ class DrinkRepository extends DB {
   }
 
   Future<void> updateDrink (
-    String drinkId,
-    Object data,
+    Drink drink,
   ) async {
     await db.collection(DRINK_COLLECTION_NAME)
-      .document(drinkId)
-      .updateData(data);
+      .document(drink.drinkId)
+      .updateData({
+        'drinkName': drink.drinkName,
+        'drinkType': drink.drinkType.toString(),
+        'subDrinkType': drink.subDrinkType.toString(),
+        'score': drink.score,
+        'memo': drink.memo,
+        'price': drink.price,
+        'place': drink.place,
+      });
   }
 
   Future<void> updateUserName (

@@ -66,22 +66,7 @@ class Drink {
   }
 
   Future<void> create() async {
-    await DrinkRepository().createDrink({
-      'userId': userId,
-      'userName': userName,
-      'drinkName': drinkName,
-      'drinkType': drinkType.toString(),
-      'subDrinkType': subDrinkType.toString(),
-      'score': score,
-      'memo': memo,
-      'price': price,
-      'place': place,
-      'postTimestamp': postDatetime.millisecondsSinceEpoch,
-      'thumbImagePath': thumbImagePath,
-      'imagePaths': imagePaths,
-      'firstImageWidth': firstImageWidth,
-      'firstImageHeight': firstImageHeight,
-    });
+    await DrinkRepository().createDrink(this);
   }
 
   Future<void> update(
@@ -105,15 +90,7 @@ class Drink {
     this.price = price;
     this.place = place;
 
-    await DrinkRepository().updateDrink(drinkId, {
-      'drinkName': drinkName,
-      'drinkType': drinkType.toString(),
-      'subDrinkType': subDrinkType.toString(),
-      'score': score,
-      'memo': memo,
-      'price': price,
-      'place': place,
-    });
+    await DrinkRepository().updateDrink(this);
   }
 
   Future<void> delete() async{

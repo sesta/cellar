@@ -263,7 +263,7 @@ class _HomePageState extends State<HomePage> {
       case TimelineType.All:
         return widget.status.drinkTypeUploadCounts[drinkType.index];
       case TimelineType.Mine:
-        return widget.user.drinkTypeUploadCounts[drinkType.index];
+        return widget.user.uploadCounts[drinkType];
     }
 
     throw 'timelineTypeの考慮漏れです';
