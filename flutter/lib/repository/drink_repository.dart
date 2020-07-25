@@ -38,8 +38,8 @@ class DrinkRepository extends DB {
 
     if (drinkType != null) {
       query = query.where(
-        'drinkTypeIndex',
-        isEqualTo: drinkType.index,
+        'drinkType',
+        isEqualTo: drinkType.toString(),
       );
     }
 
@@ -64,8 +64,8 @@ class DrinkRepository extends DB {
 
     if (drinkType != null) {
       query = query.where(
-        'drinkTypeIndex',
-        isEqualTo: drinkType.index,
+        'drinkType',
+        isEqualTo: drinkType.toString(),
       );
     }
 
