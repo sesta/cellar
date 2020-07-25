@@ -35,6 +35,8 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>投稿する写真の撮影に必要となります。</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>投稿する写真の選択に必要となります。</string>
 	<key>UILaunchStoryboardName</key>
