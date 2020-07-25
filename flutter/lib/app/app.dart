@@ -96,7 +96,6 @@ class _CellarState extends State<Cellar> {
 
         return MaterialPageRoute(builder: (context) => SplashPage(setStatus: _setStatus, setUser: _setUser));
       },
-      debugShowCheckedModeBanner: false,
     );
   }
 }
