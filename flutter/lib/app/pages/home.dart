@@ -223,6 +223,10 @@ class _HomePageState extends State<HomePage> {
     final firebaseUser = await signIn();
     if (firebaseUser == null) {
       print('SignInに失敗しました');
+
+      setState(() {
+        this._loadingSignIn = false;
+      });
       return;
     }
 
@@ -233,6 +237,7 @@ class _HomePageState extends State<HomePage> {
     });
 
     if (user != null) {
+      widget.setUser(user);
       Navigator.of(context).pushReplacementNamed('/home');
       return;
     }

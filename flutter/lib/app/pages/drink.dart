@@ -119,7 +119,7 @@ class _DrinkPageState extends State<DrinkPage> {
                       ),
                     ),
                   ),
-                  widget.user.userId != widget.drink.userId ? Container()
+                  widget.user == null || widget.user.userId != widget.drink.userId ? Container()
                     : Positioned(
                       top: MediaQuery.of(context).padding.top,
                       right: 16,
