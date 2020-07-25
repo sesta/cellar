@@ -2,25 +2,25 @@ import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/repository/status_repository.dart';
 
 class Status {
-  List<int> drinkTypeUploadCounts;
+  Map<DrinkType, int> uploadCounts;
 
   Status(
-    this.drinkTypeUploadCounts,
+    this.uploadCounts,
   );
 
   int get uploadCount {
-    return drinkTypeUploadCounts.reduce((sum, count) => sum + count);
+    return uploadCounts.values.reduce((sum, count) => sum + count);
   }
 
   Future<void> incrementUploadCount(DrinkType drinkType) async {
-    drinkTypeUploadCounts[drinkType.index] ++;
+    uploadCounts[drinkType] ++;
     // DBの個数とずれるかもしれないが完全に同期できないので諦める
     await StatusRepository().incrementUploadCount(drinkType);
   }
 
   Future<void> decrementUploadCount(DrinkType drinkType) async {
-    if (drinkTypeUploadCounts[drinkType.index] > 0) {
-      drinkTypeUploadCounts[drinkType.index] --;
+    if (uploadCounts[drinkType] > 0) {
+      uploadCounts[drinkType] --;
       // DBの個数とずれるかもしれないが完全に同期できないので諦める
       await StatusRepository().decrementUploadCount(drinkType);
     }
@@ -36,6 +36,6 @@ class Status {
 
   @override
   String toString() {
-    return 'uploadCounts: $drinkTypeUploadCounts';
+    return 'uploadCounts: $uploadCounts';
   }
 }

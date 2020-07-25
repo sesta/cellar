@@ -261,7 +261,7 @@ class _HomePageState extends State<HomePage> {
 
     switch(_timelineType) {
       case TimelineType.All:
-        return widget.status.drinkTypeUploadCounts[drinkType.index];
+        return widget.status.uploadCounts[drinkType];
       case TimelineType.Mine:
         return widget.user.uploadCounts[drinkType];
     }

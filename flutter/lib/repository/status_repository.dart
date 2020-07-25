@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cellar/repository/drink_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -25,7 +26,7 @@ class StatusRepository extends DB {
     await db.collection(STATUS_COLLECTION_NAME)
       .document(_environment)
       .collection('drinkTypes')
-      .document(drinkType.index.toString())
+      .document(drinkType.toString())
       .updateData({
         'uploadCount': FieldValue.increment(1),
       });
@@ -37,7 +38,7 @@ class StatusRepository extends DB {
     await db.collection(STATUS_COLLECTION_NAME)
       .document(_environment)
       .collection('drinkTypes')
-      .document(drinkType.index.toString())
+      .document(drinkType.toString())
       .updateData({
         'uploadCount': FieldValue.increment(-1),
       });
@@ -46,17 +47,11 @@ class StatusRepository extends DB {
   Status _toEntity(
     List<DocumentSnapshot> drinkTypesData,
   ) {
-    drinkTypesData.sort((DocumentSnapshot dataA, DocumentSnapshot dataB) {
-      final idA = int.parse(dataA.documentID);
-      final idB = int.parse(dataB.documentID);
-      return idA.compareTo(idB);
+    Map<DrinkType, int> counts = {};
+    drinkTypesData.forEach((data) {
+      counts[DrinkRepository().toDrinkType(data.documentID)] = data['uploadCount'];
     });
-    final drinkTypeUploadCounts = drinkTypesData.map((data) {
-      return data['uploadCount'];
-    }).toList().cast<int>();
 
-    return Status(
-      drinkTypeUploadCounts,
-    );
+    return Status(counts);
   }
 }

@@ -126,7 +126,7 @@ class DrinkRepository extends DB {
       data['drinkName'],
       data['drinkType'] == null // 移行のための分岐
         ? DrinkType.values[data['drinkTypeIndex']]
-        : _toDrinkType(data['drinkType']),
+        : toDrinkType(data['drinkType']),
       data['subDrinkType'] == null // 移行のための分岐
         ? SubDrinkType.values[data['subDrinkTypeIndex']]
         : _toSubDrinkType(data['subDrinkType']),
@@ -149,7 +149,7 @@ class DrinkRepository extends DB {
     return drinks;
   }
 
-  DrinkType _toDrinkType(String rawDrinkType) {
+  DrinkType toDrinkType(String rawDrinkType) {
     switch(rawDrinkType) {
       case 'DrinkType.Sake': return DrinkType.Sake;
       case 'DrinkType.Shochu': return DrinkType.Shochu;
