@@ -102,8 +102,12 @@ class DrinkRepository extends DB {
       data['userId'],
       data['userName'],
       data['drinkName'],
-      DrinkType.values[data['drinkTypeIndex']],
-      SubDrinkType.values[data['subDrinkTypeIndex']],
+      data['drinkType'] == null // 移行のための分岐
+        ? DrinkType.values[data['drinkTypeIndex']]
+        : _toDrinkType(data['drinkType']),
+      data['subDrinkType'] == null // 移行のための分岐
+        ? SubDrinkType.values[data['subDrinkTypeIndex']]
+        : _toSubDrinkType(data['subDrinkType']),
       data['score'],
       data['memo'],
       data['price'],
@@ -121,5 +125,83 @@ class DrinkRepository extends DB {
     });
 
     return drinks;
+  }
+
+  DrinkType _toDrinkType(String rawDrinkType) {
+    switch(rawDrinkType) {
+      case 'DrinkType.Sake': return DrinkType.Sake;
+      case 'DrinkType.Shochu': return DrinkType.Shochu;
+      case 'DrinkType.Beer': return DrinkType.Beer;
+      case 'DrinkType.Wine': return DrinkType.Wine;
+      case 'DrinkType.Cidre': return DrinkType.Cidre;
+      case 'DrinkType.Brandy': return DrinkType.Brandy;
+      case 'DrinkType.Whisky': return DrinkType.Whisky;
+      case 'DrinkType.Vodka': return DrinkType.Vodka;
+      case 'DrinkType.Gin': return DrinkType.Gin;
+      case 'DrinkType.Liqueur': return DrinkType.Liqueur;
+      case 'DrinkType.Other': return DrinkType.Other;
+    }
+
+    throw '不明なTypeです。 $this';
+  }
+
+  SubDrinkType _toSubDrinkType(String rawSubDrinkType) {
+    switch(rawSubDrinkType) {
+      case 'SubDrinkType.SakeDaiginjo': return SubDrinkType.SakeDaiginjo;
+      case 'SubDrinkType.SakeGinjo': return SubDrinkType.SakeGinjo;
+      case 'SubDrinkType.SakeTokubetuHonzoj': return SubDrinkType.SakeTokubetuHonzojo;
+      case 'SubDrinkType.SakeHonzojo': return SubDrinkType.SakeHonzojo;
+      case 'SubDrinkType.SakeJunmaiDaiginjo': return SubDrinkType.SakeJunmaiDaiginjo;
+      case 'SubDrinkType.SakeJunmaiGinjo': return SubDrinkType.SakeJunmaiGinjo;
+      case 'SubDrinkType.SakeTokubetsuJunma': return SubDrinkType.SakeTokubetsuJunmai;
+      case 'SubDrinkType.SakeJunmai': return SubDrinkType.SakeJunmai;
+      case 'SubDrinkType.ShochuKome': return SubDrinkType.ShochuKome;
+      case 'SubDrinkType.ShochuMugi': return SubDrinkType.ShochuMugi;
+      case 'SubDrinkType.ShochuImo': return SubDrinkType.ShochuImo;
+      case 'SubDrinkType.ShochuKokuto': return SubDrinkType.ShochuKokuto;
+      case 'SubDrinkType.ShochuSoba': return SubDrinkType.ShochuSoba;
+      case 'SubDrinkType.ShochuKuri': return SubDrinkType.ShochuKuri;
+      case 'SubDrinkType.ShochuPotato': return SubDrinkType.ShochuPotato;
+      case 'SubDrinkType.ShochuToumorokoshi': return SubDrinkType.ShochuToumorokoshi;
+      case 'SubDrinkType.ShochuAwamori': return SubDrinkType.ShochuAwamori;
+      case 'SubDrinkType.BeerBohemianPilsne': return SubDrinkType.BeerBohemianPilsner;
+      case 'SubDrinkType.BeerGermanPilsner': return SubDrinkType.BeerGermanPilsner;
+      case 'SubDrinkType.BeerSchwarz': return SubDrinkType.BeerSchwarz;
+      case 'SubDrinkType.BeerDortmunder': return SubDrinkType.BeerDortmunder;
+      case 'SubDrinkType.BeerAmericanLager': return SubDrinkType.BeerAmericanLager;
+      case 'SubDrinkType.BeerViennaLager': return SubDrinkType.BeerViennaLager;
+      case 'SubDrinkType.BeerDoppelbock': return SubDrinkType.BeerDoppelbock;
+      case 'SubDrinkType.BeerPaleAle': return SubDrinkType.BeerPaleAle;
+      case 'SubDrinkType.BeerIpa': return SubDrinkType.BeerIpa;
+      case 'SubDrinkType.BeerStout': return SubDrinkType.BeerStout;
+      case 'SubDrinkType.BeerTrappist': return SubDrinkType.BeerTrappist;
+      case 'SubDrinkType.BeerWhiteAle': return SubDrinkType.BeerWhiteAle;
+      case 'SubDrinkType.BeerBarleyWine': return SubDrinkType.BeerBarleyWine;
+      case 'SubDrinkType.BeerWeizen': return SubDrinkType.BeerWeizen;
+      case 'SubDrinkType.BeerPorter': return SubDrinkType.BeerPorter;
+      case 'SubDrinkType.BeerFlandersAle': return SubDrinkType.BeerFlandersAle;
+      case 'SubDrinkType.BeerHefeweizen': return SubDrinkType.BeerHefeweizen;
+      case 'SubDrinkType.BeerScotchAle': return SubDrinkType.BeerScotchAle;
+      case 'SubDrinkType.WineWhite': return SubDrinkType.WineWhite;
+      case 'SubDrinkType.WineRed': return SubDrinkType.WineRed;
+      case 'SubDrinkType.WineRose': return SubDrinkType.WineRose;
+      case 'SubDrinkType.WineSparkling': return SubDrinkType.WineSparkling;
+      case 'SubDrinkType.WineDessert': return SubDrinkType.WineDessert;
+      case 'SubDrinkType.BrandyCognac': return SubDrinkType.BrandyCognac;
+      case 'SubDrinkType.BrandyArmagnac': return SubDrinkType.BrandyArmagnac;
+      case 'SubDrinkType.BrandyCalvados': return SubDrinkType.BrandyCalvados;
+      case 'SubDrinkType.WhiskyScotch': return SubDrinkType.WhiskyScotch;
+      case 'SubDrinkType.WhiskyCanadian': return SubDrinkType.WhiskyCanadian;
+      case 'SubDrinkType.WhiskyIrish': return SubDrinkType.WhiskyIrish;
+      case 'SubDrinkType.WhiskyAmerican': return SubDrinkType.WhiskyAmerican;
+      case 'SubDrinkType.WhiskyJapanese': return SubDrinkType.WhiskyJapanese;
+      case 'SubDrinkType.GinDry': return SubDrinkType.GinDry;
+      case 'SubDrinkType.GinJenever': return SubDrinkType.GinJenever;
+      case 'SubDrinkType.GinOldTom': return SubDrinkType.GinOldTom;
+      case 'SubDrinkType.GinSteinhager': return SubDrinkType.GinSteinhager;
+      case 'SubDrinkType.Empty': return SubDrinkType.Empty;
+    }
+
+    throw '不明なTypeです。 $this';
   }
 }

@@ -70,8 +70,8 @@ class Drink {
       'userId': userId,
       'userName': userName,
       'drinkName': drinkName,
-      'drinkTypeIndex': drinkType.index,
-      'subDrinkTypeIndex': subDrinkType.index,
+      'drinkType': drinkType.toString(),
+      'subDrinkType': subDrinkType.toString(),
       'score': score,
       'memo': memo,
       'price': price,
@@ -107,8 +107,8 @@ class Drink {
 
     await DrinkRepository().updateDrink(drinkId, {
       'drinkName': drinkName,
-      'drinkTypeIndex': drinkType.index,
-      'subDrinkTypeIndex': subDrinkType.index,
+      'drinkType': drinkType.toString(),
+      'subDrinkType': subDrinkType.toString(),
       'score': score,
       'memo': memo,
       'price': price,
@@ -313,8 +313,6 @@ enum SubDrinkType {
   GinSteinhager,
   Empty,
 }
-
-
 
 extension SubDrinkTypeExtension on SubDrinkType {
   String get label {
