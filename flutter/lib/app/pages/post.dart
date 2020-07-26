@@ -129,6 +129,7 @@ class _PostPageState extends State<PostPage> {
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 5 - _images.length,
+        enableCamera: true,
       );
     } catch (e) {
       return;
