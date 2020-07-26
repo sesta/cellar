@@ -120,27 +120,35 @@ class DrinkRepository extends DB {
   }
 
   Future<List<Drink>> _toEntities(List<DocumentSnapshot> rawData) async {
-    final drinks = rawData.map((data) => Drink(
-      data['userId'],
-      data['userName'],
-      data['drinkName'],
-      data['drinkType'] == null // 移行のための分岐
+    final drinks = rawData.map((data) {
+      final drinkType = data['drinkType'] == null // 移行のための分岐
         ? DrinkType.values[data['drinkTypeIndex']]
-        : toDrinkType(data['drinkType']),
-      data['subDrinkType'] == null // 移行のための分岐
+        : toDrinkType(data['drinkType']);
+      final subDrinkType = data['subDrinkType'] == null // 移行のための分岐
         ? SubDrinkType.values[data['subDrinkTypeIndex']]
-        : _toSubDrinkType(data['subDrinkType']),
-      data['score'],
-      data['memo'],
-      data['price'],
-      data['place'],
-      DateTime.fromMicrosecondsSinceEpoch(data['postTimestamp'] * 1000),
-      data['thumbImagePath'],
-      data['imagePaths'].cast<String>(),
-      data['firstImageWidth'],
-      data['firstImageHeight'],
-      drinkId: data.documentID,
-    )).toList();
+        : _toSubDrinkType(data['subDrinkType']);
+      if (drinkType == null || subDrinkType == null) {
+        return null;
+      }
+
+      return Drink(
+        data['userId'],
+        data['userName'],
+        data['drinkName'],
+        drinkType,
+        subDrinkType,
+        data['score'],
+        data['memo'],
+        data['price'],
+        data['place'],
+        DateTime.fromMicrosecondsSinceEpoch(data['postTimestamp'] * 1000),
+        data['thumbImagePath'],
+        data['imagePaths'].cast<String>(),
+        data['firstImageWidth'],
+        data['firstImageHeight'],
+        drinkId: data.documentID,
+      );
+    }).where((drink) => drink != null).toList();
 
     await Future.forEach(drinks, (drink) async {
       await drink.init();
@@ -153,6 +161,7 @@ class DrinkRepository extends DB {
     switch(rawDrinkType) {
       case 'DrinkType.Sake': return DrinkType.Sake;
       case 'DrinkType.Shochu': return DrinkType.Shochu;
+      case 'DrinkType.Umeshu': return DrinkType.Umeshu;
       case 'DrinkType.Beer': return DrinkType.Beer;
       case 'DrinkType.Wine': return DrinkType.Wine;
       case 'DrinkType.Cidre': return DrinkType.Cidre;
@@ -161,10 +170,16 @@ class DrinkRepository extends DB {
       case 'DrinkType.Vodka': return DrinkType.Vodka;
       case 'DrinkType.Gin': return DrinkType.Gin;
       case 'DrinkType.Liqueur': return DrinkType.Liqueur;
+      case 'DrinkType.Chuhai': return DrinkType.Chuhai;
+      case 'DrinkType.Highball': return DrinkType.Highball;
+      case 'DrinkType.Cocktail': return DrinkType.Cocktail;
       case 'DrinkType.Other': return DrinkType.Other;
     }
 
-    throw '不明なTypeです。 $this';
+    // DrinkTypeが定義されている人とされていない人がいる可能性があるので
+    // 定義されていないものが来ることを許容する
+    print('不明なTypeです。 $rawDrinkType');
+    return null;
   }
 
   SubDrinkType _toSubDrinkType(String rawSubDrinkType) {
@@ -224,6 +239,9 @@ class DrinkRepository extends DB {
       case 'SubDrinkType.Empty': return SubDrinkType.Empty;
     }
 
-    throw '不明なTypeです。 $this';
+    // DrinkTypeが定義されている人とされていない人がいる可能性があるので
+    // 定義されていないものが来ることを許容する
+    print('不明なTypeです。 $rawSubDrinkType');
+    return null;
   }
 }
