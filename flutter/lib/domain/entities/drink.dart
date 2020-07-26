@@ -112,6 +112,7 @@ class Drink {
 enum DrinkType {
   Sake,
   Shochu,
+  Umeshu,
   Beer,
   Wine,
   Cidre,
@@ -120,6 +121,9 @@ enum DrinkType {
   Vodka,
   Gin,
   Liqueur,
+  Chuhai,
+  Highball,
+  Cocktail,
   Other,
 }
 
@@ -128,6 +132,7 @@ extension DrinkTypeExtension on DrinkType {
     switch(this) {
       case DrinkType.Sake: return '日本酒';
       case DrinkType.Shochu: return '焼酎';
+      case DrinkType.Umeshu: return '梅酒';
       case DrinkType.Beer: return 'ビール';
       case DrinkType.Wine: return 'ワイン';
       case DrinkType.Cidre: return 'シードル';
@@ -136,6 +141,9 @@ extension DrinkTypeExtension on DrinkType {
       case DrinkType.Vodka: return 'ウォッカ';
       case DrinkType.Gin: return 'ジン';
       case DrinkType.Liqueur: return 'リキュール';
+      case DrinkType.Chuhai: return 'チューハイ';
+      case DrinkType.Highball: return 'ハイボール';
+      case DrinkType.Cocktail: return 'カクテル ';
       case DrinkType.Other: return 'その他';
     }
 
@@ -166,6 +174,9 @@ extension DrinkTypeExtension on DrinkType {
         SubDrinkType.ShochuPotato,
         SubDrinkType.ShochuToumorokoshi,
         SubDrinkType.ShochuAwamori,
+      ];
+      case DrinkType.Umeshu: return [
+        SubDrinkType.Empty,
       ];
       case DrinkType.Beer: return [
         SubDrinkType.Empty,
@@ -224,6 +235,15 @@ extension DrinkTypeExtension on DrinkType {
         SubDrinkType.GinSteinhager,
       ];
       case DrinkType.Liqueur: return [
+        SubDrinkType.Empty,
+      ];
+      case DrinkType.Chuhai: return [
+        SubDrinkType.Empty,
+      ];
+      case DrinkType.Highball: return [
+        SubDrinkType.Empty,
+      ];
+      case DrinkType.Cocktail: return [
         SubDrinkType.Empty,
       ];
       case DrinkType.Other: return [

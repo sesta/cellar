@@ -153,6 +153,7 @@ class DrinkRepository extends DB {
     switch(rawDrinkType) {
       case 'DrinkType.Sake': return DrinkType.Sake;
       case 'DrinkType.Shochu': return DrinkType.Shochu;
+      case 'DrinkType.Umeshu': return DrinkType.Umeshu;
       case 'DrinkType.Beer': return DrinkType.Beer;
       case 'DrinkType.Wine': return DrinkType.Wine;
       case 'DrinkType.Cidre': return DrinkType.Cidre;
@@ -161,10 +162,13 @@ class DrinkRepository extends DB {
       case 'DrinkType.Vodka': return DrinkType.Vodka;
       case 'DrinkType.Gin': return DrinkType.Gin;
       case 'DrinkType.Liqueur': return DrinkType.Liqueur;
+      case 'DrinkType.Chuhai': return DrinkType.Chuhai;
+      case 'DrinkType.Highball': return DrinkType.Highball;
+      case 'DrinkType.Cocktail': return DrinkType.Cocktail;
       case 'DrinkType.Other': return DrinkType.Other;
     }
 
-    throw '不明なTypeです。 $this';
+    throw '不明なTypeです。 $rawDrinkType';
   }
 
   SubDrinkType _toSubDrinkType(String rawSubDrinkType) {
@@ -224,6 +228,6 @@ class DrinkRepository extends DB {
       case 'SubDrinkType.Empty': return SubDrinkType.Empty;
     }
 
-    throw '不明なTypeです。 $this';
+    throw '不明なTypeです。 $rawSubDrinkType';
   }
 }
