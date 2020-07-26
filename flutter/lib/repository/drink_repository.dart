@@ -168,7 +168,8 @@ class DrinkRepository extends DB {
       case 'DrinkType.Other': return DrinkType.Other;
     }
 
-    throw '不明なTypeです。 $rawDrinkType';
+    print('不明なTypeです。 $rawDrinkType');
+    return null;
   }
 
   SubDrinkType _toSubDrinkType(String rawSubDrinkType) {

@@ -49,7 +49,12 @@ class StatusRepository extends DB {
   ) {
     Map<DrinkType, int> counts = {};
     drinkTypesData.forEach((data) {
-      counts[DrinkRepository().toDrinkType(data.documentID)] = data['uploadCount'];
+      final drinkType = DrinkRepository().toDrinkType(data.documentID);
+      if (drinkType == null) {
+        return;
+      }
+
+      counts[drinkType] = data['uploadCount'];
     });
 
     return Status(counts);
