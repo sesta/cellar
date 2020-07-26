@@ -14,7 +14,7 @@ class StatusRepository extends DB {
   Future<Status> getStatus() async {
     final statusRef = db.collection(STATUS_COLLECTION_NAME)
       .document(_environment);
-    final drinkTypesData = await statusRef.collection('drinkTypes')
+    final drinkTypesData = await statusRef.collection('uploadCounts')
       .getDocuments();
 
     return _toEntity(drinkTypesData.documents);
@@ -25,7 +25,7 @@ class StatusRepository extends DB {
   ) async {
     await db.collection(STATUS_COLLECTION_NAME)
       .document(_environment)
-      .collection('drinkTypes')
+      .collection('uploadCounts')
       .document(drinkType.toString())
       .updateData({
         'uploadCount': FieldValue.increment(1),
@@ -37,7 +37,7 @@ class StatusRepository extends DB {
   ) async {
     await db.collection(STATUS_COLLECTION_NAME)
       .document(_environment)
-      .collection('drinkTypes')
+      .collection('uploadCounts')
       .document(drinkType.toString())
       .updateData({
         'uploadCount': FieldValue.increment(-1),
