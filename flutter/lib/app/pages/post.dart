@@ -202,6 +202,10 @@ class _PostPageState extends State<PostPage> {
           '投稿',
         ),
         elevation: 0,
+        leading:  IconButton(
+          icon: Icon(Icons.close),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       body: Stack(

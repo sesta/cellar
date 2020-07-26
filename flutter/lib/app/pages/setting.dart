@@ -51,6 +51,12 @@ class _SettingState extends State<SettingPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('設定'),
+        elevation: 0,
+        leading:  IconButton(
+          icon: Icon(Icons.close),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       body: Stack(
         children: <Widget>[
