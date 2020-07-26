@@ -82,17 +82,28 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
+    // 取得中に他のリストに切り替わることがあるため
+    // 取得開始時のtypeを持っておく
+    final timelineType = _timelineType;
+    final drinkType = _drinkType;
+    final orderType = _orderType;
+
     final drinks = await getTimelineDrinks(
       _timelineType,
       _orderType,
       drinkType: _drinkType,
       userId: widget.user == null ? null : widget.user.userId,
     );
-    _setDrinks(drinks);
+
+    // 並び順が変わっていたら保存しない
+    if (orderType != _orderType) {
+      return;
+    }
+    _setDrinks(drinks, timelineType, drinkType);
   }
 
   Future<void> _refresh() async {
-    _setDrinks(null);
+    _setDrinks(null, _timelineType, _drinkType);
 
     AnalyticsRepository().sendEvent(
       EventType.ReloadTimeline,
@@ -105,9 +116,13 @@ class _HomePageState extends State<HomePage> {
     await _updateTimeline(isForceUpdate: true);
   }
 
-  _setDrinks(List<Drink> drinks) {
-    if (_drinkType == null) {
-      switch(_timelineType) {
+  _setDrinks(
+    List<Drink> drinks,
+    TimelineType timelineType,
+    DrinkType drinkType,
+  ) {
+    if (drinkType == null) {
+      switch(timelineType) {
         case TimelineType.All:
           setState(() {
             _publicAllDrinks = drinks;
@@ -121,20 +136,20 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
-    switch(_timelineType) {
+    switch(timelineType) {
       case TimelineType.All:
         setState(() {
-          _publicDrinkMap[_drinkType] = drinks;
+          _publicDrinkMap[drinkType] = drinks;
         });
         return;
       case TimelineType.Mine:
         setState(() {
-          _mineDrinkMap[_drinkType] = drinks;
+          _mineDrinkMap[drinkType] = drinks;
         });
         return;
     }
 
-    throw '予期せぬtypeです。 $_timelineType';
+    throw '予期せぬtypeです。 $timelineType';
   }
 
   _updateTimelineType(TimelineType timelineType) {
@@ -261,9 +276,9 @@ class _HomePageState extends State<HomePage> {
 
     switch(_timelineType) {
       case TimelineType.All:
-        return widget.status.drinkTypeUploadCounts[drinkType.index];
+        return widget.status.uploadCounts[drinkType];
       case TimelineType.Mine:
-        return widget.user.drinkTypeUploadCounts[drinkType.index];
+        return widget.user.uploadCounts[drinkType];
     }
 
     throw 'timelineTypeの考慮漏れです';

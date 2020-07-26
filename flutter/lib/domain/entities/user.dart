@@ -7,40 +7,42 @@ import 'package:cellar/repository/user_repository.dart';
 class User {
   String userId;
   String userName;
-  List<int> drinkTypeUploadCounts;
+  Map<DrinkType, int> uploadCounts;
 
   User(
     this.userId,
     this.userName,
     {
-      this.drinkTypeUploadCounts,
+      this.uploadCounts,
     }
   ){
-    if (this.drinkTypeUploadCounts == null) {
-      this.drinkTypeUploadCounts = List.generate(DrinkType.values.length, (_) => 0);
+    if (this.uploadCounts == null) {
+      Map<DrinkType, int> counts = {};
+      DrinkType.values.forEach((drinkType) => counts[drinkType] = 0);
+      this.uploadCounts = counts;
     }
   }
 
   int get uploadCount {
-    return drinkTypeUploadCounts.reduce((sum, count) => sum + count);
+    return uploadCounts.values.reduce((sum, count) => sum + count);
   }
 
   List<DrinkType> get drinkTypesByMany {
     final types = List.from(DrinkType.values);
-    types.sort((typeA, typeB) => drinkTypeUploadCounts[typeB.index].compareTo(drinkTypeUploadCounts[typeA.index]));
+    types.sort((typeA, typeB) => uploadCounts[typeB].compareTo(uploadCounts[typeA]));
 
     return types.cast<DrinkType>();
   }
 
   Future<void> incrementUploadCount(DrinkType drinkType) async {
-    drinkTypeUploadCounts[drinkType.index] ++;
-    await UserRepository().updateUserUploadCount(userId, drinkTypeUploadCounts);
+    uploadCounts[drinkType] ++;
+    await UserRepository().updateUserUploadCount(userId, uploadCounts);
   }
 
   Future<void> decrementUploadCount(DrinkType drinkType) async {
-    if (drinkTypeUploadCounts[drinkType.index] > 0) {
-      drinkTypeUploadCounts[drinkType.index] --;
-      await UserRepository().updateUserUploadCount(userId, drinkTypeUploadCounts);
+    if (uploadCounts[drinkType] > 0) {
+      uploadCounts[drinkType] --;
+      await UserRepository().updateUserUploadCount(userId, uploadCounts);
     }
   }
 
@@ -53,10 +55,7 @@ class User {
   }
 
   Future<void> create() async {
-    await UserRepository().createUser(userId, {
-      'userName': userName,
-      'drinkTypeUploadCounts': drinkTypeUploadCounts,
-    });
+    await UserRepository().createUser(this);
   }
 
   Future<void> updateName() async {
@@ -69,6 +68,6 @@ class User {
   String toString() {
     return 'userId: ${this.userId}, userName: ${this.userName}, '
       'uploadCount: ${this.uploadCount}, '
-      'drinkTypeUploadCounts: ${this.drinkTypeUploadCounts.toString()}';
+      'drinkTypeUploadCounts: ${this.uploadCounts.toString()}';
   }
 }
