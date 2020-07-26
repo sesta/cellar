@@ -399,7 +399,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   icon: Icon(
                     Icons.home,
-                    size: 32,
+                    size: 30,
                     color: _timelineType == TimelineType.Mine
                       ? Colors.white
                       : Theme.of(context).primaryColorLight,
@@ -441,7 +441,7 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () => Navigator.of(context).pushNamed('/setting'),
                     icon: Icon(
                       Icons.settings,
-                      size: 32,
+                      size: 28,
                       color: Theme.of(context).primaryColorLight,
                     ),
                   ),
@@ -480,28 +480,16 @@ class _HomePageState extends State<HomePage> {
     if (drinks.length == 0) {
       return Padding(
         padding: EdgeInsets.only(bottom: 40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _timelineType == TimelineType.Mine
-            ? <Widget>[
-              NormalText(
-                'あなたのお酒が表示されます',
-                bold: true,
-              ),
-              Padding(padding: EdgeInsets.only(bottom: 24)),
-              NormalText(
+        child: Center(
+          child: _timelineType == TimelineType.Mine
+            ? NormalText(
                 '飲んだお酒を投稿してみましょう',
                 bold: true,
-              ),
-              Padding(padding: EdgeInsets.only(bottom: 24)),
-              Icon(Icons.arrow_downward),
-            ]
-          : <Widget>[
-              NormalText(
+              )
+            : NormalText(
                 'お酒が見つかりませんでした',
                 bold: true,
-              ),
-            ],
+              )
         ),
       );
     }

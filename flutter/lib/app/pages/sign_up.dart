@@ -44,6 +44,12 @@ class _SignUpState extends State<SignUpPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('新規登録'),
+        elevation: 0,
+        leading:  IconButton(
+          icon: Icon(Icons.close),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       body: Stack(
         children: <Widget>[
