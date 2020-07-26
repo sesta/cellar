@@ -12,12 +12,14 @@ class NormalTextField extends StatelessWidget {
   final int maxLines;
   final InputType inputType;
   final onChanged;
+  final String placeholder;
 
   NormalTextField(this.controller, {
     this.bold = false,
     this.maxLines = 1,
     this.inputType = InputType.String,
     this.onChanged,
+    this.placeholder = '',
   });
 
   @override
@@ -46,6 +48,9 @@ class NormalTextField extends StatelessWidget {
               WhitelistingTextInputFormatter.digitsOnly
             ]
           : <TextInputFormatter>[],
+      decoration: InputDecoration(
+        hintText: placeholder,
+      ),
     );
   }
 }

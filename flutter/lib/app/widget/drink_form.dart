@@ -156,6 +156,7 @@ class DrinkForm extends StatelessWidget {
                     NormalTextField(
                       placeController,
                       bold: true,
+                      placeholder: 'Amazon、飲食店、プレゼント',
                     ),
                   ],
                 ),
@@ -169,6 +170,7 @@ class DrinkForm extends StatelessWidget {
             memoController,
             bold: true,
             maxLines: 3,
+            placeholder: '辛口だけど飲みやすい\nチーズと合う',
           ),
         ],
       ),
