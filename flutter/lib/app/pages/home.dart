@@ -399,7 +399,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   icon: Icon(
                     Icons.home,
-                    size: 32,
+                    size: 30,
                     color: _timelineType == TimelineType.Mine
                       ? Colors.white
                       : Theme.of(context).primaryColorLight,
@@ -441,7 +441,7 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () => Navigator.of(context).pushNamed('/setting'),
                     icon: Icon(
                       Icons.settings,
-                      size: 32,
+                      size: 28,
                       color: Theme.of(context).primaryColorLight,
                     ),
                   ),
