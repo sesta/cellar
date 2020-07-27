@@ -391,6 +391,10 @@ class _HomePageState extends State<HomePage> {
                 flex: 1,
                 child: IconButton(
                   onPressed: () {
+                    if (_timelineType == TimelineType.Mine) {
+                      return;
+                    }
+
                     _updateTimelineType(TimelineType.Mine);
                     _scrollToDrinkType(0);
                     if (widget.user != null) {
@@ -410,6 +414,10 @@ class _HomePageState extends State<HomePage> {
                 flex: 1,
                 child: IconButton(
                   onPressed: () {
+                    if (_timelineType == TimelineType.All) {
+                      return;
+                    }
+
                     _updateTimelineType(TimelineType.All);
                     _scrollToDrinkType(0);
                     if (widget.user != null) {
