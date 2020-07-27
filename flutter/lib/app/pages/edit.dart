@@ -112,67 +112,49 @@ class _EditPageState extends State<EditPage> {
   }
 
   Future<void> _confirmDelete() async {
-    final isDelete = await showModalBottomSheet<bool>(
+    showDialog(
       context: context,
-      builder: (BuildContext context){
-        return Container(
-          height: 240,
-          padding: EdgeInsets.all(24.0),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: NormalText(
-                  '削除した投稿は復元できません。\n本当に削除してよろしいですか？',
-                  multiLine: true,
+      builder: (BuildContext context) =>
+          AlertDialog(
+            title: NormalText(
+              "本当に削除してよろしいですか？",
+              bold: true,
+            ),
+            content: NormalText(
+              '削除した投稿は復元できません。',
+              multiLine: true,
+            ),
+            actions: <Widget>[
+              // ボタン領域
+              FlatButton(
+                child: Text(
+                  'やめる',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueAccent,
+                  ),
                 ),
+                onPressed: () => Navigator.of(context).pop(),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RaisedButton(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                    onPressed: () => Navigator.pop(context, true),
-                    child: Text(
-                      '削除する',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
+              FlatButton(
+                child: Text(
+                  '削除する',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
                     color: Colors.redAccent,
-                    textColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
                   ),
-                  Padding(padding: EdgeInsets.only(right: 32)),
-                  RaisedButton(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                    onPressed: () => Navigator.pop(context, false),
-                    child: Text(
-                      'やめる',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    color: Theme.of(context).accentColor,
-                    textColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ],
-              )
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _delete();
+                },
+              ),
             ],
           ),
-        );
-      }
     );
+  }
 
-    if (isDelete == null || !isDelete) {
-      return;
-    }
-
+  Future<void> _delete() async {
     setState(() {
       _uploading = true;
     });
