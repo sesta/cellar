@@ -71,10 +71,12 @@ class _SettingState extends State<SettingPage> {
                   onChanged: (_) => setState(() {}),
                   bold: true,
                 ),
-                Padding(padding: EdgeInsets.only(bottom: 48)),
+                Padding(padding: EdgeInsets.only(bottom: 32)),
 
-                Center(
+                SizedBox(
+                  width: double.infinity,
                   child: RaisedButton(
+                    padding: EdgeInsets.all(12),
                     onPressed: disableSave ? null : _saveUser,
                     child: Text(
                       '更新',

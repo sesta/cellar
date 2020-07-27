@@ -131,6 +131,7 @@ class _EditPageState extends State<EditPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   RaisedButton(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
                     onPressed: () => Navigator.pop(context, true),
                     child: Text(
                       '削除する',
@@ -146,6 +147,7 @@ class _EditPageState extends State<EditPage> {
                   ),
                   Padding(padding: EdgeInsets.only(right: 32)),
                   RaisedButton(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
                     onPressed: () => Navigator.pop(context, false),
                     child: Text(
                       'やめる',
@@ -222,6 +224,7 @@ class _EditPageState extends State<EditPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     RaisedButton(
+                      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                       onPressed: _confirmDelete,
                       child: NormalText(
                         '削除する',
@@ -235,6 +238,7 @@ class _EditPageState extends State<EditPage> {
                     ),
                     Padding(padding: EdgeInsets.only(right: 32)),
                     RaisedButton(
+                      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                       onPressed: _disablePost ? null : _updateDrink,
                       child: NormalText(
                         '更新する',

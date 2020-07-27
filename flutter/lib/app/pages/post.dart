@@ -235,17 +235,22 @@ class _PostPageState extends State<PostPage> {
                 ),
                 Padding(padding: EdgeInsets.only(bottom: 64)),
 
-                Center(
-                  child: RaisedButton(
-                    onPressed: disablePost ? null : _postDrink,
-                    child: NormalText(
-                      '投稿する',
-                      bold: true,
-                    ),
-                    color: Theme.of(context).accentColor,
-                    textColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: RaisedButton(
+                      padding: EdgeInsets.all(16),
+                      onPressed: disablePost ? null : _postDrink,
+                      child: NormalText(
+                        '投稿する',
+                        bold: true,
+                      ),
+                      color: Theme.of(context).accentColor,
+                      textColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
                   ),
                 ),

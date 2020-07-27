@@ -98,10 +98,12 @@ class _UserFormState extends State<UserForm> {
             onChanged: (_) => setState(() {}),
             bold: true,
           ),
-          Padding(padding: EdgeInsets.only(bottom: 48)),
+          Padding(padding: EdgeInsets.only(bottom: 32)),
 
-          Center(
+          SizedBox(
+            width: double.infinity,
             child: RaisedButton(
+              padding: EdgeInsets.all(12),
               onPressed: _nameController.text == ''
                 ? null
                 : () => widget.createUser(_nameController.text),
