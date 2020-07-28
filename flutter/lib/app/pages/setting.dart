@@ -1,15 +1,21 @@
-import 'package:cellar/repository/analytics_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/repository/analytics_repository.dart';
+import 'package:cellar/repository/auth_repository.dart';
 
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 
 class SettingPage extends StatefulWidget {
-  SettingPage({Key key, this.user}) : super(key: key);
+  SettingPage({
+    Key key,
+    this.user,
+    this.setUser,
+  }) : super(key: key);
 
   final User user;
+  final setUser;
 
   @override
   _SettingState createState() => _SettingState();
@@ -44,6 +50,16 @@ class _SettingState extends State<SettingPage> {
 
   get disableSave {
     return _nameController.text == '';
+  }
+
+  Future<void> _signOut() async {
+    setState(() {
+      _loading = true;
+    });
+    await AuthRepository().signOut();
+    widget.setUser(null);
+    Navigator.of(context).pop();
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override
@@ -85,6 +101,26 @@ class _SettingState extends State<SettingPage> {
                       ),
                     ),
                     color: Theme.of(context).accentColor,
+                    textColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+                Padding(padding: EdgeInsets.only(bottom: 80)),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: RaisedButton(
+                    padding: EdgeInsets.all(12),
+                    onPressed: _signOut,
+                    child: Text(
+                      'ログアウト',
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    color: Colors.grey,
                     textColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),

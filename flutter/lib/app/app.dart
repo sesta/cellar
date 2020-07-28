@@ -38,7 +38,7 @@ class _CellarState extends State<Cellar> {
       _user = user;
     });
 
-    AnalyticsRepository().setUser(user.userId);
+    AnalyticsRepository().setUser(user == null ? null : user.userId);
   }
 
   @override
@@ -90,7 +90,7 @@ class _CellarState extends State<Cellar> {
           case '/setting':
             return slideUpRoute(
               'setting',
-              SettingPage(user: _user),
+              SettingPage(user: _user, setUser: _setUser),
             );
         }
 

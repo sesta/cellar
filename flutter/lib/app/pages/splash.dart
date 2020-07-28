@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cellar/repository/status_repository.dart';
 import 'package:cellar/repository/user_repository.dart';
-import 'package:cellar/repository/provider/auth.dart';
+import 'package:cellar/repository/auth_repository.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({
@@ -40,7 +40,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<User> _checkSignIn() async {
-    final userId = await getSignInUserId();
+    final userId = await AuthRepository().getSignInUserId();
     if (userId == null) {
       return null;
     }
