@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthType {
   Google,
@@ -10,6 +11,11 @@ enum AuthType {
 class AuthRepository {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<String> getSignInUserId() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.get("userId");
+  }
 
   Future<String> signIn(AuthType authType) async {
     AuthCredential credential;
@@ -26,6 +32,9 @@ class AuthRepository {
       return null;
     }
     final firebaseUser = await _auth.signInWithCredential(credential);
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setString("userId", firebaseUser.user.uid);
     return firebaseUser.user.uid;
   }
 
