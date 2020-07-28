@@ -38,6 +38,11 @@ class AuthRepository {
     return firebaseUser.user.uid;
   }
 
+  Future<void> signOut() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.remove("userId");
+  }
+
   Future<AuthCredential> _getCredentialByApple() async {
     final result = await AppleSignIn.performRequests([
       AppleIdRequest(
