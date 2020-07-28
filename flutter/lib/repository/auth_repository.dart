@@ -12,6 +12,10 @@ class AuthRepository {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  Future<bool> get enableAppleSignIn async {
+    return await AppleSignIn.isAvailable();
+  }
+
   Future<String> getSignInUserId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.get("userId");

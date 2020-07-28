@@ -47,12 +47,16 @@ class _HomePageState extends State<HomePage> {
   CarouselController _carouselController = CarouselController();
 
   bool _loadingSignIn = false;
+  bool _enableAppleSignIn = false;
 
   @override
   initState() {
     super.initState();
 
     _updateTimeline();
+    AuthRepository().enableAppleSignIn.then((enable) => setState(() {
+      _enableAppleSignIn = enable;
+    }));
   }
 
   Iterable<MapEntry<int, DrinkType>> get _postedDrinkTypeEntries {
@@ -604,11 +608,15 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(padding: EdgeInsets.only(bottom: 32)),
 
-            AppleSignInButton(
-              onPressed: () => _signIn(AuthType.Apple),
-              style: AppleButtonStyle.white,
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 8)),
+            _enableAppleSignIn
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: AppleSignInButton(
+                      onPressed: () => _signIn(AuthType.Apple),
+                      style: AppleButtonStyle.white,
+                    ),
+                )
+              : Container(height: 0),
             GoogleSignInButton(
               onPressed: () => _signIn(AuthType.Google),
             ),
