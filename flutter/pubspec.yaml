@@ -25,6 +25,7 @@ dependencies:
   cached_network_image: ^2.2.0+1
   permission_handler: 5.0.1+1
   url_launcher: ^5.5.0
+  flutter_auth_buttons: ^0.8.0
 
   flutter_launcher_icons: ^0.7.5
   rename: 1.2.0

@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
@@ -14,7 +16,6 @@ import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/small_text.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -231,8 +232,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _checkSignIn() async {
-    final userId = await AuthRepository().signIn(AuthType.Google);
+  Future<void> _signIn(AuthType authType) async {
+    final userId = await AuthRepository().signIn(authType);
     if (userId == null) {
       print('SignInに失敗しました');
 
@@ -603,19 +604,13 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(padding: EdgeInsets.only(bottom: 32)),
 
-            RaisedButton(
-              onPressed: _checkSignIn,
-              child: Text(
-                'Googleで認証する',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-              color: Theme.of(context).accentColor,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
+            AppleSignInButton(
+              onPressed: () => _signIn(AuthType.Apple),
+              style: AppleButtonStyle.white,
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 8)),
+            GoogleSignInButton(
+              onPressed: () => _signIn(AuthType.Google),
             ),
             Padding(padding: EdgeInsets.only(bottom: 32)),
 
