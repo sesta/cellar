@@ -245,7 +245,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    final userId = await getSignInUserId();
+    final userId = firebaseUser.uid;
     final user = await UserRepository().getUser(userId);
     setState(() {
       this._loadingSignIn = false;
