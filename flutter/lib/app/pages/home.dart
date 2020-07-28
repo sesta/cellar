@@ -8,7 +8,7 @@ import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/models/timeline.dart';
 import 'package:cellar/repository/user_repository.dart';
 import 'package:cellar/repository/analytics_repository.dart';
-import 'package:cellar/repository/provider/auth.dart';
+import 'package:cellar/repository/auth_repository.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
@@ -232,11 +232,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _checkSignIn() async {
-    setState(() {
-      this._loadingSignIn = true;
-    });
-    final firebaseUser = await signIn();
-    if (firebaseUser == null) {
+    final userId = await AuthRepository().signIn(AuthType.Google);
+    if (userId == null) {
       print('SignInに失敗しました');
 
       setState(() {
@@ -245,7 +242,6 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    final userId = firebaseUser.uid;
     final user = await UserRepository().getUser(userId);
     setState(() {
       this._loadingSignIn = false;
