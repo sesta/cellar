@@ -462,9 +462,12 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: widget.user == null ? null : _movePostPage,
         backgroundColor: Theme.of(context).accentColor,
-        child: Icon(
-          Icons.add,
-          color: widget.user == null ? Theme.of(context).primaryColorLight : Colors.white,
+        child: Opacity(
+          opacity: widget.user == null ? 0.4 : 1,
+          child: Image.asset(
+            'assets/images/upload-icon.png',
+            width: 48,
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
