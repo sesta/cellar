@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
@@ -241,18 +242,20 @@ class _DrinkPageState extends State<DrinkPage> {
         ),
         items: List.generate(imageLength, (index) {
           Widget content = Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            child: Lottie.asset(
+              'assets/lottie/loading.json',
+              width: 80,
+              height: 80,
             ),
           );
 
           if (_imageLoaded) {
             content = CachedNetworkImage(
               placeholder: (context, url) => Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                child: Lottie.asset(
+                  'assets/lottie/loading.json',
+                  width: 80,
+                  height: 80,
                 ),
               ),
               imageUrl: widget.drink.imageUrls[index],

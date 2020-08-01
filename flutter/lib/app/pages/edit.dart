@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/drink.dart';
@@ -240,9 +241,10 @@ class _EditPageState extends State<EditPage> {
           _uploading ? Container(
             color: Colors.black38,
             alignment: Alignment.center,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            child: Lottie.asset(
+              'assets/lottie/loading.json',
+              width: 80,
+              height: 80,
             ),
           ) : Container(),
         ],

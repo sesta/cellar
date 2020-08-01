@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/repository/analytics_repository.dart';
@@ -133,9 +134,10 @@ class _SettingState extends State<SettingPage> {
           _loading ? Container(
             color: Colors.black38,
             alignment: Alignment.center,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            child: Lottie.asset(
+              'assets/lottie/loading.json',
+              width: 80,
+              height: 80,
             ),
           ) : Container(),
         ],

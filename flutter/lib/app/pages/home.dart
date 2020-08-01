@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
@@ -481,9 +482,10 @@ class _HomePageState extends State<HomePage> {
       return Padding(
         padding: EdgeInsets.only(bottom: 40),
         child: Center(
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          child: Lottie.asset(
+            'assets/lottie/loading.json',
+            width: 80,
+            height: 80,
           ),
         ),
       );
@@ -659,10 +661,11 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.only(bottom: 80),
           color: Colors.black38,
           alignment: Alignment.center,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
+          child: Lottie.asset(
+            'assets/lottie/loading.json',
+            width: 80,
+            height: 80,
+          )
         ) : Container(),
       ],
     );

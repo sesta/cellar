@@ -259,7 +259,7 @@ class _PostPageState extends State<PostPage> {
               ],
             ),
           ),
-          !_loading ? Container(
+          _loading ? Container(
             color: Colors.black38,
             alignment: Alignment.center,
             child: Lottie.asset(
