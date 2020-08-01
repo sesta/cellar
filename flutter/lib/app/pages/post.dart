@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entities/status.dart';
@@ -261,10 +262,11 @@ class _PostPageState extends State<PostPage> {
           _loading ? Container(
             color: Colors.black38,
             alignment: Alignment.center,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
+            child: Lottie.asset(
+              'assets/lottie/loading.json',
+              width: 80,
+              height: 80,
+            )
           ) : Container(),
         ],
       ),
