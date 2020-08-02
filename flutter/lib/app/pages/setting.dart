@@ -123,6 +123,19 @@ class _SettingState extends State<SettingPage> {
 
                 FlatButton(
                   child: Text(
+                    'プライバシーポリシー',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                  onPressed: () => launch('https://cellar.sesta.dev/policy'),
+                ),
+                Padding(padding: EdgeInsets.only(bottom: 16)),
+
+                FlatButton(
+                  child: Text(
                     '問い合わせ',
                     style: TextStyle(
                       fontSize: 16,
