@@ -3,9 +3,11 @@ import 'package:cellar/repository/status_repository.dart';
 
 class Status {
   Map<DrinkType, int> uploadCounts;
+  bool isMaintenance;
 
   Status(
     this.uploadCounts,
+    this.isMaintenance,
   );
 
   int get uploadCount {
@@ -36,6 +38,6 @@ class Status {
 
   @override
   String toString() {
-    return 'uploadCounts: $uploadCounts';
+    return 'isMaintenance: $isMaintenance, uploadCounts: $uploadCounts';
   }
 }

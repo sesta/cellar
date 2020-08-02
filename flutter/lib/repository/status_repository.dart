@@ -14,10 +14,14 @@ class StatusRepository extends DB {
   Future<Status> getStatus() async {
     final statusRef = db.collection(STATUS_COLLECTION_NAME)
       .document(_environment);
+    final statusData = await statusRef.get();
     final drinkTypesData = await statusRef.collection('uploadCounts')
       .getDocuments();
 
-    return _toEntity(drinkTypesData.documents);
+    return _toEntity(
+      statusData,
+      drinkTypesData.documents,
+    );
   }
 
   Future<void> incrementUploadCount(
@@ -45,6 +49,7 @@ class StatusRepository extends DB {
   }
 
   Status _toEntity(
+    DocumentSnapshot statusData,
     List<DocumentSnapshot> drinkTypesData,
   ) {
     Map<DrinkType, int> counts = {};
@@ -57,6 +62,9 @@ class StatusRepository extends DB {
       counts[drinkType] = data['uploadCount'];
     });
 
-    return Status(counts);
+    return Status(
+      counts,
+      statusData['isMaintenance'],
+    );
   }
 }

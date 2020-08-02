@@ -29,12 +29,14 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _fetch() async {
+    Status status = await StatusRepository().getStatus();
+    widget.setStatus(status);
+    print(status);
+
     User user = await _checkSignIn();
     if (user != null) {
       widget.setUser(user);
     }
-    Status status = await StatusRepository().getStatus();
-    widget.setStatus(status);
 
     Navigator.pushReplacementNamed(context, '/home');
   }
