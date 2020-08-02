@@ -27,7 +27,9 @@ class MaintenancePage extends StatelessWidget {
           Container(padding: EdgeInsets.only(bottom: 32)),
 
           NormalText(
-            '申し訳ありません、メンテナンス中です。\n復旧までお待ちください。',
+            status.maintenanceMessage == ''
+              ? '申し訳ありません、メンテナンス中です。\n復旧までお待ちください。'
+              : status.maintenanceMessage,
             multiLine: true,
             bold: true,
           ),

@@ -65,6 +65,7 @@ class StatusRepository extends DB {
     return Status(
       counts,
       statusData['isMaintenance'],
+      statusData['maintenanceMessage'],
     );
   }
 }

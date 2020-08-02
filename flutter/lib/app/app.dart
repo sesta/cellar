@@ -95,7 +95,7 @@ class _CellarState extends State<Cellar> {
             );
 
           case '/maintenance':
-            return slideUpRoute(
+            return fadeInRoute(
               'maintenance',
               MaintenancePage(status: _status),
             );
