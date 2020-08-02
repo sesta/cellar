@@ -182,7 +182,7 @@ class _SettingState extends State<SettingPage> {
                       color: Colors.blueAccent,
                     ),
                   ),
-                  onPressed: () => launch('https://docs.google.com/forms/d/1yP8EskVwGOiKmJ5LBvAMHX1jl618uXB8UjprK79dt3Y/edit'),
+                  onPressed: () => launch('https://docs.google.com/forms/d/e/1FAIpQLSeKVQjfLEyIV-EI0wWmDK0iHk_R3E0ARu5a0nH1WgBsMrrJmw/viewform?usp=sf_link'),
                 ),
                 Padding(padding: EdgeInsets.only(bottom: 16)),
 
