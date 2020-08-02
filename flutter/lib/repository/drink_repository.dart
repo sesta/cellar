@@ -150,10 +150,6 @@ class DrinkRepository extends DB {
       );
     }).where((drink) => drink != null).toList();
 
-    await Future.forEach(drinks, (drink) async {
-      await drink.init();
-    });
-
     return drinks;
   }
 

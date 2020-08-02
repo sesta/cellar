@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entities/drink.dart';
@@ -23,7 +24,7 @@ class DrinkGrid extends StatelessWidget {
     final List<Widget> drinkWidgets = [];
     drinks.asMap().forEach((index, drink) {
       drinkWidgets.add(GestureDetector(
-        child: GridItem(drink),
+        child: GridItem(drink: drink),
         onTap: () => _pop(context, index, drink),
       ));
     });
@@ -46,9 +47,25 @@ class DrinkGrid extends StatelessWidget {
   }
 }
 
-class GridItem extends StatelessWidget {
-  GridItem(this.drink);
+class GridItem extends StatefulWidget {
+  GridItem({
+    Key key,
+    this.drink,
+  }) : super(key: key);
+
   final Drink drink;
+
+  @override
+  _GridItemState createState() => _GridItemState();
+}
+
+class _GridItemState extends State<GridItem> {
+  @override
+  initState() {
+    super.initState();
+
+    widget.drink.init().then((_) => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,14 +80,14 @@ class GridItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              NormalText(drink.drinkName, bold: true),
+              NormalText(widget.drink.drinkName, bold: true),
               Padding(padding: EdgeInsets.only(bottom: 4)),
               Row(
                 children: List.generate(5, (i)=> i).map<Widget>((index) =>
                   Padding(
                     padding: EdgeInsets.only(right: 4),
                     child: Icon(
-                      index < drink.score ? Icons.star : Icons.star_border,
+                      index < widget.drink.score ? Icons.star : Icons.star_border,
                       size: 16,
                       color: Colors.orangeAccent,
                     ),
@@ -85,13 +102,17 @@ class GridItem extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         clipBehavior: Clip.antiAlias,
         child: Hero(
-          tag: drink.thumbImagePath,
-          child: Image(
-            image: NetworkImage(
-              drink.thumbImageUrl,
-            ),
-            fit: BoxFit.cover,
-          ),
+          tag: widget.drink.thumbImagePath,
+          child: widget.drink.thumbImageUrl == null
+            ? Lottie.asset(
+                'assets/lottie/loading.json',
+              )
+            : Image(
+                image: NetworkImage(
+                  widget.drink.thumbImageUrl,
+                ),
+                fit: BoxFit.cover,
+              ),
         ),
       ),
     );
