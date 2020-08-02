@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/repository/analytics_repository.dart';
@@ -78,22 +79,29 @@ class _SettingState extends State<SettingPage> {
       body: Stack(
         children: <Widget>[
           SingleChildScrollView(
-            child: Padding(
-            padding: EdgeInsets.all(64),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  NormalText('ニックネーム'),
-                  NormalTextField(
-                    _nameController,
-                    onChanged: (_) => setState(() {}),
-                    bold: true,
-                  ),
-                  Padding(padding: EdgeInsets.only(bottom: 32)),
+            child: Column(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.only(top: 36)),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Padding(padding: EdgeInsets.only(left: 24)),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          NormalText('ニックネーム'),
+                          NormalTextField(
+                            _nameController,
+                            onChanged: (_) => setState(() {}),
+                            bold: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.only(right: 24)),
 
-                  SizedBox(
-                    width: double.infinity,
-                    child: RaisedButton(
+                    RaisedButton(
                       padding: EdgeInsets.all(12),
                       onPressed: disableSave ? null : _saveUser,
                       child: Text(
@@ -108,29 +116,36 @@ class _SettingState extends State<SettingPage> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                  ),
-                  Padding(padding: EdgeInsets.only(bottom: 80)),
+                    Padding(padding: EdgeInsets.only(right: 24)),
+                  ],
+                ),
+                Padding(padding: EdgeInsets.only(bottom: 64)),
 
-                  SizedBox(
-                    width: double.infinity,
-                    child: RaisedButton(
-                      padding: EdgeInsets.all(12),
-                      onPressed: _signOut,
-                      child: Text(
-                        'ログアウト',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
+                FlatButton(
+                  child: Text(
+                    '問い合わせ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent,
                     ),
                   ),
-                ],
-              ),
+                  onPressed: () => launch('https://docs.google.com/forms/d/1yP8EskVwGOiKmJ5LBvAMHX1jl618uXB8UjprK79dt3Y/edit'),
+                ),
+                Padding(padding: EdgeInsets.only(bottom: 16)),
+
+                FlatButton(
+                  child: Text(
+                    'ログアウト',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  onPressed: _signOut,
+                ),
+              ],
             ),
           ),
           _loading ? Container(
