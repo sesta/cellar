@@ -44,7 +44,7 @@ class Drink {
     }
   );
 
-  init() async {
+  Future<void> init() async {
     thumbImageUrl = await getDataUrl(thumbImagePath);
   }
 
