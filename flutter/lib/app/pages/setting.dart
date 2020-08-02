@@ -77,58 +77,60 @@ class _SettingState extends State<SettingPage> {
       ),
       body: Stack(
         children: <Widget>[
-          Padding(
-          padding: EdgeInsets.all(64),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                NormalText('ニックネーム'),
-                NormalTextField(
-                  _nameController,
-                  onChanged: (_) => setState(() {}),
-                  bold: true,
-                ),
-                Padding(padding: EdgeInsets.only(bottom: 32)),
+          SingleChildScrollView(
+            child: Padding(
+            padding: EdgeInsets.all(64),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  NormalText('ニックネーム'),
+                  NormalTextField(
+                    _nameController,
+                    onChanged: (_) => setState(() {}),
+                    bold: true,
+                  ),
+                  Padding(padding: EdgeInsets.only(bottom: 32)),
 
-                SizedBox(
-                  width: double.infinity,
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(12),
-                    onPressed: disableSave ? null : _saveUser,
-                    child: Text(
-                      '更新',
-                      style: TextStyle(
-                        fontSize: 14,
+                  SizedBox(
+                    width: double.infinity,
+                    child: RaisedButton(
+                      padding: EdgeInsets.all(12),
+                      onPressed: disableSave ? null : _saveUser,
+                      child: Text(
+                        '更新',
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                      color: Theme.of(context).accentColor,
+                      textColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                    color: Theme.of(context).accentColor,
-                    textColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
                   ),
-                ),
-                Padding(padding: EdgeInsets.only(bottom: 80)),
+                  Padding(padding: EdgeInsets.only(bottom: 80)),
 
-                SizedBox(
-                  width: double.infinity,
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(12),
-                    onPressed: _signOut,
-                    child: Text(
-                      'ログアウト',
-                      style: TextStyle(
-                        fontSize: 14,
+                  SizedBox(
+                    width: double.infinity,
+                    child: RaisedButton(
+                      padding: EdgeInsets.all(12),
+                      onPressed: _signOut,
+                      child: Text(
+                        'ログアウト',
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                      color: Colors.grey,
+                      textColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                    color: Colors.grey,
-                    textColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           _loading ? Container(
