@@ -12,6 +12,7 @@ import 'package:cellar/app/pages/post.dart';
 import 'package:cellar/app/pages/edit.dart';
 import 'package:cellar/app/pages/sign_up.dart';
 import 'package:cellar/app/pages/setting.dart';
+import 'package:cellar/app/pages/maintenance.dart';
 
 import 'package:cellar/app/widget/transitions/fade_in_route.dart';
 import 'package:cellar/app/widget/transitions/slide_up_route.dart';
@@ -91,6 +92,12 @@ class _CellarState extends State<Cellar> {
             return slideUpRoute(
               'setting',
               SettingPage(user: _user, setUser: _setUser),
+            );
+
+          case '/maintenance':
+            return slideUpRoute(
+              'maintenance',
+              MaintenancePage(status: _status),
             );
         }
 

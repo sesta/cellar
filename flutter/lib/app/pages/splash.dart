@@ -31,7 +31,10 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> _fetch() async {
     Status status = await StatusRepository().getStatus();
     widget.setStatus(status);
-    print(status);
+    if (status.isMaintenance) {
+      Navigator.pushReplacementNamed(context, '/maintenance');
+      return;
+    }
 
     User user = await _checkSignIn();
     if (user != null) {
