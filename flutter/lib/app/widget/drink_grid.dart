@@ -64,7 +64,9 @@ class _GridItemState extends State<GridItem> {
   initState() {
     super.initState();
 
-    widget.drink.init().then((_) => setState(() {}));
+    if (widget.drink.thumbImageUrl == null) {
+      widget.drink.init().then((_) => setState(() {}));
+    }
   }
 
   @override
@@ -104,8 +106,11 @@ class _GridItemState extends State<GridItem> {
         child: Hero(
           tag: widget.drink.thumbImagePath,
           child: widget.drink.thumbImageUrl == null
-            ? Lottie.asset(
-                'assets/lottie/loading.json',
+            ? Transform.scale( // なぜかsizeが指定できないので苦肉の策
+                scale: 0.5,
+                child: Lottie.asset(
+                  'assets/lottie/loading.json',
+                ),
               )
             : Image(
                 image: NetworkImage(
