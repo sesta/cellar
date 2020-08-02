@@ -54,6 +54,45 @@ class _SettingState extends State<SettingPage> {
     return _nameController.text == '';
   }
 
+  Future<void> _confirmSignOut() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) =>
+          AlertDialog(
+            title: NormalText(
+              "ログアウトしてよろしいですか？",
+              bold: true,
+            ),
+            actions: <Widget>[
+              // ボタン領域
+              FlatButton(
+                child: Text(
+                  'やめる',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueAccent,
+                  ),
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              FlatButton(
+                child: Text(
+                  'ログアウトする',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _signOut();
+                },
+              ),
+            ],
+          ),
+    );
+  }
+
   Future<void> _signOut() async {
     setState(() {
       _loading = true;
@@ -156,7 +195,7 @@ class _SettingState extends State<SettingPage> {
                       color: Colors.grey,
                     ),
                   ),
-                  onPressed: _signOut,
+                  onPressed: _confirmSignOut,
                 ),
               ],
             ),
