@@ -26,6 +26,7 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
+  DateTime _drinkDateTime = DateTime.now(); // TODO: ちゃんとする
   DrinkType _drinkType;
   SubDrinkType _subDrinkType = SubDrinkType.Empty;
   int _score = 3;
@@ -59,6 +60,12 @@ class _EditPageState extends State<EditPage> {
   get _disablePost {
     return _nameController.text == ''
       || _drinkType == null;
+  }
+
+  _updateDrinkDateTime(DateTime drinkDateTime) {
+    setState(() {
+      _drinkDateTime = drinkDateTime;
+    });
   }
 
   _updateDrinkType(DrinkType drinkType) {
@@ -190,6 +197,7 @@ class _EditPageState extends State<EditPage> {
                 Padding(padding: EdgeInsets.only(bottom: 24)),
                 DrinkForm(
                   user: widget.user,
+                  drinkDateTime: _drinkDateTime,
                   nameController: _nameController,
                   priceController: _priceController,
                   placeController: _placeController,
@@ -197,6 +205,7 @@ class _EditPageState extends State<EditPage> {
                   score: _score,
                   drinkType: _drinkType,
                   subDrinkType: _subDrinkType,
+                  updateDrinkDateTime: _updateDrinkDateTime,
                   updateDrinkType: _updateDrinkType,
                   updateSubDrinkType: _updateSubDrinkType,
                   updateScore: _updateScore,

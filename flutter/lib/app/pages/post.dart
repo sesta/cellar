@@ -30,6 +30,7 @@ class PostPage extends StatefulWidget {
 class _PostPageState extends State<PostPage> {
   List<Asset> _imageAssets = [];
   List<List<int>> _images = [];
+  DateTime _drinkDateTime = DateTime.now();
   DrinkType _drinkType;
   SubDrinkType _subDrinkType = SubDrinkType.Empty;
   int _score = 3;
@@ -55,6 +56,12 @@ class _PostPageState extends State<PostPage> {
     return _images.length == 0
         || _nameController.text == ''
         || _drinkType == null;
+  }
+
+  _updateDrinkDateTime(DateTime drinkDateTime) {
+    setState(() {
+      _drinkDateTime = drinkDateTime;
+    });
   }
 
   _updateDrinkType(DrinkType drinkType) {
@@ -223,6 +230,7 @@ class _PostPageState extends State<PostPage> {
 
                 DrinkForm(
                   user: widget.user,
+                  drinkDateTime: _drinkDateTime,
                   nameController: _nameController,
                   priceController: _priceController,
                   placeController: _placeController,
@@ -230,6 +238,7 @@ class _PostPageState extends State<PostPage> {
                   score: _score,
                   drinkType: _drinkType,
                   subDrinkType: _subDrinkType,
+                  updateDrinkDateTime: _updateDrinkDateTime,
                   updateDrinkType: _updateDrinkType,
                   updateSubDrinkType: _updateSubDrinkType,
                   updateScore: _updateScore,
