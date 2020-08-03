@@ -10,6 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_localizations:
+    sdk: flutter
+
   multi_image_picker: ^4.6.7
   firebase_core: ^0.4.4+3
   firebase_analytics: ^5.0.11

@@ -14,6 +14,7 @@ class DrinkRepository extends DB {
       .setData({
         'userId': drink.userId,
         'userName': drink.userName,
+        'drinkTimestamp': drink.drinkDateTime.millisecondsSinceEpoch,
         'drinkName': drink.drinkName,
         'drinkType': drink.drinkType.toString(),
         'subDrinkType': drink.subDrinkType.toString(),
@@ -46,7 +47,7 @@ class DrinkRepository extends DB {
     if (isOrderByScore) {
       query = query.orderBy('score', descending: isDescTimestamp);
     }
-    query = query.orderBy('postTimestamp', descending: isDescTimestamp);
+    query = query.orderBy('drinkTimestamp', descending: isDescTimestamp);
     query = query.limit(PAGE_LIMIT);
 
     final snapshot = await query.getDocuments();
@@ -72,7 +73,7 @@ class DrinkRepository extends DB {
     if (isOrderByScore) {
       query = query.orderBy('score', descending: isDescTimestamp);
     }
-    query = query.orderBy('postTimestamp', descending: isDescTimestamp);
+    query = query.orderBy('drinkTimestamp', descending: isDescTimestamp);
     query = query.limit(PAGE_LIMIT);
 
     final snapshot = await query.getDocuments();
@@ -85,6 +86,7 @@ class DrinkRepository extends DB {
     await db.collection(DRINK_COLLECTION_NAME)
       .document(drink.drinkId)
       .updateData({
+        'drinkTimestamp': drink.drinkDateTime.millisecondsSinceEpoch,
         'drinkName': drink.drinkName,
         'drinkType': drink.drinkType.toString(),
         'subDrinkType': drink.subDrinkType.toString(),
@@ -121,12 +123,8 @@ class DrinkRepository extends DB {
 
   Future<List<Drink>> _toEntities(List<DocumentSnapshot> rawData) async {
     final drinks = rawData.map((data) {
-      final drinkType = data['drinkType'] == null // 移行のための分岐
-        ? DrinkType.values[data['drinkTypeIndex']]
-        : toDrinkType(data['drinkType']);
-      final subDrinkType = data['subDrinkType'] == null // 移行のための分岐
-        ? SubDrinkType.values[data['subDrinkTypeIndex']]
-        : _toSubDrinkType(data['subDrinkType']);
+      final drinkType = toDrinkType(data['drinkType']);
+      final subDrinkType = _toSubDrinkType(data['subDrinkType']);
       if (drinkType == null || subDrinkType == null) {
         return null;
       }
@@ -134,6 +132,7 @@ class DrinkRepository extends DB {
       return Drink(
         data['userId'],
         data['userName'],
+        DateTime.fromMicrosecondsSinceEpoch(data['drinkTimestamp'] * 1000),
         data['drinkName'],
         drinkType,
         subDrinkType,

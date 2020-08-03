@@ -11,6 +11,7 @@ import 'package:cellar/repository/provider/storage.dart';
 Future<void> post(
   User user,
   List<Asset> images,
+  DateTime drinkDateTime,
   String drinkName,
   DrinkType drinkType,
   SubDrinkType subDrinkType,
@@ -40,6 +41,7 @@ Future<void> post(
   final drink = Drink(
     user.userId,
     user.userName,
+    drinkDateTime,
     drinkName,
     drinkType,
     subDrinkType,

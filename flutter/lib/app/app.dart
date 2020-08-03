@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
@@ -54,6 +55,14 @@ class _CellarState extends State<Cellar> {
       color: Theme.of(context).accentColor,
       navigatorObservers: [
         AnalyticsRepository().observer,
+      ],
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale("ja"),
       ],
       onGenerateRoute: (settings) {
         switch(settings.name) {

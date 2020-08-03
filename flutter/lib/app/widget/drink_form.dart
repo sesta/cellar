@@ -5,10 +5,12 @@ import 'package:cellar/domain/entities/user.dart';
 
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
+import 'package:intl/intl.dart';
 
 class DrinkForm extends StatelessWidget {
   DrinkForm({
     this.user,
+    this.drinkDateTime,
     this.nameController,
     this.priceController,
     this.placeController,
@@ -16,6 +18,7 @@ class DrinkForm extends StatelessWidget {
     this.score,
     this.drinkType,
     this.subDrinkType,
+    this.updateDrinkDateTime,
     this.updateDrinkType,
     this.updateSubDrinkType,
     this.updateScore,
@@ -23,6 +26,7 @@ class DrinkForm extends StatelessWidget {
   
   final User user;
 
+  final DateTime drinkDateTime;
   final TextEditingController nameController;
   final TextEditingController priceController;
   final TextEditingController placeController;
@@ -31,19 +35,57 @@ class DrinkForm extends StatelessWidget {
   final DrinkType drinkType;
   final SubDrinkType subDrinkType;
 
+  final updateDrinkDateTime;
   final updateDrinkType;
   final updateSubDrinkType;
   final updateScore;
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime dateTime = await showDatePicker(
+      context: context,
+      initialDate: drinkDateTime,
+      firstDate: DateTime(2016),
+      lastDate: DateTime.now(),
+      helpText: '飲んだ日を選択してください。',
+    );
+
+    if (dateTime != null) {
+      updateDrinkDateTime(dateTime);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<SubDrinkType> subDrinkTypes = drinkType == null ? [SubDrinkType.Empty] : drinkType.subDrinkTypes;
+    final formatter = DateFormat('yyyy/MM/dd');
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          NormalText('飲んだ日 *'),
+          InkWell(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: NormalText(
+                formatter.format(drinkDateTime),
+                bold: true,
+              ),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.white38,
+                    width: 1,
+                    style: BorderStyle.solid
+                  ),
+                ),
+              ),
+            ),
+            onTap: () => _selectDate(context),
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 24)),
+
           NormalText('名前 *'),
           NormalTextField(
             nameController,
