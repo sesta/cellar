@@ -27,6 +27,7 @@ class UserRepository extends DB {
       .setData({
         'userName': user.userName,
         'uploadCounts': {},
+        'isDeveloper': false, // 管理画面からのみtrueにできる
       });
   }
 
@@ -71,6 +72,7 @@ class UserRepository extends DB {
       userId,
       rawData['userName'],
       uploadCounts: counts,
+      isDeveloper: rawData['isDeveloper'] == null ? false : rawData['isDeveloper'],
     );
   }
 }

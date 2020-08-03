@@ -8,12 +8,14 @@ class User {
   String userId;
   String userName;
   Map<DrinkType, int> uploadCounts;
+  bool isDeveloper;
 
   User(
     this.userId,
     this.userName,
     {
       this.uploadCounts,
+      this.isDeveloper = false,
     }
   ){
     if (this.uploadCounts == null) {
@@ -67,7 +69,7 @@ class User {
   @override
   String toString() {
     return 'userId: ${this.userId}, userName: ${this.userName}, '
-      'uploadCount: ${this.uploadCount}, '
+      'uploadCount: ${this.uploadCount}, isDeveloper: $isDeveloper, '
       'drinkTypeUploadCounts: ${this.uploadCounts.toString()}';
   }
 }

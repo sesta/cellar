@@ -39,7 +39,9 @@ class _CellarState extends State<Cellar> {
       _user = user;
     });
 
-    AnalyticsRepository().setUser(user == null ? null : user.userId);
+    if (user != null) {
+      AnalyticsRepository().setUser(user);
+    }
   }
 
   @override
