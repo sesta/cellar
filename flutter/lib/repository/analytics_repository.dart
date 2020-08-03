@@ -39,6 +39,7 @@ class AnalyticsRepository {
 
   Future<void> setUser(String userId) async {
     await _analytics.setUserId(userId);
+    await _analytics.setUserProperty(name: 'user_id', value: userId);
   }
 
   Future<void> sendEvent(
