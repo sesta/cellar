@@ -121,12 +121,8 @@ class DrinkRepository extends DB {
 
   Future<List<Drink>> _toEntities(List<DocumentSnapshot> rawData) async {
     final drinks = rawData.map((data) {
-      final drinkType = data['drinkType'] == null // 移行のための分岐
-        ? DrinkType.values[data['drinkTypeIndex']]
-        : toDrinkType(data['drinkType']);
-      final subDrinkType = data['subDrinkType'] == null // 移行のための分岐
-        ? SubDrinkType.values[data['subDrinkTypeIndex']]
-        : _toSubDrinkType(data['subDrinkType']);
+      final drinkType = toDrinkType(data['drinkType']);
+      final subDrinkType = _toSubDrinkType(data['subDrinkType']);
       if (drinkType == null || subDrinkType == null) {
         return null;
       }
