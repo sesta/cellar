@@ -26,7 +26,7 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  DateTime _drinkDateTime = DateTime.now(); // TODO: ちゃんとする
+  DateTime _drinkDateTime;
   DrinkType _drinkType;
   SubDrinkType _subDrinkType = SubDrinkType.Empty;
   int _score = 3;
@@ -51,6 +51,7 @@ class _EditPageState extends State<EditPage> {
     _nameController.addListener(() => setState(() {}));
 
     setState(() {
+      _drinkDateTime = widget.drink.drinkDateTime;
       _drinkType = widget.drink.drinkType;
       _subDrinkType = widget.drink.subDrinkType;
       _score = widget.drink.score;
@@ -99,6 +100,7 @@ class _EditPageState extends State<EditPage> {
     final oldDrinkType = widget.drink.drinkType;
 
     await widget.drink.update(
+      _drinkDateTime,
       _nameController.text,
       _drinkType,
       _subDrinkType,

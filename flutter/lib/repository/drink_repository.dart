@@ -14,6 +14,7 @@ class DrinkRepository extends DB {
       .setData({
         'userId': drink.userId,
         'userName': drink.userName,
+        'drinkTimestamp': drink.drinkDateTime.millisecondsSinceEpoch,
         'drinkName': drink.drinkName,
         'drinkType': drink.drinkType.toString(),
         'subDrinkType': drink.subDrinkType.toString(),
@@ -85,6 +86,7 @@ class DrinkRepository extends DB {
     await db.collection(DRINK_COLLECTION_NAME)
       .document(drink.drinkId)
       .updateData({
+        'drinkTimestamp': drink.drinkDateTime.millisecondsSinceEpoch,
         'drinkName': drink.drinkName,
         'drinkType': drink.drinkType.toString(),
         'subDrinkType': drink.subDrinkType.toString(),
@@ -130,6 +132,7 @@ class DrinkRepository extends DB {
       return Drink(
         data['userId'],
         data['userName'],
+        DateTime.fromMicrosecondsSinceEpoch(data['drinkTimestamp'] * 1000),
         data['drinkName'],
         drinkType,
         subDrinkType,

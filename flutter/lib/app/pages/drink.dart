@@ -169,7 +169,7 @@ class _DrinkPageState extends State<DrinkPage> {
                         NormalText(widget.drink.userName),
                         Expanded(child: Container()),
 
-                        NormalText(widget.drink.postDatetimeString),
+                        NormalText(widget.drink.drinkDatetimeString),
                       ],
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 24)),

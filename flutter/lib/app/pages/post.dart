@@ -54,8 +54,8 @@ class _PostPageState extends State<PostPage> {
 
   get disablePost {
     return _images.length == 0
-        || _nameController.text == ''
-        || _drinkType == null;
+      || _nameController.text == ''
+      || _drinkType == null;
   }
 
   _updateDrinkDateTime(DateTime drinkDateTime) {
@@ -184,6 +184,7 @@ class _PostPageState extends State<PostPage> {
     await post(
       widget.user,
       _imageAssets,
+      _drinkDateTime,
       _nameController.text,
       _drinkType,
       _subDrinkType,

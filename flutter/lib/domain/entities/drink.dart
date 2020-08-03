@@ -8,6 +8,7 @@ class Drink {
   String drinkId;
   String userId;
   String userName;
+  DateTime drinkDateTime;
   String drinkName;
   DrinkType drinkType;
   SubDrinkType subDrinkType;
@@ -27,6 +28,7 @@ class Drink {
   Drink(
     this.userId,
     this.userName,
+    this.drinkDateTime,
     this.drinkName,
     this.drinkType,
     this.subDrinkType,
@@ -60,9 +62,9 @@ class Drink {
     return "¥${formatter.format(price)}";
   }
 
-  get postDatetimeString {
+  get drinkDatetimeString {
     final formatter = DateFormat('yyyy/MM/dd');
-    return formatter.format(postDatetime);
+    return formatter.format(drinkDateTime);
   }
 
   Future<void> create() async {
@@ -70,6 +72,7 @@ class Drink {
   }
 
   Future<void> update(
+    DateTime drinkDateTime,
     String drinkName,
     DrinkType drinkType,
     SubDrinkType subDrinkType,
@@ -82,6 +85,7 @@ class Drink {
       throw '更新するためにはdrinkIdが必要です';
     }
 
+    this.drinkDateTime = drinkDateTime;
     this.drinkName = drinkName;
     this.drinkType = drinkType;
     this.subDrinkType = subDrinkType;
