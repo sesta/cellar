@@ -47,7 +47,7 @@ class DrinkRepository extends DB {
     if (isOrderByScore) {
       query = query.orderBy('score', descending: isDescTimestamp);
     }
-    query = query.orderBy('postTimestamp', descending: isDescTimestamp);
+    query = query.orderBy('drinkTimestamp', descending: isDescTimestamp);
     query = query.limit(PAGE_LIMIT);
 
     final snapshot = await query.getDocuments();
@@ -73,7 +73,7 @@ class DrinkRepository extends DB {
     if (isOrderByScore) {
       query = query.orderBy('score', descending: isDescTimestamp);
     }
-    query = query.orderBy('postTimestamp', descending: isDescTimestamp);
+    query = query.orderBy('drinkTimestamp', descending: isDescTimestamp);
     query = query.limit(PAGE_LIMIT);
 
     final snapshot = await query.getDocuments();
