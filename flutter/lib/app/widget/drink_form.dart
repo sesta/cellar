@@ -46,6 +46,7 @@ class DrinkForm extends StatelessWidget {
       initialDate: drinkDateTime,
       firstDate: DateTime(2016),
       lastDate: DateTime.now(),
+      helpText: '飲んだ日を選択してください。',
     );
 
     if (dateTime != null) {
@@ -65,7 +66,22 @@ class DrinkForm extends StatelessWidget {
         children: <Widget>[
           NormalText('飲んだ日 *'),
           InkWell(
-            child: Text(formatter.format(drinkDateTime)),
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: NormalText(
+                formatter.format(drinkDateTime),
+                bold: true,
+              ),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.white38,
+                    width: 1,
+                    style: BorderStyle.solid
+                  ),
+                ),
+              ),
+            ),
             onTap: () => _selectDate(context),
           ),
           Padding(padding: EdgeInsets.only(bottom: 24)),
