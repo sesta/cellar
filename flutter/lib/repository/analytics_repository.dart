@@ -1,3 +1,4 @@
+import 'package:cellar/domain/entities/user.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 
@@ -37,9 +38,10 @@ class AnalyticsRepository {
     analytics: _analytics,
   );
 
-  Future<void> setUser(String userId) async {
-    await _analytics.setUserId(userId);
-    await _analytics.setUserProperty(name: 'user_id', value: userId);
+  Future<void> setUser(User user) async {
+    await _analytics.setUserId(user.userId);
+    await _analytics.setUserProperty(name: 'user_id', value: user.userId);
+    await _analytics.setUserProperty(name: 'is_developer', value: user.isDeveloper.toString());
   }
 
   Future<void> sendEvent(
