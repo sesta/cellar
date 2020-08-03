@@ -35,6 +35,18 @@ class DrinkForm extends StatelessWidget {
   final updateSubDrinkType;
   final updateScore;
 
+  DateTime _date = new DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: _date,
+      firstDate: DateTime(2016),
+      lastDate: DateTime.now(),
+    );
+    print(picked);
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<SubDrinkType> subDrinkTypes = drinkType == null ? [SubDrinkType.Empty] : drinkType.subDrinkTypes;
@@ -44,6 +56,13 @@ class DrinkForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          NormalText('飲んだ日 *'),
+          FlatButton(
+            child: Text('日付'),
+            onPressed: () => _selectDate(context),
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 24)),
+
           NormalText('名前 *'),
           NormalTextField(
             nameController,
