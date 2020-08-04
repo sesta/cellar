@@ -39,7 +39,7 @@ class DrinkGrid extends StatelessWidget {
         top: 16,
         left: 16,
         right: 16,
-        bottom: 64,
+        bottom: 120,
       ),
       childAspectRatio: IMAGE_ASPECT_RATIO,
       children: drinkWidgets,
