@@ -1,39 +1,39 @@
 {
   "indexes": [
     {
-      "collectionGroup": "drinks",
+      "collectionGroup": "dev-drinks",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "drinkTypeIndex",
+          "fieldPath": "drinkType",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "postTimestamp",
+          "fieldPath": "drinkTimestamp",
           "order": "ASCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "drinks",
+      "collectionGroup": "dev-drinks",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "drinkTypeIndex",
+          "fieldPath": "drinkType",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "postTimestamp",
+          "fieldPath": "drinkTimestamp",
           "order": "DESCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "drinks",
+      "collectionGroup": "dev-drinks",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "drinkTypeIndex",
+          "fieldPath": "drinkType",
           "order": "ASCENDING"
         },
         {
@@ -41,17 +41,17 @@
           "order": "DESCENDING"
         },
         {
-          "fieldPath": "postTimestamp",
+          "fieldPath": "drinkTimestamp",
           "order": "DESCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "drinks",
+      "collectionGroup": "dev-drinks",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "drinkTypeIndex",
+          "fieldPath": "drinkType",
           "order": "ASCENDING"
         },
         {
@@ -59,17 +59,17 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "postTimestamp",
-          "order": "DESCENDING"
+          "fieldPath": "drinkTimestamp",
+          "order": "ASCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "drinks",
+      "collectionGroup": "dev-drinks",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "drinkTypeIndex",
+          "fieldPath": "drinkType",
           "order": "ASCENDING"
         },
         {
@@ -77,61 +77,19 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "score",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "postTimestamp",
+          "fieldPath": "drinkTimestamp",
           "order": "DESCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "drinks",
+      "collectionGroup": "dev-drinks",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "score",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "postTimestamp",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "drinks",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "userId",
+          "fieldPath": "drinkType",
           "order": "ASCENDING"
         },
-        {
-          "fieldPath": "postTimestamp",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "drinks",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "userId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "postTimestamp",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "drinks",
-      "queryScope": "COLLECTION",
-      "fields": [
         {
           "fieldPath": "userId",
           "order": "ASCENDING"
@@ -141,7 +99,231 @@
           "order": "DESCENDING"
         },
         {
-          "fieldPath": "postTimestamp",
+          "fieldPath": "drinkTimestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "dev-drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "score",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "dev-drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "dev-drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "dev-drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "score",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "drinkType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "drinkType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "drinkType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "score",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "drinkType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "drinkType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "drinkType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "score",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "score",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "drinks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "score",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "drinkTimestamp",
           "order": "DESCENDING"
         }
       ]
