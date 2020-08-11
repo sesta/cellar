@@ -12,9 +12,9 @@ import 'package:cellar/app/widget/atoms/normal_text.dart';
 class EditPage extends StatefulWidget {
   EditPage({
     Key key,
-    this.status,
-    this.user,
-    this.drink,
+    @required this.status,
+    @required this.user,
+    @required this.drink,
   }) : super(key: key);
 
   final Status status;

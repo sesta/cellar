@@ -9,8 +9,8 @@ import 'package:cellar/repository/auth_repository.dart';
 class SplashPage extends StatefulWidget {
   SplashPage({
     Key key,
-    this.setStatus,
-    this.setUser,
+    @required this.setStatus,
+    @required this.setUser,
   }) : super(key: key);
 
   final setStatus;

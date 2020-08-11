@@ -16,8 +16,8 @@ import 'package:cellar/app/widget/atoms/normal_text.dart';
 class PostPage extends StatefulWidget {
   PostPage({
     Key key,
-    this.status,
-    this.user,
+    @required this.status,
+    @required this.user,
   }) : super(key: key);
 
   final Status status;

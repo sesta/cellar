@@ -12,8 +12,8 @@ import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 class SettingPage extends StatefulWidget {
   SettingPage({
     Key key,
-    this.user,
-    this.setUser,
+    @required this.user,
+    @required this.setUser,
   }) : super(key: key);
 
   final User user;
