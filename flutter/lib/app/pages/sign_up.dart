@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/domain/entity/entities.dart';
 
 import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';

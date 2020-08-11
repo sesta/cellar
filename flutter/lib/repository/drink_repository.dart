@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:cellar/conf.dart';
-import 'package:cellar/domain/entities/drink.dart';
+import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/provider/firestore.dart';
 
 class DrinkRepository extends DB {

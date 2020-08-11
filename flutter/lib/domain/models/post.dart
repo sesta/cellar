@@ -4,8 +4,7 @@ import 'dart:typed_data';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 import 'package:cellar/conf.dart';
-import 'package:cellar/domain/entities/drink.dart';
-import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
 
 Future<void> post(

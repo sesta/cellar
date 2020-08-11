@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'package:cellar/domain/entities/drink.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:cellar/conf.dart';
-import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/provider/firestore.dart';
 
 class UserRepository extends DB {

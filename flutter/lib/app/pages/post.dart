@@ -4,9 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:cellar/conf.dart';
-import 'package:cellar/domain/entities/status.dart';
-import 'package:cellar/domain/entities/drink.dart';
-import 'package:cellar/domain/entities/user.dart';
+import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/domain/models/post.dart';
 import 'package:cellar/repository/repositories.dart';
 
