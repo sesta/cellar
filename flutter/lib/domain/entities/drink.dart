@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:intl/intl.dart';
 
-import 'package:cellar/repository/drink_repository.dart';
-import 'package:cellar/repository/storage_repository.dart';
+import 'package:cellar/repository/repositories.dart';
 
 class Drink {
   String drinkId;

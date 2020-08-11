@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
-import 'package:cellar/repository/status_repository.dart';
-import 'package:cellar/repository/user_repository.dart';
-import 'package:cellar/repository/auth_repository.dart';
+import 'package:cellar/repository/repositories.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({

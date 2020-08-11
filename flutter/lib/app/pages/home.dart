@@ -9,9 +9,7 @@ import 'package:cellar/domain/entities/status.dart';
 import 'package:cellar/domain/entities/user.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/models/timeline.dart';
-import 'package:cellar/repository/user_repository.dart';
-import 'package:cellar/repository/analytics_repository.dart';
-import 'package:cellar/repository/auth_repository.dart';
+import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';

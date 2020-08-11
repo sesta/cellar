@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cellar/domain/entities/drink.dart';
-import 'package:cellar/repository/drink_repository.dart';
+import 'package:cellar/repository/repositories.dart';
 
 enum TimelineType {
   Mine,
