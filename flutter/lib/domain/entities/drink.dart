@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 
 import 'package:cellar/repository/drink_repository.dart';
-import 'package:cellar/repository/provider/storage.dart';
+import 'package:cellar/repository/storage_repository.dart';
 
 class Drink {
   String drinkId;
@@ -47,13 +47,13 @@ class Drink {
   );
 
   Future<void> init() async {
-    thumbImageUrl = await getDataUrl(thumbImagePath);
+    thumbImageUrl = await StorageRepository().getUrl(thumbImagePath);
   }
 
   getImageUrls() async {
     imageUrls = [];
     await Future.forEach(imagePaths, (path) async {
-      imageUrls.add(await getDataUrl(path));
+      imageUrls.add(await StorageRepository().getUrl(path));
     });
   }
 
