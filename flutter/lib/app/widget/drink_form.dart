@@ -9,19 +9,19 @@ import 'package:intl/intl.dart';
 
 class DrinkForm extends StatelessWidget {
   DrinkForm({
-    this.user,
-    this.drinkDateTime,
-    this.nameController,
-    this.priceController,
-    this.placeController,
-    this.memoController,
-    this.score,
-    this.drinkType,
-    this.subDrinkType,
-    this.updateDrinkDateTime,
-    this.updateDrinkType,
-    this.updateSubDrinkType,
-    this.updateScore,
+    @required this.user,
+    @required this.drinkDateTime,
+    @required this.nameController,
+    @required this.priceController,
+    @required this.placeController,
+    @required this.memoController,
+    @required this.score,
+    @required this.drinkType,
+    @required this.subDrinkType,
+    @required this.updateDrinkDateTime,
+    @required this.updateDrinkType,
+    @required this.updateSubDrinkType,
+    @required this.updateScore,
   });
   
   final User user;

@@ -10,8 +10,8 @@ class DrinkGrid extends StatelessWidget {
   final List<Drink> drinks;
   final updateDrink;
   DrinkGrid({
-    this.drinks,
-    this.updateDrink,
+    @required this.drinks,
+    @required this.updateDrink,
   });
 
   _pop(BuildContext context, int index, Drink drink) async {
