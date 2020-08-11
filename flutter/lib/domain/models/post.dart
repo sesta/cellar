@@ -6,7 +6,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entities/drink.dart';
 import 'package:cellar/domain/entities/user.dart';
-import 'package:cellar/repository/provider/storage.dart';
+import 'package:cellar/repository/storage_repository.dart';
 
 Future<void> post(
   User user,
@@ -65,7 +65,7 @@ Future<void> uploadImage(Asset image, String path, int expectWidthSize) async {
     (image.originalHeight * resizeRate).round(),
   );
   List<int> imageData = byteData.buffer.asUint8List();
-  final int error = await uploadData(
+  final int error = await StorageRepository().uploadData(
     path,
     imageData,
     'image/jpeg',
