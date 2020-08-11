@@ -1,5 +1,5 @@
-import 'package:cellar/domain/entities/drink.dart';
-import 'package:cellar/repository/status_repository.dart';
+import 'package:cellar/domain/entity/entities.dart';
+import 'package:cellar/repository/repositories.dart';
 
 class Status {
   Map<DrinkType, int> uploadCounts;

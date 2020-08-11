@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:cellar/domain/entities/status.dart';
-import 'package:cellar/domain/entities/user.dart';
-import 'package:cellar/domain/entities/drink.dart';
-import 'package:cellar/repository/analytics_repository.dart';
+import 'package:cellar/domain/entity/entities.dart';
+import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/pages/splash.dart';
 import 'package:cellar/app/pages/home.dart';

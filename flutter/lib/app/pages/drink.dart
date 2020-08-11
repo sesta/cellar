@@ -3,8 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:lottie/lottie.dart';
 
-import 'package:cellar/domain/entities/user.dart';
-import 'package:cellar/domain/entities/drink.dart';
+import 'package:cellar/domain/entity/entities.dart';
 
 import 'package:cellar/app/widget/atoms/label_test.dart';
 import 'package:cellar/app/widget/atoms/main_text.dart';
