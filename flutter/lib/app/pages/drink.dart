@@ -14,8 +14,8 @@ import 'package:cellar/app/widget/atoms/normal_text.dart';
 class DrinkPage extends StatefulWidget {
   DrinkPage({
     Key key,
-    this.user,
-    this.drink,
+    @required this.user,
+    @required this.drink,
   }) : super(key: key);
 
   final User user;

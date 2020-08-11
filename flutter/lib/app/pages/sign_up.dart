@@ -9,8 +9,8 @@ import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 class SignUpPage extends StatefulWidget {
   SignUpPage({
     Key key,
-    this.userId,
-    this.setUser,
+    @required this.userId,
+    @required this.setUser,
   }) : super(key: key);
 
   final String userId;

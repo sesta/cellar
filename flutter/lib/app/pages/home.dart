@@ -21,9 +21,9 @@ import 'package:cellar/app/widget/atoms/small_text.dart';
 class HomePage extends StatefulWidget {
   HomePage({
     Key key,
-    this.user,
-    this.status,
-    this.setUser,
+    @required this.user,
+    @required this.status,
+    @required this.setUser,
   }) : super(key: key);
 
   final User user;

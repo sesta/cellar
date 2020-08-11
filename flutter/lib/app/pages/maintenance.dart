@@ -7,7 +7,7 @@ import 'package:cellar/app/widget/atoms/normal_text.dart';
 class MaintenancePage extends StatelessWidget {
   MaintenancePage({
     Key key,
-    this.status,
+    @required this.status,
   }) : super(key: key);
 
   final Status status;
