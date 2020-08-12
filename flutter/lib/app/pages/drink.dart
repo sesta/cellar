@@ -266,22 +266,22 @@ class _DrinkPageState extends State<DrinkPage> {
             content = Hero(
               tag: widget.drink.thumbImagePath,
               child: _imageLoaded
-                  ? CachedNetworkImage(
-                placeholder: (context, url) => Image(
-                  image: NetworkImage(
-                    widget.drink.thumbImageUrl,
+                ? CachedNetworkImage(
+                    placeholder: (context, url) => Image(
+                      image: NetworkImage(
+                        widget.drink.thumbImageUrl,
+                      ),
+                      fit: BoxFit.contain,
+                    ),
+                    imageUrl: widget.drink.imageUrls.first,
+                    fit: BoxFit.contain,
+                  )
+                : Image(
+                    image: NetworkImage(
+                      widget.drink.thumbImageUrl,
+                    ),
+                    fit: BoxFit.contain,
                   ),
-                  fit: BoxFit.contain,
-                ),
-                imageUrl: widget.drink.imageUrls.first,
-                fit: BoxFit.contain,
-              )
-                  : Image(
-                image: NetworkImage(
-                  widget.drink.thumbImageUrl,
-                ),
-                fit: BoxFit.contain,
-              ),
             );
           }
 
