@@ -5,7 +5,6 @@ import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/drink_form.dart';
-import 'package:cellar/app/widget/atoms/normal_text.dart';
 
 class EditPage extends StatefulWidget {
   EditPage({
@@ -124,13 +123,13 @@ class _EditPageState extends State<EditPage> {
       context: context,
       builder: (BuildContext context) =>
           AlertDialog(
-            title: NormalText(
+            title: Text(
               "本当に削除してよろしいですか？",
-              bold: true,
+              style: Theme.of(context).textTheme.subtitle1,
             ),
-            content: NormalText(
+            content: Text(
               '削除した投稿は復元できません。',
-              multiLine: true,
+              style: Theme.of(context).textTheme.bodyText2,
             ),
             actions: <Widget>[
               // ボタン領域
@@ -218,9 +217,9 @@ class _EditPageState extends State<EditPage> {
                     RaisedButton(
                       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                       onPressed: _confirmDelete,
-                      child: NormalText(
+                      child: Text(
                         '削除する',
-                        bold: true,
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
                       color: Colors.redAccent,
                       textColor: Colors.white,
@@ -232,9 +231,9 @@ class _EditPageState extends State<EditPage> {
                     RaisedButton(
                       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                       onPressed: _disablePost ? null : _updateDrink,
-                      child: NormalText(
+                      child: Text(
                         '更新する',
-                        bold: true,
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
                       color: Theme.of(context).accentColor,
                       textColor: Colors.white,

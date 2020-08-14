@@ -11,7 +11,6 @@ import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
-import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/small_text.dart';
 
 class HomePage extends StatefulWidget {
@@ -493,13 +492,13 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsets.only(bottom: 40),
         child: Center(
           child: _timelineType == TimelineType.Mine
-            ? NormalText(
+            ? Text(
                 '飲んだお酒を投稿してみましょう',
-                bold: true,
+                style: Theme.of(context).textTheme.subtitle1,
               )
-            : NormalText(
+            : Text(
                 'お酒が見つかりませんでした',
-                bold: true,
+                style: Theme.of(context).textTheme.subtitle1,
               )
         ),
       );
@@ -525,9 +524,9 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: <Widget>[
-                NormalText(
+                Text(
                   '全て',
-                  bold: _drinkType == null,
+                  style: Theme.of(context).textTheme.subtitle1,
                 ),
                 Padding(padding: EdgeInsets.only(right: 4)),
                 LabelText(
@@ -560,9 +559,11 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: <Widget>[
-                  NormalText(
+                  Text(
                     userDrinkType.label,
-                    bold: _drinkType == userDrinkType,
+                    style: _drinkType == userDrinkType
+                      ? Theme.of(context).textTheme.subtitle1
+                      : Theme.of(context).textTheme.subtitle2,
                   ),
                   Padding(padding: EdgeInsets.only(right: 4)),
                   LabelText(
@@ -590,9 +591,11 @@ class _HomePageState extends State<HomePage> {
         OrderType.values.map((orderType) =>
           PopupMenuItem(
             value: orderType,
-            child: NormalText(
+            child: Text(
               orderType.label,
-              bold: orderType == _orderType,
+              style: orderType == _orderType
+                ? Theme.of(context).textTheme.subtitle1
+                : Theme.of(context).textTheme.subtitle2,
             ),
           )
         ).toList(),
@@ -604,9 +607,9 @@ class _HomePageState extends State<HomePage> {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            NormalText(
+            Text(
               'お酒を投稿するには\nアカウント認証が必要です。',
-              multiLine: true,
+              style: Theme.of(context).textTheme.bodyText2,
             ),
             Padding(padding: EdgeInsets.only(bottom: 32)),
 

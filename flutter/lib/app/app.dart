@@ -122,12 +122,12 @@ ThemeData get _cellarThemeData => ThemeData.dark().copyWith(
       fontWeight: FontWeight.bold,
       height: 1.5,
     ),
-    subtitle2: TextStyle(
+    subtitle1: TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.bold,
       height: 1,
     ),
-    subtitle1: TextStyle(
+    subtitle2: TextStyle(
       fontSize: 14,
       height: 1,
     ),

@@ -3,7 +3,6 @@ import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 
-import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -94,7 +93,10 @@ class _UserFormState extends State<UserForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          NormalText('ニックネーム'),
+          Text(
+            'ニックネーム',
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
           NormalTextField(
             _nameController,
             onChanged: (_) => setState(() {}),

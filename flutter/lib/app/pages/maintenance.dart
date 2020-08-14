@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 
-import 'package:cellar/app/widget/atoms/normal_text.dart';
-
 class MaintenancePage extends StatelessWidget {
   MaintenancePage({
     Key key,
@@ -26,12 +24,11 @@ class MaintenancePage extends StatelessWidget {
           ),
           Container(padding: EdgeInsets.only(bottom: 32)),
 
-          NormalText(
+          Text(
             status.maintenanceMessage == ''
               ? '申し訳ありません、メンテナンス中です。\n復旧までお待ちください。'
               : status.maintenanceMessage,
-            multiLine: true,
-            bold: true,
+            style: Theme.of(context).textTheme.subtitle1,
           ),
         ],
       ),

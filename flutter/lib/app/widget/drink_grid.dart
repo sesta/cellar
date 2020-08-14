@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entity/entities.dart';
 
-import 'package:cellar/app/widget/atoms/normal_text.dart';
-
 class DrinkGrid extends StatelessWidget {
   final List<Drink> drinks;
   final updateDrink;
@@ -96,7 +94,10 @@ class _GridItemState extends State<GridItem> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                NormalText(widget.drink.drinkName, bold: true),
+                Text(
+                  widget.drink.drinkName,
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
                 Padding(padding: EdgeInsets.only(bottom: 4)),
                 Row(
                   children: List.generate(5, (i)=> i).map<Widget>((index) =>

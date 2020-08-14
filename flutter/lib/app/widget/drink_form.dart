@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 
-import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 
 class DrinkForm extends StatelessWidget {
@@ -63,13 +62,16 @@ class DrinkForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          NormalText('飲んだ日 *'),
+          Text(
+            '飲んだ日 *',
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
           InkWell(
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 16),
-              child: NormalText(
+              child: Text(
                 formatter.format(drinkDateTime),
-                bold: true,
+                style: Theme.of(context).textTheme.subtitle1,
               ),
               decoration: BoxDecoration(
                 border: Border(
@@ -85,14 +87,20 @@ class DrinkForm extends StatelessWidget {
           ),
           Padding(padding: EdgeInsets.only(bottom: 24)),
 
-          NormalText('名前 *'),
+          Text(
+            '名前 *',
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
           NormalTextField(
             nameController,
             bold: true,
           ),
           Padding(padding: EdgeInsets.only(bottom: 24)),
 
-          NormalText('評価 *'),
+          Text(
+            '評価 *',
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
           Padding(padding: const EdgeInsets.only(bottom: 8)),
           Row(
             children: List.generate(5, (i)=> i).map<Widget>((index) =>
@@ -116,7 +124,10 @@ class DrinkForm extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  NormalText('種類 *'),
+                  Text(
+                    '種類 *',
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
                   DropdownButton(
                     value: drinkType,
                     onChanged: updateDrinkType,
@@ -132,7 +143,10 @@ class DrinkForm extends StatelessWidget {
                           constraints: BoxConstraints(
                             minWidth: 80,
                           ),
-                          child: NormalText(type.label, bold: true),
+                          child: Text(
+                            type.label,
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
                         ),
                       )
                     ).toList(),
@@ -144,7 +158,10 @@ class DrinkForm extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  NormalText('種類の詳細'),
+                  Text(
+                    '種類の詳細',
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
                   DropdownButton(
                     value: subDrinkType,
                     onChanged: updateSubDrinkType,
@@ -160,7 +177,10 @@ class DrinkForm extends StatelessWidget {
                           constraints: BoxConstraints(
                             minWidth: 100,
                           ),
-                          child: NormalText(type.label, bold: true)
+                          child: Text(
+                            type.label,
+                            style: Theme.of(context).textTheme.subtitle1,
+                          )
                         ),
                       )
                     ).toList(),
@@ -178,7 +198,10 @@ class DrinkForm extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    NormalText('価格'),
+                    Text(
+                      '価格',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
                     NormalTextField(
                       priceController,
                       bold: true,
@@ -193,7 +216,10 @@ class DrinkForm extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    NormalText('購入した場所'),
+                    Text(
+                      '購入した場所',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
                     NormalTextField(
                       placeController,
                       bold: true,
@@ -206,7 +232,10 @@ class DrinkForm extends StatelessWidget {
           ),
           Padding(padding: EdgeInsets.only(bottom: 24)),
 
-          NormalText('メモ'),
+          Text(
+            'メモ',
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
           NormalTextField(
             memoController,
             bold: true,

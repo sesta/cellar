@@ -5,7 +5,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
 
-import 'package:cellar/app/widget/atoms/normal_text.dart';
 import 'package:cellar/app/widget/atoms/normal_text_field.dart';
 
 class SettingPage extends StatefulWidget {
@@ -58,9 +57,9 @@ class _SettingState extends State<SettingPage> {
       context: context,
       builder: (BuildContext context) =>
           AlertDialog(
-            title: NormalText(
+            title: Text(
               "ログアウトしてよろしいですか？",
-              bold: true,
+              style: Theme.of(context).textTheme.subtitle1,
             ),
             actions: <Widget>[
               // ボタン領域
@@ -128,7 +127,10 @@ class _SettingState extends State<SettingPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          NormalText('ニックネーム'),
+                          Text(
+                            'ニックネーム',
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
                           NormalTextField(
                             _nameController,
                             onChanged: (_) => setState(() {}),
