@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
 
-import 'package:cellar/app/widget/atoms/normal_text_field.dart';
+import 'package:cellar/app/widget/atoms/text_input.dart';
 
 class SettingPage extends StatefulWidget {
   SettingPage({
@@ -131,10 +131,10 @@ class _SettingState extends State<SettingPage> {
                             'ニックネーム',
                             style: Theme.of(context).textTheme.subtitle2,
                           ),
-                          NormalTextField(
+                          TextInput(
                             _nameController,
                             onChanged: (_) => setState(() {}),
-                            bold: true,
+                            textStyle: Theme.of(context).textTheme.subtitle1,
                           ),
                         ],
                       ),

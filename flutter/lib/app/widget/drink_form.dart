@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 
-import 'package:cellar/app/widget/atoms/normal_text_field.dart';
+import 'package:cellar/app/widget/atoms/text_input.dart';
 
 class DrinkForm extends StatelessWidget {
   DrinkForm({
@@ -91,9 +91,9 @@ class DrinkForm extends StatelessWidget {
             '名前 *',
             style: Theme.of(context).textTheme.subtitle2,
           ),
-          NormalTextField(
+          TextInput(
             nameController,
-            bold: true,
+            textStyle: Theme.of(context).textTheme.subtitle1,
           ),
           Padding(padding: EdgeInsets.only(bottom: 24)),
 
@@ -202,9 +202,9 @@ class DrinkForm extends StatelessWidget {
                       '価格',
                       style: Theme.of(context).textTheme.subtitle2,
                     ),
-                    NormalTextField(
+                    TextInput(
                       priceController,
-                      bold: true,
+                      textStyle: Theme.of(context).textTheme.subtitle1,
                       inputType: InputType.Number,
                     ),
                   ],
@@ -220,9 +220,9 @@ class DrinkForm extends StatelessWidget {
                       '購入した場所',
                       style: Theme.of(context).textTheme.subtitle2,
                     ),
-                    NormalTextField(
+                    TextInput(
                       placeController,
-                      bold: true,
+                      textStyle: Theme.of(context).textTheme.subtitle1,
                       placeholder: 'Amazon、飲食店、プレゼント',
                     ),
                   ],
@@ -236,9 +236,9 @@ class DrinkForm extends StatelessWidget {
             'メモ',
             style: Theme.of(context).textTheme.subtitle2,
           ),
-          NormalTextField(
+          TextInput(
             memoController,
-            bold: true,
+            textStyle: Theme.of(context).textTheme.bodyText1,
             maxLines: 3,
             placeholder: '辛口だけど飲みやすい\nチーズと合う',
           ),

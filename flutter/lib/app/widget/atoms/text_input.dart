@@ -6,16 +6,16 @@ enum InputType {
   Number,
 }
 
-class NormalTextField extends StatelessWidget {
+class TextInput extends StatelessWidget {
   final TextEditingController controller;
-  final bool bold;
+  final TextStyle textStyle;
   final int maxLines;
   final InputType inputType;
   final onChanged;
   final String placeholder;
 
-  NormalTextField(this.controller, {
-    this.bold = false,
+  TextInput(this.controller, {
+    this.textStyle,
     this.maxLines = 1,
     this.inputType = InputType.String,
     this.onChanged,
@@ -36,11 +36,7 @@ class NormalTextField extends StatelessWidget {
       controller: controller,
       onChanged: onChanged,
       cursorColor: Theme.of(context).accentColor,
-      style: TextStyle(
-        fontSize: 14,
-        fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-        height: maxLines == 1 ? 1 : 1.5,
-      ),
+      style: textStyle,
       maxLines: maxLines,
       keyboardType: keyboardType,
       inputFormatters: inputType == InputType.Number
