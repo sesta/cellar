@@ -5,8 +5,7 @@ import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 
-import 'package:cellar/app/widget/atoms/label_test.dart';
-
+import 'package:cellar/app/widget/atoms/label_text.dart';
 
 class DrinkPage extends StatefulWidget {
   DrinkPage({
