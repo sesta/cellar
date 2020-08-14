@@ -47,9 +47,7 @@ class _CellarState extends State<Cellar> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cellar',
-      theme: ThemeData.dark().copyWith(
-        accentColor: Colors.blueGrey,
-      ),
+      theme: _cellarThemeData,
       color: Theme.of(context).accentColor,
       navigatorObservers: [
         AnalyticsRepository().observer,
@@ -115,3 +113,32 @@ class _CellarState extends State<Cellar> {
     );
   }
 }
+
+ThemeData get _cellarThemeData => ThemeData.dark().copyWith(
+  accentColor: Colors.blueGrey,
+  textTheme: TextTheme(
+    headline2: TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      height: 1.5,
+    ),
+    subtitle2: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+      height: 1,
+    ),
+    subtitle1: TextStyle(
+      fontSize: 14,
+      height: 1,
+    ),
+    bodyText1: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+      height: 1.5,
+    ),
+    bodyText2: TextStyle(
+      fontSize: 14,
+      height: 1.5,
+    ),
+  ),
+);
