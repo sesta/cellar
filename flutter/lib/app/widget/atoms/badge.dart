@@ -1,25 +1,13 @@
 import 'package:flutter/material.dart';
 
-class LabelText extends StatelessWidget {
+class Badge extends StatelessWidget {
   final String text;
-  final String size;
-  final single;
-  LabelText(this.text, {
-    this.size,
-    this.single = false,
-  });
+  Badge(this.text);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: size == 'small' ? 6 : 8,
-        horizontal: size == 'small' ? 8 : 12
-      ),
-      margin: EdgeInsets.only(
-        right: single ? 0 : 6,
-        bottom: single ? 0 : 6,
-      ),
+      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
         color: Theme.of(context).primaryColor,
@@ -27,7 +15,7 @@ class LabelText extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: size == 'small' ? 10 : 12,
+          fontSize: 10,
           color: Colors.white,
           fontWeight: FontWeight.bold,
           height: 1,

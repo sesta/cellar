@@ -10,7 +10,7 @@ import 'package:cellar/domain/models/timeline.dart';
 import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
-import 'package:cellar/app/widget/atoms/label_text.dart';
+import 'package:cellar/app/widget/atoms/badge.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -528,11 +528,7 @@ class _HomePageState extends State<HomePage> {
                   style: Theme.of(context).textTheme.subtitle1,
                 ),
                 Padding(padding: EdgeInsets.only(right: 4)),
-                LabelText(
-                  _getUploadCount(null).toString(),
-                  size: 'small',
-                  single: true,
-                ),
+                Badge(_getUploadCount(null).toString()),
               ],
             ),
             onPressed: () {
@@ -565,11 +561,7 @@ class _HomePageState extends State<HomePage> {
                       : Theme.of(context).textTheme.subtitle2,
                   ),
                   Padding(padding: EdgeInsets.only(right: 4)),
-                  LabelText(
-                    _getUploadCount(userDrinkType).toString(),
-                    size: 'small',
-                    single: true,
-                  ),
+                  Badge(_getUploadCount(userDrinkType).toString()),
                 ],
               ),
               onPressed: () {

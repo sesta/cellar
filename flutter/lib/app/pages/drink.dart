@@ -5,7 +5,7 @@ import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 
-import 'package:cellar/app/widget/atoms/label_text.dart';
+import 'package:cellar/app/widget/atoms/label.dart';
 
 class DrinkPage extends StatefulWidget {
   DrinkPage({
@@ -203,10 +203,10 @@ class _DrinkPageState extends State<DrinkPage> {
                       alignment: Alignment.centerLeft,
                       child: Wrap(
                         children: <Widget>[
-                          LabelText(widget.drink.drinkType.label),
-                          widget.drink.subDrinkType == SubDrinkType.Empty ? Container(width: 0) : LabelText(widget.drink.subDrinkType.label),
-                          widget.drink.price == 0 ? Container(width: 0) : LabelText(widget.drink.priceString),
-                          widget.drink.place == '' ? Container(width: 0) : LabelText(widget.drink.place),
+                          Label(widget.drink.drinkType.label),
+                          widget.drink.subDrinkType == SubDrinkType.Empty ? Container(width: 0) : Label(widget.drink.subDrinkType.label),
+                          widget.drink.price == 0 ? Container(width: 0) : Label(widget.drink.priceString),
+                          widget.drink.place == '' ? Container(width: 0) : Label(widget.drink.place),
                         ],
                       ),
                     ),
