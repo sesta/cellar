@@ -11,7 +11,6 @@ import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/atoms/label_test.dart';
-import 'package:cellar/app/widget/atoms/small_text.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -631,14 +630,14 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SmallText(
+                Text(
                   '※',
-                  multiLine: true,
+                  style: Theme.of(context).textTheme.caption,
                 ),
                 Padding(padding: EdgeInsets.only(right: 4)),
-                SmallText(
+                Text(
                   'プライバシーポリシーに\n同意の上認証をしてください。',
-                  multiLine: true,
+                  style: Theme.of(context).textTheme.caption,
                 ),
               ],
             ),

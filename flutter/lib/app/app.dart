@@ -140,5 +140,9 @@ ThemeData get _cellarThemeData => ThemeData.dark().copyWith(
       fontSize: 14,
       height: 1.5,
     ),
+    caption: TextStyle(
+      fontSize: 12,
+      height: 1.5,
+    ),
   ),
 );
