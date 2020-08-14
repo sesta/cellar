@@ -145,4 +145,5 @@ ThemeData get _cellarThemeData => ThemeData.dark().copyWith(
       height: 1.5,
     ),
   ),
+  applyElevationOverlayColor: true, // ダークモードだとfalseになるようなので指定
 );
