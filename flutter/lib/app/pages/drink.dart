@@ -5,10 +5,7 @@ import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 
-import 'package:cellar/app/widget/atoms/label_test.dart';
-import 'package:cellar/app/widget/atoms/main_text.dart';
-import 'package:cellar/app/widget/atoms/normal_text.dart';
-
+import 'package:cellar/app/widget/atoms/label.dart';
 
 class DrinkPage extends StatefulWidget {
   DrinkPage({
@@ -147,7 +144,10 @@ class _DrinkPageState extends State<DrinkPage> {
                       right: 0,
                       child: Padding(
                         padding: EdgeInsets.all(16),
-                        child: NormalText("${_carouselPage + 1} / $imageLength"),
+                        child: Text(
+                          "${_carouselPage + 1} / $imageLength",
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
                       ),
                     ),
                 ],
@@ -165,19 +165,23 @@ class _DrinkPageState extends State<DrinkPage> {
                           color: Theme.of(context).accentColor,
                         ),
                         Padding(padding: EdgeInsets.only(right: 4)),
-                        NormalText(widget.drink.userName),
+                        Text(
+                          widget.drink.userName,
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
                         Expanded(child: Container()),
 
-                        NormalText(widget.drink.drinkDatetimeString),
+                        Text(
+                          widget.drink.drinkDatetimeString,
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
                       ],
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 24)),
 
-                    MainText(
+                    Text(
                       widget.drink.drinkName,
-                      bold: true,
-                      multiLine: true,
-                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headline2,
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 8)),
 
@@ -199,10 +203,10 @@ class _DrinkPageState extends State<DrinkPage> {
                       alignment: Alignment.centerLeft,
                       child: Wrap(
                         children: <Widget>[
-                          LabelText(widget.drink.drinkType.label),
-                          widget.drink.subDrinkType == SubDrinkType.Empty ? Container(width: 0) : LabelText(widget.drink.subDrinkType.label),
-                          widget.drink.price == 0 ? Container(width: 0) : LabelText(widget.drink.priceString),
-                          widget.drink.place == '' ? Container(width: 0) : LabelText(widget.drink.place),
+                          Label(widget.drink.drinkType.label),
+                          widget.drink.subDrinkType == SubDrinkType.Empty ? Container(width: 0) : Label(widget.drink.subDrinkType.label),
+                          widget.drink.price == 0 ? Container(width: 0) : Label(widget.drink.priceString),
+                          widget.drink.place == '' ? Container(width: 0) : Label(widget.drink.place),
                         ],
                       ),
                     ),
@@ -210,9 +214,9 @@ class _DrinkPageState extends State<DrinkPage> {
 
                     Container(
                       alignment: Alignment.centerLeft,
-                      child: NormalText(
+                      child: Text(
                         widget.drink.memo,
-                        multiLine: true,
+                        style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),
                   ],

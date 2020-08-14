@@ -9,7 +9,6 @@ import 'package:cellar/domain/models/post.dart';
 import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/drink_form.dart';
-import 'package:cellar/app/widget/atoms/normal_text.dart';
 
 class PostPage extends StatefulWidget {
   PostPage({
@@ -86,13 +85,13 @@ class _PostPageState extends State<PostPage> {
       context: context,
       builder: (BuildContext context) =>
         AlertDialog(
-          title: NormalText(
+          title: Text(
             "設定に移動してよろしいですか？",
-            bold: true,
+            style: Theme.of(context).textTheme.subtitle1,
           ),
-          content: NormalText(
+          content: Text(
             'アプリの写真へのアクセスが\n許可されていません。',
-            multiLine: true,
+            style: Theme.of(context).textTheme.bodyText2,
           ),
           actions: <Widget>[
             // ボタン領域
@@ -251,9 +250,9 @@ class _PostPageState extends State<PostPage> {
                     child: RaisedButton(
                       padding: EdgeInsets.all(16),
                       onPressed: disablePost ? null : _postDrink,
-                      child: NormalText(
+                      child: Text(
                         '投稿する',
-                        bold: true,
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
                       color: Theme.of(context).accentColor,
                       textColor: Colors.white,
