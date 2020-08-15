@@ -45,6 +45,7 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
 
       if (_tabController.index == 0) {
         _updateDrinkType(null);
+        return;
       }
 
       final drinkType = _postedDrinkTypeEntries.toList()[_tabController.index - 1].value;
