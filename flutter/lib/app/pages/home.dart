@@ -26,7 +26,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   TimelineType _timelineType = TimelineType.Mine;
   DrinkType _drinkType;
   OrderType _orderType = OrderType.Newer;
@@ -39,9 +39,24 @@ class _HomePageState extends State<HomePage> {
   bool _loadingSignIn = false;
   bool _enableAppleSignIn = false;
 
+  TabController _tabController;
+
   @override
   initState() {
     super.initState();
+
+    _tabController = TabController(
+      vsync: this,
+      length: _postedDrinkTypeEntries.length + 1,
+    );
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging || _tabController.index == 0) {
+        return;
+      }
+
+      final drinkType = _postedDrinkTypeEntries.toList()[_tabController.index - 1].value;
+      _updateDrinkType(drinkType);
+    });
 
     _updateTimeline();
     AuthRepository().enableAppleSignIn.then((enable) => setState(() {
@@ -168,7 +183,7 @@ class _HomePageState extends State<HomePage> {
     _updateTimeline();
   }
 
-  _updateDrinkType(DrinkType drinkType, String from) {
+  _updateDrinkType(DrinkType drinkType) {
     if (_drinkType == drinkType) {
       return;
     }
@@ -183,7 +198,6 @@ class _HomePageState extends State<HomePage> {
         'timelineType': _timelineType.toString(),
         'drinkType': drinkType.toString(),
         'orderType': _orderType.toString(),
-        'from': from,
       },
     );
     _updateTimeline();
@@ -298,120 +312,118 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: _postedDrinkTypeEntries.length + 1,
-      child: Scaffold(
-        body: Column(
-          children: [
-            Padding(padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top),
-            ),
-            _drinkTypeList(),
-            Expanded(
-              child: Stack(
-                children: [
-                  TabBarView(
-                    children: [
-                      _timeline(null),
-                      ..._postedDrinkTypeEntries
-                        .map((entry) => _timeline(entry.value))
-                        .toList()
-                    ],
-                  ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: _orderMenu(),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: BottomAppBar(
-          color: Theme.of(context).accentColor,
-          shape: CircularNotchedRectangle(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    onPressed: () {
-                      if (_timelineType == TimelineType.Mine) {
-                        return;
-                      }
-
-                      _updateTimelineType(TimelineType.Mine);
-                    },
-                    icon: Icon(
-                      Icons.home,
-                      size: 30,
-                      color: _timelineType == TimelineType.Mine
-                        ? Colors.white
-                        : Theme.of(context).primaryColorLight,
-                    ),
-                  ),
+    return Scaffold(
+      body: Column(
+        children: [
+          Padding(padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top),
+          ),
+          _drinkTypeList(),
+          Expanded(
+            child: Stack(
+              children: [
+                TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _timeline(null),
+                    ..._postedDrinkTypeEntries
+                      .map((entry) => _timeline(entry.value))
+                      .toList()
+                  ],
                 ),
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    onPressed: () {
-                      if (_timelineType == TimelineType.All) {
-                        return;
-                      }
-
-                      _updateTimelineType(TimelineType.All);
-                    },
-                    icon: Icon(
-                      Icons.people,
-                      size: 32,
-                      color: _timelineType == TimelineType.All
-                        ? Colors.white
-                        : Theme.of(context).primaryColorLight,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 88,
-                  height: 40,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Container(height: 0),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: widget.user == null
-                    ? Container(height: 0)
-                    : IconButton(
-                      onPressed: () => Navigator.of(context).pushNamed('/setting'),
-                      icon: Icon(
-                        Icons.settings,
-                        size: 28,
-                        color: Theme.of(context).primaryColorLight,
-                      ),
-                    ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: _orderMenu(),
                 ),
               ],
             ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: widget.user == null ? null : _movePostPage,
-          backgroundColor: Theme.of(context).accentColor,
-          child: Opacity(
-            opacity: widget.user == null ? 0.4 : 1,
-            child: Image.asset(
-              'assets/images/upload-icon.png',
-              width: 48,
-            ),
+        ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Theme.of(context).accentColor,
+        shape: CircularNotchedRectangle(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: IconButton(
+                  onPressed: () {
+                    if (_timelineType == TimelineType.Mine) {
+                      return;
+                    }
+
+                    _updateTimelineType(TimelineType.Mine);
+                  },
+                  icon: Icon(
+                    Icons.home,
+                    size: 30,
+                    color: _timelineType == TimelineType.Mine
+                      ? Colors.white
+                      : Theme.of(context).primaryColorLight,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: IconButton(
+                  onPressed: () {
+                    if (_timelineType == TimelineType.All) {
+                      return;
+                    }
+
+                    _updateTimelineType(TimelineType.All);
+                  },
+                  icon: Icon(
+                    Icons.people,
+                    size: 32,
+                    color: _timelineType == TimelineType.All
+                      ? Colors.white
+                      : Theme.of(context).primaryColorLight,
+                  ),
+                ),
+              ),
+              Container(
+                width: 88,
+                height: 40,
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(height: 0),
+              ),
+              Expanded(
+                flex: 1,
+                child: widget.user == null
+                  ? Container(height: 0)
+                  : IconButton(
+                    onPressed: () => Navigator.of(context).pushNamed('/setting'),
+                    icon: Icon(
+                      Icons.settings,
+                      size: 28,
+                      color: Theme.of(context).primaryColorLight,
+                    ),
+                  ),
+              ),
+            ],
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        extendBody: true,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: widget.user == null ? null : _movePostPage,
+        backgroundColor: Theme.of(context).accentColor,
+        child: Opacity(
+          opacity: widget.user == null ? 0.4 : 1,
+          child: Image.asset(
+            'assets/images/upload-icon.png',
+            width: 48,
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      extendBody: true,
     );
   }
 
@@ -456,6 +468,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _drinkTypeList() =>
     TabBar(
+      controller: _tabController,
       isScrollable: true,
       tabs: <Widget>[
         Tab(
@@ -469,14 +482,6 @@ class _HomePageState extends State<HomePage> {
               Badge(_getUploadCount(null).toString()),
             ],
           ),
-//          onPressed: () {
-//            _updateDrinkType(null, 'button');
-//            _carouselController.animateToPage(
-//              0,
-//              curve: Curves.easeOut,
-//              duration: Duration(milliseconds: 300),
-//            );
-//          },
         ),
         ..._postedDrinkTypeEntries.map((entry) {
           final index = entry.key;
@@ -487,18 +492,12 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 Text(
                   userDrinkType.label,
-                  style: _drinkType == userDrinkType
-                    ? Theme.of(context).textTheme.subtitle1
-                    : Theme.of(context).textTheme.subtitle2,
+                  style: Theme.of(context).textTheme.subtitle2,
                 ),
                 Padding(padding: EdgeInsets.only(right: 4)),
                 Badge(_getUploadCount(userDrinkType).toString()),
               ],
             ),
-//              onPressed: () {
-//                _updateDrinkType(userDrinkType, 'button');
-//                _carouselController.animateToPage(index + 1);
-//              },
           );
         }).toList()
       ],
