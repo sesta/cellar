@@ -96,15 +96,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _timelineType == TimelineType.Mine
-        ? MineTimeline(
-            user: widget.user,
-            status: widget.status,
-            timelineType: TimelineType.Mine,
-          )
+        ? MineTimeline(user: widget.user)
         : AllTimeline(
             user: widget.user,
             status: widget.status,
-            timelineType: TimelineType.All,
           ),
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).accentColor,

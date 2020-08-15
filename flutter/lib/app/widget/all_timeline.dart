@@ -13,12 +13,10 @@ class AllTimeline extends StatefulWidget {
     Key key,
     @required this.user,
     @required this.status,
-    @required this.timelineType,
   }) : super(key: key);
 
   final User user;
   final Status status;
-  final TimelineType timelineType;
 
   @override
   _AllTimelineState createState() => _AllTimelineState();
@@ -75,10 +73,6 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
   }
 
   Future<void> _updateTimeline({ bool isForceUpdate }) async {
-    if (widget.user == null && widget.timelineType == TimelineType.Mine) {
-      return;
-    }
-
     if (
       _getTargetDrinks(_drinkType) != null
       && isForceUpdate != true
@@ -88,31 +82,30 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
 
     // 取得中に他のリストに切り替わることがあるため
     // 取得開始時のtypeを持っておく
-    final timelineType = widget.timelineType;
     final drinkType = _drinkType;
     final orderType = _orderType;
 
     final drinks = await getTimelineDrinks(
-      widget.timelineType,
+      TimelineType.All,
       _orderType,
       drinkType: _drinkType,
-      userId: widget.user == null ? null : widget.user.userId,
+      userId: null,
     );
 
     // 並び順が変わっていたら保存しない
     if (orderType != _orderType) {
       return;
     }
-    _setDrinks(drinks, timelineType, drinkType);
+    _setDrinks(drinks, TimelineType.All, drinkType);
   }
 
   Future<void> _refresh() async {
-    _setDrinks(null, widget.timelineType, _drinkType);
+    _setDrinks(null, TimelineType.All, _drinkType);
 
     AnalyticsRepository().sendEvent(
       EventType.ReloadTimeline,
       {
-        'timelineType': widget.timelineType.toString(),
+        'timelineType': TimelineType.All.toString(),
         'drinkType': _drinkType.toString(),
         'orderType': _orderType.toString(),
       },
@@ -149,7 +142,7 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
     AnalyticsRepository().sendEvent(
       EventType.ChangeDrinkType,
       {
-        'timelineType': widget.timelineType.toString(),
+        'timelineType': TimelineType.All.toString(),
         'drinkType': drinkType.toString(),
         'orderType': _orderType.toString(),
       },
@@ -171,7 +164,7 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
     AnalyticsRepository().sendEvent(
       EventType.ChangeOrderType,
       {
-        'timelineType': widget.timelineType.toString(),
+        'timelineType': TimelineType.All.toString(),
         'drinkType': _drinkType.toString(),
         'orderType': orderType.toString(),
       },
@@ -185,27 +178,11 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
   }
 
   int _getUploadCount(DrinkType drinkType) {
-    if (widget.user == null && widget.timelineType == TimelineType.Mine) {
-      return 0;
-    }
-
     if (drinkType == null) {
-      switch(widget.timelineType) {
-        case TimelineType.All:
-          return widget.status.uploadCount;
-        case TimelineType.Mine:
-          return widget.user.uploadCount;
-      }
+      return widget.status.uploadCount;
     }
 
-    switch(widget.timelineType) {
-      case TimelineType.All:
-        return widget.status.uploadCounts[drinkType];
-      case TimelineType.Mine:
-        return widget.user.uploadCounts[drinkType];
-    }
-
-    throw 'timelineTypeの考慮漏れです';
+    return widget.status.uploadCounts[drinkType];
   }
 
   List<Drink> _getTargetDrinks(DrinkType drinkType) {
@@ -218,11 +195,10 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         Padding(padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top),
+          top: MediaQuery.of(context).padding.top),
         ),
         _drinkTypeList(),
         Expanded(
@@ -233,8 +209,8 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
                 children: [
                   _timeline(null),
                   ..._postedDrinkTypeEntries
-                      .map((entry) => _timeline(entry.value))
-                      .toList()
+                    .map((entry) => _timeline(entry.value))
+                    .toList()
                 ],
               ),
               Positioned(
@@ -269,15 +245,10 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
       return Padding(
         padding: EdgeInsets.only(bottom: 40),
         child: Center(
-          child: widget.timelineType == TimelineType.Mine
-            ? Text(
-                '飲んだお酒を投稿してみましょう',
-                style: Theme.of(context).textTheme.subtitle1,
-              )
-            : Text(
-                'お酒が見つかりませんでした',
-                style: Theme.of(context).textTheme.subtitle1,
-              )
+          child: Text(
+            'お酒が見つかりませんでした',
+            style: Theme.of(context).textTheme.subtitle1,
+          )
         ),
       );
     }
@@ -349,16 +320,16 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
               size: 20,
             ),
             itemBuilder: (BuildContext context) =>
-                OrderType.values.map((orderType) =>
-                    PopupMenuItem(
-                      height: 40,
-                      value: orderType,
-                      child: Text(
-                        orderType.label,
-                        style: Theme.of(context).textTheme.caption,
-                      ),
-                    )
-                ).toList(),
+              OrderType.values.map((orderType) =>
+                PopupMenuItem(
+                  height: 40,
+                  value: orderType,
+                  child: Text(
+                    orderType.label,
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                )
+              ).toList(),
           ),
           Padding(padding: EdgeInsets.only(right: 8)),
         ],
