@@ -69,8 +69,8 @@ class _GridItemState extends State<GridItem> {
     if (widget.drink.thumbImageUrl == null) {
       widget.drink.init().then((_) async {
          setState(() {});
-         // サムネぐらいは読み込めてることを信じて0.5秒後に表示
-         await Future.delayed(Duration(milliseconds: 500));
+         // サムネぐらいは読み込めてることを信じて0.3秒後に表示
+         await Future.delayed(Duration(milliseconds: 300));
 
          // 表示しようと思ったら別のページになってたりするので、念のためチェック
          if (!this.mounted) {
