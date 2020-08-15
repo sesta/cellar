@@ -33,7 +33,7 @@ class DrinkGrid extends StatelessWidget {
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
       padding: EdgeInsets.only(
-        top: 16,
+        top: 48,
         left: 16,
         right: 16,
         bottom: 120,

@@ -314,22 +314,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Column(
         children: [
-          Container(
+          Padding(
             padding: EdgeInsets.only(
               top: MediaQuery.of(context).padding.top + 8,
-              left: 16,
-            ),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Cellar',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                height: 1,
-              ),
             ),
           ),
-          Padding(padding: EdgeInsets.only(bottom: 8)),
           Row(
             children: <Widget>[
               Expanded(
@@ -338,41 +327,50 @@ class _HomePageState extends State<HomePage> {
                   child: _drinkTypeList(),
                 ),
               ),
-              _orderMenu(),
             ],
           ),
+
           Expanded(
-            child: widget.user == null && _timelineType == TimelineType.Mine
-              ? _signInContainer()
-              : CarouselSlider(
-                carouselController: _carouselController,
-                options: CarouselOptions(
-                  height: MediaQuery.of(context).size.height,
-                  viewportFraction: 1,
-                  enableInfiniteScroll: false,
-                  onPageChanged: (int index, CarouselPageChangedReason reason) {
-                    if (reason == CarouselPageChangedReason.controller) {
-                      return;
-                    }
+            child: Stack(
+              children: [
+                widget.user == null && _timelineType == TimelineType.Mine
+                  ? _signInContainer()
+                  : CarouselSlider(
+                    carouselController: _carouselController,
+                    options: CarouselOptions(
+                      height: MediaQuery.of(context).size.height,
+                      viewportFraction: 1,
+                      enableInfiniteScroll: false,
+                      onPageChanged: (int index, CarouselPageChangedReason reason) {
+                        if (reason == CarouselPageChangedReason.controller) {
+                          return;
+                        }
 
-                    if (index == 0) {
-                      _updateDrinkType(null, 'carousel');
-                      _scrollToDrinkType(0);
-                      return;
-                    }
+                        if (index == 0) {
+                          _updateDrinkType(null, 'carousel');
+                          _scrollToDrinkType(0);
+                          return;
+                        }
 
-                    final targetDrinkTypes = _postedDrinkTypeEntries.toList();
-                    _updateDrinkType(targetDrinkTypes[index - 1].value, 'carousel');
-                    _scrollToDrinkType(index);
-                  },
+                        final targetDrinkTypes = _postedDrinkTypeEntries.toList();
+                        _updateDrinkType(targetDrinkTypes[index - 1].value, 'carousel');
+                        _scrollToDrinkType(index);
+                      },
+                    ),
+                    items: [
+                      _timeline(null),
+                      ..._postedDrinkTypeEntries
+                        .map((entry) => _timeline(entry.value))
+                        .toList()
+                    ],
+                  ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: _orderMenu(),
                 ),
-                items: [
-                  _timeline(null),
-                  ..._postedDrinkTypeEntries
-                    .map((entry) => _timeline(entry.value))
-                    .toList()
-                ],
-              ),
+              ],
+            ),
           ),
         ],
       ),
@@ -575,21 +573,44 @@ class _HomePageState extends State<HomePage> {
     );
 
   Widget _orderMenu() =>
-    PopupMenuButton(
-      onSelected: _updateOrderType,
-      icon: Icon(Icons.sort),
-      itemBuilder: (BuildContext context) =>
-        OrderType.values.map((orderType) =>
-          PopupMenuItem(
-            value: orderType,
-            child: Text(
-              orderType.label,
-              style: orderType == _orderType
-                ? Theme.of(context).textTheme.subtitle1
-                : Theme.of(context).textTheme.subtitle2,
+    Container(
+      height: 40,
+      width: 120,
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(
+            _orderType.label,
+            style: Theme.of(context).textTheme.caption.copyWith(
+              height: 1,
             ),
-          )
-        ).toList(),
+          ),
+
+          PopupMenuButton(
+            onSelected: _updateOrderType,
+            icon: Icon(
+              Icons.sort,
+              size: 20,
+            ),
+            itemBuilder: (BuildContext context) =>
+                OrderType.values.map((orderType) =>
+                    PopupMenuItem(
+                      height: 40,
+                      value: orderType,
+                      child: Text(
+                        orderType.label,
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    )
+                ).toList(),
+          ),
+          Padding(padding: EdgeInsets.only(right: 8)),
+        ],
+      ),
     );
 
   Widget _signInContainer() =>
