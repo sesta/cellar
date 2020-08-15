@@ -94,13 +94,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget bodyWidget = AllTimeline(
+      user: widget.user,
+      status: widget.status,
+    );
+    if (_timelineType == TimelineType.Mine) {
+      bodyWidget = widget.user == null
+        ? _signInContainer()
+        : MineTimeline(user: widget.user);
+    }
+
     return Scaffold(
-      body: _timelineType == TimelineType.Mine
-        ? MineTimeline(user: widget.user)
-        : AllTimeline(
-            user: widget.user,
-            status: widget.status,
-          ),
+      body: bodyWidget,
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).accentColor,
         shape: CircularNotchedRectangle(),
