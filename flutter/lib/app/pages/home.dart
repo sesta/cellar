@@ -311,160 +311,155 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top + 8,
-            ),
-          ),
-          Row(
+    return DefaultTabController(
+      length: _postedDrinkTypeEntries.length + 1,
+      child: Scaffold(
+        appBar: AppBar(
+          flexibleSpace: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Expanded(
-                child: Container(
-                  height: 40,
-                  child: _drinkTypeList(),
-                ),
-              ),
+              _drinkTypeList(),
             ],
           ),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  widget.user == null && _timelineType == TimelineType.Mine
+                    ? _signInContainer()
+                    : CarouselSlider(
+                      carouselController: _carouselController,
+                      options: CarouselOptions(
+                        height: MediaQuery.of(context).size.height,
+                        viewportFraction: 1,
+                        enableInfiniteScroll: false,
+                        onPageChanged: (int index, CarouselPageChangedReason reason) {
+                          if (reason == CarouselPageChangedReason.controller) {
+                            return;
+                          }
 
-          Expanded(
-            child: Stack(
-              children: [
-                widget.user == null && _timelineType == TimelineType.Mine
-                  ? _signInContainer()
-                  : CarouselSlider(
-                    carouselController: _carouselController,
-                    options: CarouselOptions(
-                      height: MediaQuery.of(context).size.height,
-                      viewportFraction: 1,
-                      enableInfiniteScroll: false,
-                      onPageChanged: (int index, CarouselPageChangedReason reason) {
-                        if (reason == CarouselPageChangedReason.controller) {
-                          return;
-                        }
+                          if (index == 0) {
+                            _updateDrinkType(null, 'carousel');
+                            _scrollToDrinkType(0);
+                            return;
+                          }
 
-                        if (index == 0) {
-                          _updateDrinkType(null, 'carousel');
-                          _scrollToDrinkType(0);
-                          return;
-                        }
-
-                        final targetDrinkTypes = _postedDrinkTypeEntries.toList();
-                        _updateDrinkType(targetDrinkTypes[index - 1].value, 'carousel');
-                        _scrollToDrinkType(index);
-                      },
+                          final targetDrinkTypes = _postedDrinkTypeEntries.toList();
+                          _updateDrinkType(targetDrinkTypes[index - 1].value, 'carousel');
+                          _scrollToDrinkType(index);
+                        },
+                      ),
+                      items: [
+                        _timeline(null),
+                        ..._postedDrinkTypeEntries
+                          .map((entry) => _timeline(entry.value))
+                          .toList()
+                      ],
                     ),
-                    items: [
-                      _timeline(null),
-                      ..._postedDrinkTypeEntries
-                        .map((entry) => _timeline(entry.value))
-                        .toList()
-                    ],
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: _orderMenu(),
                   ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: _orderMenu(),
+                ],
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: BottomAppBar(
+          color: Theme.of(context).accentColor,
+          shape: CircularNotchedRectangle(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    onPressed: () {
+                      if (_timelineType == TimelineType.Mine) {
+                        return;
+                      }
+
+                      _updateTimelineType(TimelineType.Mine);
+                      _scrollToDrinkType(0);
+                      if (widget.user != null) {
+                        _carouselController.jumpToPage(0);
+                      }
+                    },
+                    icon: Icon(
+                      Icons.home,
+                      size: 30,
+                      color: _timelineType == TimelineType.Mine
+                        ? Colors.white
+                        : Theme.of(context).primaryColorLight,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    onPressed: () {
+                      if (_timelineType == TimelineType.All) {
+                        return;
+                      }
+
+                      _updateTimelineType(TimelineType.All);
+                      _scrollToDrinkType(0);
+                      if (widget.user != null) {
+                        _carouselController.jumpToPage(0);
+                      }
+                    },
+                    icon: Icon(
+                      Icons.people,
+                      size: 32,
+                      color: _timelineType == TimelineType.All
+                        ? Colors.white
+                        : Theme.of(context).primaryColorLight,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 88,
+                  height: 40,
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(height: 0),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: widget.user == null
+                    ? Container(height: 0)
+                    : IconButton(
+                      onPressed: () => Navigator.of(context).pushNamed('/setting'),
+                      icon: Icon(
+                        Icons.settings,
+                        size: 28,
+                        color: Theme.of(context).primaryColorLight,
+                      ),
+                    ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).accentColor,
-        shape: CircularNotchedRectangle(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: IconButton(
-                  onPressed: () {
-                    if (_timelineType == TimelineType.Mine) {
-                      return;
-                    }
-
-                    _updateTimelineType(TimelineType.Mine);
-                    _scrollToDrinkType(0);
-                    if (widget.user != null) {
-                      _carouselController.jumpToPage(0);
-                    }
-                  },
-                  icon: Icon(
-                    Icons.home,
-                    size: 30,
-                    color: _timelineType == TimelineType.Mine
-                      ? Colors.white
-                      : Theme.of(context).primaryColorLight,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: IconButton(
-                  onPressed: () {
-                    if (_timelineType == TimelineType.All) {
-                      return;
-                    }
-
-                    _updateTimelineType(TimelineType.All);
-                    _scrollToDrinkType(0);
-                    if (widget.user != null) {
-                      _carouselController.jumpToPage(0);
-                    }
-                  },
-                  icon: Icon(
-                    Icons.people,
-                    size: 32,
-                    color: _timelineType == TimelineType.All
-                      ? Colors.white
-                      : Theme.of(context).primaryColorLight,
-                  ),
-                ),
-              ),
-              Container(
-                width: 88,
-                height: 40,
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(height: 0),
-              ),
-              Expanded(
-                flex: 1,
-                child: widget.user == null
-                  ? Container(height: 0)
-                  : IconButton(
-                    onPressed: () => Navigator.of(context).pushNamed('/setting'),
-                    icon: Icon(
-                      Icons.settings,
-                      size: 28,
-                      color: Theme.of(context).primaryColorLight,
-                    ),
-                  ),
-              ),
-            ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: widget.user == null ? null : _movePostPage,
+          backgroundColor: Theme.of(context).accentColor,
+          child: Opacity(
+            opacity: widget.user == null ? 0.4 : 1,
+            child: Image.asset(
+              'assets/images/upload-icon.png',
+              width: 48,
+            ),
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        extendBody: true,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: widget.user == null ? null : _movePostPage,
-        backgroundColor: Theme.of(context).accentColor,
-        child: Opacity(
-          opacity: widget.user == null ? 0.4 : 1,
-          child: Image.asset(
-            'assets/images/upload-icon.png',
-            width: 48,
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      extendBody: true,
     );
   }
 
@@ -508,65 +503,50 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _drinkTypeList() =>
-    ListView(
-      scrollDirection: Axis.horizontal,
-      controller: _scrollController,
-      children: <Widget>[
-        ButtonTheme(
-          minWidth: 80,
-          child: FlatButton(
-            textColor: _drinkType == null
-                ? Colors.white
-                : Colors.white38,
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  '全て',
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-                Padding(padding: EdgeInsets.only(right: 4)),
-                Badge(_getUploadCount(null).toString()),
-              ],
-            ),
-            onPressed: () {
-              _updateDrinkType(null, 'button');
-              _carouselController.animateToPage(
-                0,
-                curve: Curves.easeOut,
-                duration: Duration(milliseconds: 300),
-              );
-            },
+    TabBar(
+      isScrollable: true,
+      tabs: <Widget>[
+        Tab(
+          child: Row(
+            children: <Widget>[
+              Text(
+                '全て',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              Padding(padding: EdgeInsets.only(right: 4)),
+              Badge(_getUploadCount(null).toString()),
+            ],
           ),
+//          onPressed: () {
+//            _updateDrinkType(null, 'button');
+//            _carouselController.animateToPage(
+//              0,
+//              curve: Curves.easeOut,
+//              duration: Duration(milliseconds: 300),
+//            );
+//          },
         ),
         ..._postedDrinkTypeEntries.map((entry) {
           final index = entry.key;
           final userDrinkType = entry.value;
 
-          return ButtonTheme(
-            minWidth: 80,
-            child: FlatButton(
-              textColor: _drinkType == userDrinkType
-                  ? Colors.white
-                  : Colors.white38,
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    userDrinkType.label,
-                    style: _drinkType == userDrinkType
-                      ? Theme.of(context).textTheme.subtitle1
-                      : Theme.of(context).textTheme.subtitle2,
-                  ),
-                  Padding(padding: EdgeInsets.only(right: 4)),
-                  Badge(_getUploadCount(userDrinkType).toString()),
-                ],
-              ),
-              onPressed: () {
-                _updateDrinkType(userDrinkType, 'button');
-                _carouselController.animateToPage(index + 1);
-              },
+          return Tab(
+            child: Row(
+              children: <Widget>[
+                Text(
+                  userDrinkType.label,
+                  style: _drinkType == userDrinkType
+                    ? Theme.of(context).textTheme.subtitle1
+                    : Theme.of(context).textTheme.subtitle2,
+                ),
+                Padding(padding: EdgeInsets.only(right: 4)),
+                Badge(_getUploadCount(userDrinkType).toString()),
+              ],
             ),
+//              onPressed: () {
+//                _updateDrinkType(userDrinkType, 'button');
+//                _carouselController.animateToPage(index + 1);
+//              },
           );
         }).toList()
       ],
