@@ -1,6 +1,4 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
@@ -37,9 +35,6 @@ class _HomePageState extends State<HomePage> {
   List<Drink> _mineAllDrinks;
   Map<DrinkType, List<Drink>> _publicDrinkMap = {};
   Map<DrinkType, List<Drink>> _mineDrinkMap = {};
-
-  ScrollController _scrollController = ScrollController();
-  CarouselController _carouselController = CarouselController();
 
   bool _loadingSignIn = false;
   bool _enableAppleSignIn = false;
@@ -223,14 +218,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  _scrollToDrinkType(int index) {
-    _scrollController.animateTo(
-      min(index * 80.0, _scrollController.position.maxScrollExtent),
-      curve: Curves.easeOut,
-      duration: Duration(milliseconds: 300),
-    );
-  }
-
   Future<void> _signIn(AuthType authType) async {
     final userId = await AuthRepository().signIn(authType);
     if (userId == null) {
@@ -314,50 +301,23 @@ class _HomePageState extends State<HomePage> {
     return DefaultTabController(
       length: _postedDrinkTypeEntries.length + 1,
       child: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              _drinkTypeList(),
-            ],
-          ),
-        ),
         body: Column(
           children: [
+            Padding(padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top),
+            ),
+            _drinkTypeList(),
             Expanded(
               child: Stack(
                 children: [
-                  widget.user == null && _timelineType == TimelineType.Mine
-                    ? _signInContainer()
-                    : CarouselSlider(
-                      carouselController: _carouselController,
-                      options: CarouselOptions(
-                        height: MediaQuery.of(context).size.height,
-                        viewportFraction: 1,
-                        enableInfiniteScroll: false,
-                        onPageChanged: (int index, CarouselPageChangedReason reason) {
-                          if (reason == CarouselPageChangedReason.controller) {
-                            return;
-                          }
-
-                          if (index == 0) {
-                            _updateDrinkType(null, 'carousel');
-                            _scrollToDrinkType(0);
-                            return;
-                          }
-
-                          final targetDrinkTypes = _postedDrinkTypeEntries.toList();
-                          _updateDrinkType(targetDrinkTypes[index - 1].value, 'carousel');
-                          _scrollToDrinkType(index);
-                        },
-                      ),
-                      items: [
-                        _timeline(null),
-                        ..._postedDrinkTypeEntries
-                          .map((entry) => _timeline(entry.value))
-                          .toList()
-                      ],
-                    ),
+                  TabBarView(
+                    children: [
+                      _timeline(null),
+                      ..._postedDrinkTypeEntries
+                        .map((entry) => _timeline(entry.value))
+                        .toList()
+                    ],
+                  ),
                   Positioned(
                     top: 0,
                     right: 0,
@@ -384,10 +344,6 @@ class _HomePageState extends State<HomePage> {
                       }
 
                       _updateTimelineType(TimelineType.Mine);
-                      _scrollToDrinkType(0);
-                      if (widget.user != null) {
-                        _carouselController.jumpToPage(0);
-                      }
                     },
                     icon: Icon(
                       Icons.home,
@@ -407,10 +363,6 @@ class _HomePageState extends State<HomePage> {
                       }
 
                       _updateTimelineType(TimelineType.All);
-                      _scrollToDrinkType(0);
-                      if (widget.user != null) {
-                        _carouselController.jumpToPage(0);
-                      }
                     },
                     icon: Icon(
                       Icons.people,
