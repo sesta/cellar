@@ -50,6 +50,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       length: _postedDrinkTypeEntries.length + 1,
     );
     _tabController.addListener(() {
+      // タブを押した時に連続で発生するので最後の物だけ実行
       if (_tabController.indexIsChanging) {
         return;
       }
