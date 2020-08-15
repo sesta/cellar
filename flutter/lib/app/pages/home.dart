@@ -50,8 +50,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       length: _postedDrinkTypeEntries.length + 1,
     );
     _tabController.addListener(() {
-      if (_tabController.indexIsChanging || _tabController.index == 0) {
+      if (_tabController.indexIsChanging) {
         return;
+      }
+
+      if (_tabController.index == 0) {
+        _updateDrinkType(null);
       }
 
       final drinkType = _postedDrinkTypeEntries.toList()[_tabController.index - 1].value;
