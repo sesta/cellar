@@ -212,8 +212,9 @@ class _PostPageState extends State<PostPage> {
           icon: Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).backgroundColor,
       ),
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
         children: <Widget>[
           SingleChildScrollView(
@@ -254,6 +255,7 @@ class _PostPageState extends State<PostPage> {
                         '投稿する',
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
+                      color: Theme.of(context).primaryColor,
                       textColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
@@ -332,8 +334,8 @@ class _ImagePreviewState extends State<ImagePreview> {
                 child: Material(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                   clipBehavior: Clip.antiAlias,
-                  color: Theme.of(context).primaryColorLight,
-                  child: Icon(Icons.add, size: 48, color: Colors.black87),
+                  color: Theme.of(context).primaryColorDark,
+                  child: Icon(Icons.add, size: 48, color: Colors.white),
                 ),
                 onTap: widget.addImage,
               )
@@ -381,7 +383,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                         height: 28,
                         width: 28,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).primaryColorDark,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: SizedBox(
@@ -412,8 +414,8 @@ class _ImagePreviewState extends State<ImagePreview> {
                     child: Material(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                       clipBehavior: Clip.antiAlias,
-                      color: Theme.of(context).primaryColorLight,
-                      child: Icon(Icons.add, color: Colors.black87),
+                      color: Theme.of(context).primaryColorDark,
+                      child: Icon(Icons.add, color: Colors.white),
                     ),
                   ),
                   onTap: widget.addImage,
