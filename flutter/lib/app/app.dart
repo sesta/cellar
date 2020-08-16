@@ -117,8 +117,10 @@ class _CellarState extends State<Cellar> {
 ThemeData get _cellarThemeData => ThemeData.dark().copyWith(
   primaryColor: Colors.blueGrey,
   primaryColorLight: Colors.blueGrey[200],
-  scaffoldBackgroundColor: Colors.black87,
-  backgroundColor: Colors.black38,
+  primaryColorDark: Colors.blueGrey[700],
+  scaffoldBackgroundColor: Colors.black,
+  backgroundColor: Colors.grey[900],
+  disabledColor: Colors.grey[500],
   textTheme: TextTheme(
     headline2: TextStyle(
       fontSize: 24,

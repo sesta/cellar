@@ -107,6 +107,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: bodyWidget,
       bottomNavigationBar: BottomAppBar(
+        color: Theme.of(context).backgroundColor,
         shape: CircularNotchedRectangle(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -127,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                     size: 30,
                     color: _timelineType == TimelineType.Mine
                       ? Colors.white
-                      : Theme.of(context).primaryColorLight,
+                      : Theme.of(context).disabledColor,
                   ),
                 ),
               ),
@@ -146,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                     size: 32,
                     color: _timelineType == TimelineType.All
                       ? Colors.white
-                      : Theme.of(context).primaryColorLight,
+                      : Theme.of(context).disabledColor,
                   ),
                 ),
               ),
@@ -167,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                     icon: Icon(
                       Icons.settings,
                       size: 28,
-                      color: Theme.of(context).primaryColorLight,
+                      color: Theme.of(context).disabledColor,
                     ),
                   ),
               ),
@@ -184,6 +185,7 @@ class _HomePageState extends State<HomePage> {
             width: 48,
           ),
         ),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       extendBody: true,

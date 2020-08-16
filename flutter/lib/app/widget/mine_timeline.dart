@@ -1,3 +1,4 @@
+import 'package:cellar/app/widget/drink_type_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -186,10 +187,21 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top),
+        DrinkTypeTabBar(
+          tabController: _tabController,
+          drinkTypeTabs: [
+            DrinkTypeTab(
+              drinkType: null,
+              count: _getUploadCount(null),
+            ),
+            ..._postedDrinkTypeEntries.map((entry) =>
+                DrinkTypeTab(
+                  drinkType: entry.value,
+                  count: _getUploadCount(entry.value),
+                )
+            ).toList(),
+          ],
         ),
-        _drinkTypeList(),
         Expanded(
           child: Stack(
             children: [
@@ -198,8 +210,8 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
                 children: [
                   _timeline(null),
                   ..._postedDrinkTypeEntries
-                      .map((entry) => _timeline(entry.value))
-                      .toList()
+                    .map((entry) => _timeline(entry.value))
+                    .toList()
                 ],
               ),
               Positioned(
@@ -247,42 +259,6 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
       child: DrinkGrid(drinks: drinks, updateDrink: _updateDrink),
     );
   }
-
-  Widget _drinkTypeList() =>
-    TabBar(
-      controller: _tabController,
-      isScrollable: true,
-      tabs: <Widget>[
-        Tab(
-          child: Row(
-            children: <Widget>[
-              Text(
-                '全て',
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-              Padding(padding: EdgeInsets.only(right: 4)),
-              Badge(_getUploadCount(null).toString()),
-            ],
-          ),
-        ),
-        ..._postedDrinkTypeEntries.map((entry) {
-          final userDrinkType = entry.value;
-
-          return Tab(
-            child: Row(
-              children: <Widget>[
-                Text(
-                  userDrinkType.label,
-                  style: Theme.of(context).textTheme.subtitle2,
-                ),
-                Padding(padding: EdgeInsets.only(right: 4)),
-                Badge(_getUploadCount(userDrinkType).toString()),
-              ],
-            ),
-          );
-        }).toList()
-      ],
-    );
 
   Widget _orderMenu() =>
     Container(
