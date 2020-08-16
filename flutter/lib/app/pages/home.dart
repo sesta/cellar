@@ -233,14 +233,14 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
+            Padding(padding: EdgeInsets.only(bottom: 8)),
 
             FlatButton(
               child: Text(
-                'プライバシーポリシー',
-                style: TextStyle(
-                  fontSize: 12,
+                'プライバシーポリシーを見る',
+                style: Theme.of(context).textTheme.caption.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.blueAccent,
+                  color: Theme.of(context).primaryColorLight,
                 ),
               ),
               onPressed: () => launch('https://cellar.sesta.dev/policy'),
