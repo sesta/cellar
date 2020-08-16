@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -94,18 +95,31 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget bodyWidget = AllTimeline(
+    Widget content = AllTimeline(
       user: widget.user,
       status: widget.status,
     );
     if (_timelineType == TimelineType.Mine) {
-      bodyWidget = widget.user == null
+      content = widget.user == null
         ? _signInContainer()
         : MineTimeline(user: widget.user);
     }
 
     return Scaffold(
-      body: bodyWidget,
+      body: PageTransitionSwitcher(
+        transitionBuilder: (
+          Widget child,
+          Animation<double> primaryAnimation,
+          Animation<double> secondaryAnimation,
+        ) {
+          return FadeThroughTransition(
+            child: child,
+            animation: primaryAnimation,
+            secondaryAnimation: secondaryAnimation,
+          );
+        },
+        child: content,
+      ),
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).backgroundColor,
         shape: CircularNotchedRectangle(),
@@ -193,71 +207,74 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _signInContainer() =>
-    Stack(
-      children: <Widget>[
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'お酒を投稿するには\nアカウント認証が必要です。',
-              style: Theme.of(context).textTheme.bodyText2,
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 32)),
-
-            _enableAppleSignIn
-              ? Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: AppleSignInButton(
-                      onPressed: () => _signIn(AuthType.Apple),
-                      style: AppleButtonStyle.white,
-                    ),
-                )
-              : Container(height: 0),
-            GoogleSignInButton(
-              onPressed: () => _signIn(AuthType.Google),
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 32)),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  '※',
-                  style: Theme.of(context).textTheme.caption,
-                ),
-                Padding(padding: EdgeInsets.only(right: 4)),
-                Text(
-                  'プライバシーポリシーに\n同意の上認証をしてください。',
-                  style: Theme.of(context).textTheme.caption,
-                ),
-              ],
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 8)),
-
-            FlatButton(
-              child: Text(
-                'プライバシーポリシーを見る',
-                style: Theme.of(context).textTheme.caption.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColorLight,
-                ),
+    Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Stack(
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'お酒を投稿するには\nアカウント認証が必要です。',
+                style: Theme.of(context).textTheme.bodyText2,
               ),
-              onPressed: () => launch('https://cellar.sesta.dev/policy'),
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 80)),
-          ]
-        ),
-        _loadingSignIn ? Container(
-          padding: EdgeInsets.only(bottom: 80),
-          color: Colors.black38,
-          alignment: Alignment.center,
-          child: Lottie.asset(
-            'assets/lottie/loading.json',
-            width: 80,
-            height: 80,
-          )
-        ) : Container(),
-      ],
+              Padding(padding: EdgeInsets.only(bottom: 32)),
+
+              _enableAppleSignIn
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: AppleSignInButton(
+                        onPressed: () => _signIn(AuthType.Apple),
+                        style: AppleButtonStyle.white,
+                      ),
+                  )
+                : Container(height: 0),
+              GoogleSignInButton(
+                onPressed: () => _signIn(AuthType.Google),
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 32)),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '※',
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                  Padding(padding: EdgeInsets.only(right: 4)),
+                  Text(
+                    'プライバシーポリシーに\n同意の上認証をしてください。',
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                ],
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 8)),
+
+              FlatButton(
+                child: Text(
+                  'プライバシーポリシーを見る',
+                  style: Theme.of(context).textTheme.caption.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColorLight,
+                  ),
+                ),
+                onPressed: () => launch('https://cellar.sesta.dev/policy'),
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 80)),
+            ]
+          ),
+          _loadingSignIn ? Container(
+            padding: EdgeInsets.only(bottom: 80),
+            color: Colors.black38,
+            alignment: Alignment.center,
+            child: Lottie.asset(
+              'assets/lottie/loading.json',
+              width: 80,
+              height: 80,
+            )
+          ) : Container(),
+        ],
+      ),
     );
 }
