@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    // TODO: 自分のTimelineを表示するようにする
+    Navigator.of(context).pushReplacementNamed('/home');
   }
 
   Widget get _content {
