@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:animations/animations.dart';
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entity/entities.dart';
@@ -56,38 +57,47 @@ class GridItem extends StatefulWidget {
   _GridItemState createState() => _GridItemState();
 }
 
-class _GridItemState extends State<GridItem> {
-  bool _loaded = false;
+class _GridItemState extends State<GridItem> with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
 
   @override
   initState() {
     super.initState();
-    setState(() {
-      _loaded = widget.drink.thumbImageUrl != null;
-    });
 
-    if (widget.drink.thumbImageUrl == null) {
-      widget.drink.init().then((_) async {
-         setState(() {});
-         // サムネぐらいは読み込めてることを信じて0.3秒後に表示
-         await Future.delayed(Duration(milliseconds: 300));
-
-         // 表示しようと思ったら別のページになってたりするので、念のためチェック
-         if (!this.mounted) {
-           return;
-         }
-         setState(() {
-           _loaded = true;
-         });
-      });
+    final loaded = widget.drink.thumbImageUrl != null;
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: loaded ? 0 : 500),
+    );
+    if (loaded) {
+      _animationController.forward();
+      return;
     }
+
+    widget.drink.init().then((_) async {
+       setState(() {});
+       // サムネぐらいは読み込めてることを信じて0.3秒後に表示
+       await Future.delayed(Duration(milliseconds: 300));
+
+       // 表示しようと思ったら別のページになってたりするので、念のためチェック
+       if (!this.mounted) {
+         return;
+       }
+
+       await _animationController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      opacity: _loaded ? 1.0 : 0.0,
-      duration: Duration(milliseconds: 500),
+    return FadeScaleTransition(
+      animation: _animationController,
       child: GridTile(
         footer: Material(
           color: Colors.transparent,
@@ -101,19 +111,20 @@ class _GridItemState extends State<GridItem> {
               children: [
                 Text(
                   widget.drink.drinkName,
+                  overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.subtitle1,
                 ),
                 Padding(padding: EdgeInsets.only(bottom: 4)),
                 Row(
                   children: List.generate(5, (i)=> i).map<Widget>((index) =>
-                    Padding(
-                      padding: EdgeInsets.only(right: 4),
-                      child: Icon(
-                        index < widget.drink.score ? Icons.star : Icons.star_border,
-                        size: 16,
-                        color: Colors.orangeAccent,
-                      ),
-                    )
+                      Padding(
+                        padding: EdgeInsets.only(right: 4),
+                        child: Icon(
+                          index < widget.drink.score ? Icons.star : Icons.star_border,
+                          size: 16,
+                          color: Colors.orangeAccent,
+                        ),
+                      )
                   ).toList(),
                 ),
               ],
@@ -126,13 +137,13 @@ class _GridItemState extends State<GridItem> {
           child: Hero(
             tag: widget.drink.thumbImagePath,
             child: widget.drink.thumbImageUrl == null
-              ? Container()
-              : Image(
-                  image: NetworkImage(
-                    widget.drink.thumbImageUrl,
-                  ),
-                  fit: BoxFit.cover,
-                ),
+                ? Container()
+                : Image(
+              image: NetworkImage(
+                widget.drink.thumbImageUrl,
+              ),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),

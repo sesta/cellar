@@ -183,47 +183,50 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DrinkTypeTabBar(
-          tabController: _tabController,
-          drinkTypeTabs: [
-            DrinkTypeTab(
-              drinkType: null,
-              count: _getUploadCount(null),
-            ),
-            ..._postedDrinkTypes.map((drinkType) =>
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Column(
+        children: [
+          DrinkTypeTabBar(
+            tabController: _tabController,
+            drinkTypeTabs: [
               DrinkTypeTab(
-                drinkType: drinkType,
-                count: _getUploadCount(drinkType),
-              )
-            ).toList(),
-          ],
-        ),
-        Expanded(
-          child: Stack(
-            children: [
-              TabBarView(
-                controller: _tabController,
-                children: [
-                  _timeline(null),
-                  ..._postedDrinkTypes
-                    .map((drinkType) => _timeline(drinkType))
-                    .toList()
-                ],
+                drinkType: null,
+                count: _getUploadCount(null),
               ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: OrderMenu(
-                  selectedOrderType: _orderType,
-                  updateOrderType: _updateOrderType,
-                ),
-              ),
+              ..._postedDrinkTypes.map((drinkType) =>
+                DrinkTypeTab(
+                  drinkType: drinkType,
+                  count: _getUploadCount(drinkType),
+                )
+              ).toList(),
             ],
           ),
-        ),
-      ],
+          Expanded(
+            child: Stack(
+              children: [
+                TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _timeline(null),
+                    ..._postedDrinkTypes
+                      .map((drinkType) => _timeline(drinkType))
+                      .toList()
+                  ],
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: OrderMenu(
+                    selectedOrderType: _orderType,
+                    updateOrderType: _updateOrderType,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

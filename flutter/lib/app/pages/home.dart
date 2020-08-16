@@ -1,14 +1,21 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
-import 'package:cellar/domain/models/timeline.dart';
 import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/mine_timeline.dart';
 import 'package:cellar/app/widget/all_timeline.dart';
+import 'package:cellar/app/widget/setting.dart';
+
+enum BottomSelectType {
+  TimelineMine,
+  TimelineAll,
+  Setting
+}
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -27,7 +34,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TimelineType _timelineType = TimelineType.Mine;
+  BottomSelectType _bottomSelectType = BottomSelectType.TimelineMine;
 
   bool _loadingSignIn = false;
   bool _enableAppleSignIn = false;
@@ -41,19 +48,19 @@ class _HomePageState extends State<HomePage> {
     }));
   }
 
-  _updateTimelineType(TimelineType timelineType) {
-    if (_timelineType == timelineType) {
+  _updateBottomSelectType(BottomSelectType bottomSelectType) {
+    if (_bottomSelectType == bottomSelectType) {
       return;
     }
 
     setState(() {
-      _timelineType = timelineType;
+      _bottomSelectType = bottomSelectType;
     });
 
     AnalyticsRepository().sendEvent(
       EventType.ChangeTimelineType,
       {
-        'timelineType': timelineType.toString(),
+        'timelineType': bottomSelectType.toString(),
       },
     );
   }
@@ -92,20 +99,44 @@ class _HomePageState extends State<HomePage> {
     // TODO: 自分のTimelineを表示するようにする
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Widget bodyWidget = AllTimeline(
-      user: widget.user,
-      status: widget.status,
-    );
-    if (_timelineType == TimelineType.Mine) {
-      bodyWidget = widget.user == null
-        ? _signInContainer()
-        : MineTimeline(user: widget.user);
+  Widget get _content {
+    switch (_bottomSelectType) {
+      case BottomSelectType.TimelineMine:
+        return widget.user == null
+          ? _signInContainer()
+          : MineTimeline(user: widget.user);
+      case BottomSelectType.TimelineAll:
+        return AllTimeline(
+          user: widget.user,
+          status: widget.status,
+        );
+      case BottomSelectType.Setting:
+        return Setting(
+          user: widget.user,
+          setUser: widget.setUser,
+        );
     }
 
+    throw '考慮していないTypeです。 $_bottomSelectType';
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: bodyWidget,
+      body: PageTransitionSwitcher(
+        transitionBuilder: (
+          Widget child,
+          Animation<double> primaryAnimation,
+          Animation<double> secondaryAnimation,
+        ) {
+          return FadeThroughTransition(
+            child: child,
+            animation: primaryAnimation,
+            secondaryAnimation: secondaryAnimation,
+          );
+        },
+        child: _content,
+      ),
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).backgroundColor,
         shape: CircularNotchedRectangle(),
@@ -117,16 +148,16 @@ class _HomePageState extends State<HomePage> {
                 flex: 1,
                 child: IconButton(
                   onPressed: () {
-                    if (_timelineType == TimelineType.Mine) {
+                    if (_bottomSelectType == BottomSelectType.TimelineMine) {
                       return;
                     }
 
-                    _updateTimelineType(TimelineType.Mine);
+                    _updateBottomSelectType(BottomSelectType.TimelineMine);
                   },
                   icon: Icon(
                     Icons.home,
                     size: 30,
-                    color: _timelineType == TimelineType.Mine
+                    color: _bottomSelectType == BottomSelectType.TimelineMine
                       ? Colors.white
                       : Theme.of(context).disabledColor,
                   ),
@@ -136,16 +167,16 @@ class _HomePageState extends State<HomePage> {
                 flex: 1,
                 child: IconButton(
                   onPressed: () {
-                    if (_timelineType == TimelineType.All) {
+                    if (_bottomSelectType == BottomSelectType.TimelineAll) {
                       return;
                     }
 
-                    _updateTimelineType(TimelineType.All);
+                    _updateBottomSelectType(BottomSelectType.TimelineAll);
                   },
                   icon: Icon(
                     Icons.people,
                     size: 32,
-                    color: _timelineType == TimelineType.All
+                    color: _bottomSelectType == BottomSelectType.TimelineAll
                       ? Colors.white
                       : Theme.of(context).disabledColor,
                   ),
@@ -164,11 +195,19 @@ class _HomePageState extends State<HomePage> {
                 child: widget.user == null
                   ? Container(height: 0)
                   : IconButton(
-                    onPressed: () => Navigator.of(context).pushNamed('/setting'),
+                    onPressed: () {
+                      if (_bottomSelectType == BottomSelectType.Setting) {
+                        return;
+                      }
+
+                      _updateBottomSelectType(BottomSelectType.Setting);
+                    },
                     icon: Icon(
                       Icons.settings,
                       size: 28,
-                      color: Theme.of(context).disabledColor,
+                      color: _bottomSelectType == BottomSelectType.Setting
+                          ? Colors.white
+                          : Theme.of(context).disabledColor,
                     ),
                   ),
               ),
@@ -193,71 +232,74 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _signInContainer() =>
-    Stack(
-      children: <Widget>[
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'お酒を投稿するには\nアカウント認証が必要です。',
-              style: Theme.of(context).textTheme.bodyText2,
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 32)),
-
-            _enableAppleSignIn
-              ? Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: AppleSignInButton(
-                      onPressed: () => _signIn(AuthType.Apple),
-                      style: AppleButtonStyle.white,
-                    ),
-                )
-              : Container(height: 0),
-            GoogleSignInButton(
-              onPressed: () => _signIn(AuthType.Google),
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 32)),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  '※',
-                  style: Theme.of(context).textTheme.caption,
-                ),
-                Padding(padding: EdgeInsets.only(right: 4)),
-                Text(
-                  'プライバシーポリシーに\n同意の上認証をしてください。',
-                  style: Theme.of(context).textTheme.caption,
-                ),
-              ],
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 8)),
-
-            FlatButton(
-              child: Text(
-                'プライバシーポリシーを見る',
-                style: Theme.of(context).textTheme.caption.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColorLight,
-                ),
+    Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Stack(
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'お酒を投稿するには\nアカウント認証が必要です。',
+                style: Theme.of(context).textTheme.bodyText2,
               ),
-              onPressed: () => launch('https://cellar.sesta.dev/policy'),
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 80)),
-          ]
-        ),
-        _loadingSignIn ? Container(
-          padding: EdgeInsets.only(bottom: 80),
-          color: Colors.black38,
-          alignment: Alignment.center,
-          child: Lottie.asset(
-            'assets/lottie/loading.json',
-            width: 80,
-            height: 80,
-          )
-        ) : Container(),
-      ],
+              Padding(padding: EdgeInsets.only(bottom: 32)),
+
+              _enableAppleSignIn
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: AppleSignInButton(
+                        onPressed: () => _signIn(AuthType.Apple),
+                        style: AppleButtonStyle.white,
+                      ),
+                  )
+                : Container(height: 0),
+              GoogleSignInButton(
+                onPressed: () => _signIn(AuthType.Google),
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 32)),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '※',
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                  Padding(padding: EdgeInsets.only(right: 4)),
+                  Text(
+                    'プライバシーポリシーに\n同意の上認証をしてください。',
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                ],
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 8)),
+
+              FlatButton(
+                child: Text(
+                  'プライバシーポリシーを見る',
+                  style: Theme.of(context).textTheme.caption.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColorLight,
+                  ),
+                ),
+                onPressed: () => launch('https://cellar.sesta.dev/policy'),
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 80)),
+            ]
+          ),
+          _loadingSignIn ? Container(
+            padding: EdgeInsets.only(bottom: 80),
+            color: Colors.black38,
+            alignment: Alignment.center,
+            child: Lottie.asset(
+              'assets/lottie/loading.json',
+              width: 80,
+              height: 80,
+            )
+          ) : Container(),
+        ],
+      ),
     );
 }
