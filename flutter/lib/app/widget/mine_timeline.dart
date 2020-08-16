@@ -27,6 +27,7 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
 
   List<Drink> _allDrinks;
   Map<DrinkType, List<Drink>> _drinkMap = {};
+  List<DrinkType> _postedDrinkTypes = [];
 
   TabController _tabController;
 
@@ -34,6 +35,9 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
   initState() {
     super.initState();
 
+    _postedDrinkTypes = widget.user.drinkTypesByMany
+      .where((drinkType) => _getUploadCount(drinkType) > 0)
+      .toList();
     _tabController = TabController(
       vsync: this,
       length: _postedDrinkTypes.length + 1,
@@ -55,11 +59,6 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
 
     _updateTimeline();
   }
-
-  List<DrinkType> get _postedDrinkTypes =>
-    widget.user.drinkTypesByMany
-      .where((drinkType) => _getUploadCount(drinkType) > 0)
-      .toList();
 
   Future<void> _updateTimeline({ bool isForceUpdate }) async {
     if (
@@ -160,11 +159,6 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
     _updateTimeline();
   }
 
-  _updateDrink() {
-    // editなどによるDrinkの更新を反映させるため
-    setState(() {});
-  }
-
   int _getUploadCount(DrinkType drinkType) {
     if (drinkType == null) {
       return widget.user.uploadCount;
@@ -260,7 +254,7 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
 
     return RefreshIndicator(
       onRefresh: _refresh,
-      child: DrinkGrid(drinks: drinks, updateDrink: _updateDrink),
+      child: DrinkGrid(drinks: drinks),
     );
   }
 }

@@ -45,7 +45,7 @@ class _SettingState extends State<Setting> {
     await widget.user.updateName();
 
     AnalyticsRepository().sendEvent(EventType.EditUserName, {});
-    Navigator.of(context).pop();
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   get disableSave {
@@ -95,7 +95,6 @@ class _SettingState extends State<Setting> {
     });
     await AuthRepository().signOut();
     widget.setUser(null);
-    Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, '/home');
   }
 
