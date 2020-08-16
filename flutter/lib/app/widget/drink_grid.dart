@@ -122,6 +122,7 @@ class _GridItemState extends State<GridItem> with SingleTickerProviderStateMixin
                 children: [
                   Text(
                     widget.drink.drinkName,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                   Padding(padding: EdgeInsets.only(bottom: 4)),
