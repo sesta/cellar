@@ -48,7 +48,6 @@ class _CellarState extends State<Cellar> {
     return MaterialApp(
       title: 'Cellar',
       theme: _cellarThemeData,
-      color: Theme.of(context).primaryColor,
       navigatorObservers: [
         AnalyticsRepository().observer,
       ],
