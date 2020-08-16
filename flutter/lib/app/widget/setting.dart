@@ -95,7 +95,6 @@ class _SettingState extends State<Setting> {
     });
     await AuthRepository().signOut();
     widget.setUser(null);
-    Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, '/home');
   }
 
