@@ -66,9 +66,8 @@ class _SettingState extends State<SettingPage> {
               FlatButton(
                 child: Text(
                   'やめる',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueAccent,
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Theme.of(context).primaryColorLight,
                   ),
                 ),
                 onPressed: () => Navigator.of(context).pop(),
@@ -76,9 +75,8 @@ class _SettingState extends State<SettingPage> {
               FlatButton(
                 child: Text(
                   'ログアウトする',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Theme.of(context).primaryColorLight,
                   ),
                 ),
                 onPressed: () {
