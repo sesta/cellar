@@ -7,8 +7,8 @@ import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/atoms/text_input.dart';
 
-class SettingPage extends StatefulWidget {
-  SettingPage({
+class Setting extends StatefulWidget {
+  Setting({
     Key key,
     @required this.user,
     @required this.setUser,
@@ -21,7 +21,7 @@ class SettingPage extends StatefulWidget {
   _SettingState createState() => _SettingState();
 }
 
-class _SettingState extends State<SettingPage> {
+class _SettingState extends State<Setting> {
   bool _loading = false;
   final _nameController = TextEditingController();
 
@@ -56,36 +56,36 @@ class _SettingState extends State<SettingPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) =>
-          AlertDialog(
-            title: Text(
-              "ログアウトしてよろしいですか？",
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            actions: <Widget>[
-              // ボタン領域
-              FlatButton(
-                child: Text(
-                  'やめる',
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: Theme.of(context).primaryColorLight,
-                  ),
-                ),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-              FlatButton(
-                child: Text(
-                  'ログアウトする',
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: Theme.of(context).primaryColorLight,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _signOut();
-                },
-              ),
-            ],
+        AlertDialog(
+          title: Text(
+            "ログアウトしてよろしいですか？",
+            style: Theme.of(context).textTheme.subtitle1,
           ),
+          actions: <Widget>[
+            // ボタン領域
+            FlatButton(
+              child: Text(
+                'やめる',
+                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                  color: Theme.of(context).primaryColorLight,
+                ),
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            FlatButton(
+              child: Text(
+                'ログアウトする',
+                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                  color: Theme.of(context).primaryColorLight,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _signOut();
+              },
+            ),
+          ],
+        ),
     );
   }
 
@@ -101,27 +101,19 @@ class _SettingState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('設定'),
-        elevation: 0,
-        leading:  IconButton(
-          icon: Icon(Icons.close),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        backgroundColor: Theme.of(context).backgroundColor,
-      ),
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Stack(
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Stack(
         children: <Widget>[
           SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Padding(padding: EdgeInsets.only(top: 36)),
+                Padding(padding: EdgeInsets.only(top: 200)),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    Padding(padding: EdgeInsets.only(left: 24)),
+                    Padding(padding: EdgeInsets.only(left: 40)),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +147,7 @@ class _SettingState extends State<SettingPage> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                    Padding(padding: EdgeInsets.only(right: 24)),
+                    Padding(padding: EdgeInsets.only(right: 40)),
                   ],
                 ),
                 Padding(padding: EdgeInsets.only(bottom: 64)),
@@ -204,7 +196,7 @@ class _SettingState extends State<SettingPage> {
             ),
           ) : Container(),
         ],
-      )
+      ),
     );
   }
 }
