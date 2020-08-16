@@ -26,6 +26,7 @@ class DrinkTypeTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       color: Theme.of(context).backgroundColor,
       padding: EdgeInsets.only(
           top: MediaQuery.of(context).padding.top
