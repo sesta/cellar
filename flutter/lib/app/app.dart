@@ -117,9 +117,13 @@ ThemeData get _cellarThemeData => ThemeData.dark().copyWith(
   primaryColor: Colors.blueGrey,
   primaryColorLight: Colors.blueGrey[200],
   primaryColorDark: Colors.blueGrey[700],
+  accentColor: Colors.blueGrey[200],
   scaffoldBackgroundColor: Colors.black,
   backgroundColor: Colors.grey[900],
+  dialogBackgroundColor: Colors.grey[800],
+  buttonColor: Colors.blueGrey,
   disabledColor: Colors.grey[500],
+  errorColor: Colors.redAccent,
   textTheme: TextTheme(
     headline2: TextStyle(
       fontSize: 24,

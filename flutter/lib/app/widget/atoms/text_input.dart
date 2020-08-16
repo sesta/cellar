@@ -35,14 +35,15 @@ class TextInput extends StatelessWidget {
     return TextField(
       controller: controller,
       onChanged: onChanged,
+      cursorColor: Theme.of(context).primaryColorLight,
       style: textStyle,
       maxLines: maxLines,
       keyboardType: keyboardType,
       inputFormatters: inputType == InputType.Number
-          ? <TextInputFormatter>[
-              WhitelistingTextInputFormatter.digitsOnly
-            ]
-          : <TextInputFormatter>[],
+        ? <TextInputFormatter>[
+            WhitelistingTextInputFormatter.digitsOnly
+          ]
+        : <TextInputFormatter>[],
       decoration: InputDecoration(
         hintText: placeholder,
       ),

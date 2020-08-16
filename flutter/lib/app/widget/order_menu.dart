@@ -30,6 +30,7 @@ class OrderMenu extends StatelessWidget {
           ),
 
           PopupMenuButton(
+            color: Theme.of(context).dialogBackgroundColor,
             onSelected: updateOrderType,
             icon: Icon(
               Icons.sort,
