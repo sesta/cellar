@@ -56,14 +56,20 @@ class GridItem extends StatefulWidget {
   _GridItemState createState() => _GridItemState();
 }
 
-class _GridItemState extends State<GridItem> {
+class _GridItemState extends State<GridItem> with SingleTickerProviderStateMixin {
   bool _loaded = false;
+  bool _loadedFirst = false;
+  AnimationController _animationController;
+  Animation<double> _tweenAnimation;
 
   @override
   initState() {
     super.initState();
+
+    _setAnimation();
     setState(() {
       _loaded = widget.drink.thumbImageUrl != null;
+      _loadedFirst = widget.drink.thumbImageUrl != null;
     });
 
     if (widget.drink.thumbImageUrl == null) {
@@ -79,60 +85,76 @@ class _GridItemState extends State<GridItem> {
          setState(() {
            _loaded = true;
          });
+
+         await _animationController.forward();
       });
     }
   }
 
+  _setAnimation() async {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+    final Animation curve = CurvedAnimation(parent: _animationController, curve: Curves.easeInOut);
+    _tweenAnimation = Tween(begin: 0.0, end: 1.0)
+      .animate(curve);
+    _tweenAnimation.addListener(() => setState(() {}));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      opacity: _loaded ? 1.0 : 0.0,
-      duration: Duration(milliseconds: 500),
-      child: GridTile(
-        footer: Material(
-          color: Colors.transparent,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))),
-          clipBehavior: Clip.antiAlias,
-          child: Container(
-            color: Colors.black38,
-            padding: EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.drink.drinkName,
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-                Padding(padding: EdgeInsets.only(bottom: 4)),
-                Row(
-                  children: List.generate(5, (i)=> i).map<Widget>((index) =>
-                    Padding(
-                      padding: EdgeInsets.only(right: 4),
-                      child: Icon(
-                        index < widget.drink.score ? Icons.star : Icons.star_border,
-                        size: 16,
-                        color: Colors.orangeAccent,
-                      ),
-                    )
-                  ).toList(),
-                ),
-              ],
+    return Transform.scale(
+      scale: _loadedFirst ? 1 : _tweenAnimation.value,
+      child: AnimatedOpacity(
+        opacity: _loaded ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 500),
+        child: GridTile(
+          footer: Material(
+            color: Colors.transparent,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))),
+            clipBehavior: Clip.antiAlias,
+            child: Container(
+              color: Colors.black38,
+              padding: EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.drink.drinkName,
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  Padding(padding: EdgeInsets.only(bottom: 4)),
+                  Row(
+                    children: List.generate(5, (i)=> i).map<Widget>((index) =>
+                      Padding(
+                        padding: EdgeInsets.only(right: 4),
+                        child: Icon(
+                          index < widget.drink.score ? Icons.star : Icons.star_border,
+                          size: 16,
+                          color: Colors.orangeAccent,
+                        ),
+                      )
+                    ).toList(),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        child: Material(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          clipBehavior: Clip.antiAlias,
-          child: Hero(
-            tag: widget.drink.thumbImagePath,
-            child: widget.drink.thumbImageUrl == null
-              ? Container()
-              : Image(
-                  image: NetworkImage(
-                    widget.drink.thumbImageUrl,
+          child: Material(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            clipBehavior: Clip.antiAlias,
+            child: Hero(
+              tag: widget.drink.thumbImagePath,
+              child: widget.drink.thumbImageUrl == null
+                ? Container()
+                : Image(
+                    image: NetworkImage(
+                      widget.drink.thumbImageUrl,
+                    ),
+                    fit: BoxFit.cover,
                   ),
-                  fit: BoxFit.cover,
-                ),
+            ),
           ),
         ),
       ),
