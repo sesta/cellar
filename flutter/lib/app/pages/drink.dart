@@ -83,6 +83,7 @@ class _DrinkPageState extends State<DrinkPage> {
     final imageLength = widget.drink.imagePaths.length;
 
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body:  SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
@@ -162,7 +163,7 @@ class _DrinkPageState extends State<DrinkPage> {
                       children: <Widget>[
                         Icon(
                           Icons.person,
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).primaryColor,
                         ),
                         Padding(padding: EdgeInsets.only(right: 4)),
                         Text(
@@ -235,7 +236,7 @@ class _DrinkPageState extends State<DrinkPage> {
     final imageLength = widget.drink.imagePaths.length;
 
     return Container(
-      color: Theme.of(context).primaryColor,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: CarouselSlider(
         options: CarouselOptions(
           aspectRatio: imageRatio,

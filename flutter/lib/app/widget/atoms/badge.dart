@@ -10,7 +10,8 @@ class Badge extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        color: Theme.of(context).primaryColor,
+        // TODO: 色の分類をがんばる
+        color: Colors.black,
       ),
       child: Text(
         text,

@@ -11,7 +11,7 @@ class Label extends StatelessWidget {
       margin: EdgeInsets.only(right: 6, bottom: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        color: Theme.of(context).primaryColor,
+        color: Colors.black,
       ),
       child: Text(
         text,

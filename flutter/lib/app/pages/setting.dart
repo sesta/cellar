@@ -66,9 +66,8 @@ class _SettingState extends State<SettingPage> {
               FlatButton(
                 child: Text(
                   'やめる',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueAccent,
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Theme.of(context).primaryColorLight,
                   ),
                 ),
                 onPressed: () => Navigator.of(context).pop(),
@@ -76,9 +75,8 @@ class _SettingState extends State<SettingPage> {
               FlatButton(
                 child: Text(
                   'ログアウトする',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Theme.of(context).primaryColorLight,
                   ),
                 ),
                 onPressed: () {
@@ -111,8 +109,9 @@ class _SettingState extends State<SettingPage> {
           icon: Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).backgroundColor,
       ),
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
         children: <Widget>[
           SingleChildScrollView(
@@ -150,7 +149,7 @@ class _SettingState extends State<SettingPage> {
                           fontSize: 14,
                         ),
                       ),
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).primaryColor,
                       textColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
@@ -164,10 +163,8 @@ class _SettingState extends State<SettingPage> {
                 FlatButton(
                   child: Text(
                     'プライバシーポリシー',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blueAccent,
+                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                      color: Theme.of(context).primaryColorLight,
                     ),
                   ),
                   onPressed: () => launch('https://cellar.sesta.dev/policy'),
@@ -177,10 +174,8 @@ class _SettingState extends State<SettingPage> {
                 FlatButton(
                   child: Text(
                     '問い合わせ',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blueAccent,
+                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                      color: Theme.of(context).primaryColorLight,
                     ),
                   ),
                   onPressed: () => launch('https://docs.google.com/forms/d/e/1FAIpQLSeKVQjfLEyIV-EI0wWmDK0iHk_R3E0ARu5a0nH1WgBsMrrJmw/viewform?usp=sf_link'),
@@ -190,10 +185,8 @@ class _SettingState extends State<SettingPage> {
                 FlatButton(
                   child: Text(
                     'ログアウト',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                      color: Theme.of(context).primaryColorLight,
                     ),
                   ),
                   onPressed: _confirmSignOut,

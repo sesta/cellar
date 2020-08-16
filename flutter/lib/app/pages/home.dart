@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: bodyWidget,
       bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).backgroundColor,
         shape: CircularNotchedRectangle(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                     size: 30,
                     color: _timelineType == TimelineType.Mine
                       ? Colors.white
-                      : Theme.of(context).primaryColorLight,
+                      : Theme.of(context).disabledColor,
                   ),
                 ),
               ),
@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                     size: 32,
                     color: _timelineType == TimelineType.All
                       ? Colors.white
-                      : Theme.of(context).primaryColorLight,
+                      : Theme.of(context).disabledColor,
                   ),
                 ),
               ),
@@ -168,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                     icon: Icon(
                       Icons.settings,
                       size: 28,
-                      color: Theme.of(context).primaryColorLight,
+                      color: Theme.of(context).disabledColor,
                     ),
                   ),
               ),
@@ -178,7 +178,6 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: widget.user == null ? null : _movePostPage,
-        backgroundColor: Theme.of(context).accentColor,
         child: Opacity(
           opacity: widget.user == null ? 0.4 : 1,
           child: Image.asset(
@@ -186,6 +185,7 @@ class _HomePageState extends State<HomePage> {
             width: 48,
           ),
         ),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       extendBody: true,
@@ -233,14 +233,14 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
+            Padding(padding: EdgeInsets.only(bottom: 8)),
 
             FlatButton(
               child: Text(
-                'プライバシーポリシー',
-                style: TextStyle(
-                  fontSize: 12,
+                'プライバシーポリシーを見る',
+                style: Theme.of(context).textTheme.caption.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.blueAccent,
+                  color: Theme.of(context).primaryColorLight,
                 ),
               ),
               onPressed: () => launch('https://cellar.sesta.dev/policy'),

@@ -123,6 +123,7 @@ class _EditPageState extends State<EditPage> {
       context: context,
       builder: (BuildContext context) =>
           AlertDialog(
+            backgroundColor: Theme.of(context).backgroundColor,
             title: Text(
               "本当に削除してよろしいですか？",
               style: Theme.of(context).textTheme.subtitle1,
@@ -136,9 +137,8 @@ class _EditPageState extends State<EditPage> {
               FlatButton(
                 child: Text(
                   'やめる',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueAccent,
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Theme.of(context).primaryColorLight,
                   ),
                 ),
                 onPressed: () => Navigator.of(context).pop(),
@@ -146,9 +146,8 @@ class _EditPageState extends State<EditPage> {
               FlatButton(
                 child: Text(
                   '削除する',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Theme.of(context).errorColor,
                   ),
                 ),
                 onPressed: () {
@@ -179,14 +178,14 @@ class _EditPageState extends State<EditPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text(
           '編集',
         ),
         elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).backgroundColor,
       ),
       body: Stack(
         children: <Widget>[
@@ -221,7 +220,7 @@ class _EditPageState extends State<EditPage> {
                         '削除する',
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
-                      color: Colors.redAccent,
+                      color: Theme.of(context).errorColor,
                       textColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
@@ -235,8 +234,8 @@ class _EditPageState extends State<EditPage> {
                         '更新する',
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
-                      color: Theme.of(context).accentColor,
                       textColor: Colors.white,
+                      color: Theme.of(context).primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),

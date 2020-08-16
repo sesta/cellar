@@ -13,7 +13,7 @@ class MaintenancePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).accentColor,
+      backgroundColor: Theme.of(context).primaryColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,7 +28,7 @@ class MaintenancePage extends StatelessWidget {
             status.maintenanceMessage == ''
               ? '申し訳ありません、メンテナンス中です。\n復旧までお待ちください。'
               : status.maintenanceMessage,
-            style: Theme.of(context).textTheme.subtitle1,
+            style: Theme.of(context).textTheme.bodyText1,
           ),
         ],
       ),

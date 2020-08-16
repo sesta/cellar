@@ -5,8 +5,9 @@ import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/domain/models/timeline.dart';
 import 'package:cellar/repository/analytics_repository.dart';
 
-import 'package:cellar/app/widget/atoms/badge.dart';
 import 'package:cellar/app/widget/drink_grid.dart';
+import 'package:cellar/app/widget/drink_type_tab_bar.dart';
+import 'package:cellar/app/widget/order_menu.dart';
 
 class AllTimeline extends StatefulWidget {
   AllTimeline({
@@ -37,7 +38,7 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
 
     _tabController = TabController(
       vsync: this,
-      length: _postedDrinkTypeEntries.length + 1,
+      length: _postedDrinkTypes.length + 1,
     );
     _tabController.addListener(() {
       // タブを押した時に連続で発生するので最後の物だけ実行
@@ -47,29 +48,26 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
 
       if (_tabController.index == 0) {
         _updateDrinkType(null);
+        return;
       }
 
-      final drinkType = _postedDrinkTypeEntries.toList()[_tabController.index - 1].value;
+      final drinkType = _postedDrinkTypes[_tabController.index - 1];
       _updateDrinkType(drinkType);
     });
 
     _updateTimeline();
   }
 
-  Iterable<MapEntry<int, DrinkType>> get _postedDrinkTypeEntries {
+  List<DrinkType> get _postedDrinkTypes {
     if (widget.user == null) {
       return DrinkType.values
         .where((drinkType) => _getUploadCount(drinkType) > 0)
-        .toList()
-        .asMap()
-        .entries;
+        .toList();
     }
 
     return widget.user.drinkTypesByMany
       .where((drinkType) => _getUploadCount(drinkType) > 0)
-      .toList()
-      .asMap()
-      .entries;
+      .toList();
   }
 
   Future<void> _updateTimeline({ bool isForceUpdate }) async {
@@ -197,10 +195,21 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(padding: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top),
+        DrinkTypeTabBar(
+          tabController: _tabController,
+          drinkTypeTabs: [
+            DrinkTypeTab(
+              drinkType: null,
+              count: _getUploadCount(null),
+            ),
+            ..._postedDrinkTypes.map((drinkType) =>
+              DrinkTypeTab(
+                drinkType: drinkType,
+                count: _getUploadCount(drinkType),
+              )
+            ).toList(),
+          ],
         ),
-        _drinkTypeList(),
         Expanded(
           child: Stack(
             children: [
@@ -208,15 +217,18 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
                 controller: _tabController,
                 children: [
                   _timeline(null),
-                  ..._postedDrinkTypeEntries
-                    .map((entry) => _timeline(entry.value))
+                  ..._postedDrinkTypes
+                    .map((drinkType) => _timeline(drinkType))
                     .toList()
                 ],
               ),
               Positioned(
                 top: 0,
                 right: 0,
-                child: _orderMenu(),
+                child: OrderMenu(
+                  selectedOrderType: _orderType,
+                  updateOrderType: _updateOrderType,
+                ),
               ),
             ],
           ),
@@ -258,81 +270,4 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
       child: DrinkGrid(drinks: drinks, updateDrink: _updateDrink),
     );
   }
-
-  Widget _drinkTypeList() =>
-    TabBar(
-      controller: _tabController,
-      isScrollable: true,
-      tabs: <Widget>[
-        Tab(
-          child: Row(
-            children: <Widget>[
-              Text(
-                '全て',
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-              Padding(padding: EdgeInsets.only(right: 4)),
-              Badge(_getUploadCount(null).toString()),
-            ],
-          ),
-        ),
-        ..._postedDrinkTypeEntries.map((entry) {
-          final userDrinkType = entry.value;
-
-          return Tab(
-            child: Row(
-              children: <Widget>[
-                Text(
-                  userDrinkType.label,
-                  style: Theme.of(context).textTheme.subtitle2,
-                ),
-                Padding(padding: EdgeInsets.only(right: 4)),
-                Badge(_getUploadCount(userDrinkType).toString()),
-              ],
-            ),
-          );
-        }).toList()
-      ],
-    );
-
-  Widget _orderMenu() =>
-    Container(
-      height: 40,
-      width: 120,
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text(
-            _orderType.label,
-            style: Theme.of(context).textTheme.caption.copyWith(
-              height: 1,
-            ),
-          ),
-
-          PopupMenuButton(
-            onSelected: _updateOrderType,
-            icon: Icon(
-              Icons.sort,
-              size: 20,
-            ),
-            itemBuilder: (BuildContext context) =>
-              OrderType.values.map((orderType) =>
-                PopupMenuItem(
-                  height: 40,
-                  value: orderType,
-                  child: Text(
-                    orderType.label,
-                    style: Theme.of(context).textTheme.caption,
-                  ),
-                )
-              ).toList(),
-          ),
-          Padding(padding: EdgeInsets.only(right: 8)),
-        ],
-      ),
-    );
 }
