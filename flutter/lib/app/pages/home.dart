@@ -107,7 +107,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: bodyWidget,
       bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).accentColor,
         shape: CircularNotchedRectangle(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -178,7 +177,6 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: widget.user == null ? null : _movePostPage,
-        backgroundColor: Theme.of(context).accentColor,
         child: Opacity(
           opacity: widget.user == null ? 0.4 : 1,
           child: Image.asset(

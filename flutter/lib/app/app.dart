@@ -48,7 +48,7 @@ class _CellarState extends State<Cellar> {
     return MaterialApp(
       title: 'Cellar',
       theme: _cellarThemeData,
-      color: Theme.of(context).accentColor,
+      color: Theme.of(context).primaryColor,
       navigatorObservers: [
         AnalyticsRepository().observer,
       ],
@@ -115,7 +115,10 @@ class _CellarState extends State<Cellar> {
 }
 
 ThemeData get _cellarThemeData => ThemeData.dark().copyWith(
-  accentColor: Colors.blueGrey,
+  primaryColor: Colors.blueGrey,
+  primaryColorLight: Colors.blueGrey[200],
+  scaffoldBackgroundColor: Colors.black87,
+  backgroundColor: Colors.black38,
   textTheme: TextTheme(
     headline2: TextStyle(
       fontSize: 24,

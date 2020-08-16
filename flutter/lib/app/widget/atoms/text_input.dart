@@ -35,7 +35,6 @@ class TextInput extends StatelessWidget {
     return TextField(
       controller: controller,
       onChanged: onChanged,
-      cursorColor: Theme.of(context).accentColor,
       style: textStyle,
       maxLines: maxLines,
       keyboardType: keyboardType,

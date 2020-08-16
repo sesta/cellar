@@ -150,7 +150,6 @@ class _SettingState extends State<SettingPage> {
                           fontSize: 14,
                         ),
                       ),
-                      color: Theme.of(context).accentColor,
                       textColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),

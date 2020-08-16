@@ -235,7 +235,6 @@ class _EditPageState extends State<EditPage> {
                         '更新する',
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
-                      color: Theme.of(context).accentColor,
                       textColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),

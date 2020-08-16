@@ -162,7 +162,6 @@ class _DrinkPageState extends State<DrinkPage> {
                       children: <Widget>[
                         Icon(
                           Icons.person,
-                          color: Theme.of(context).accentColor,
                         ),
                         Padding(padding: EdgeInsets.only(right: 4)),
                         Text(
