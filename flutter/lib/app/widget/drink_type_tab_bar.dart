@@ -1,6 +1,8 @@
-import 'package:cellar/app/widget/atoms/badge.dart';
-import 'package:cellar/domain/entity/drink.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cellar/domain/entity/entities.dart';
+
+import 'package:cellar/app/widget/atoms/badge.dart';
 
 class DrinkTypeTab {
   DrinkTypeTab({

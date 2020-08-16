@@ -7,6 +7,7 @@ import 'package:cellar/repository/analytics_repository.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/drink_type_tab_bar.dart';
+import 'package:cellar/app/widget/order_menu.dart';
 
 class AllTimeline extends StatefulWidget {
   AllTimeline({
@@ -228,7 +229,10 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
               Positioned(
                 top: 0,
                 right: 0,
-                child: _orderMenu(),
+                child: OrderMenu(
+                  selectedOrderType: _orderType,
+                  updateOrderType: _updateOrderType,
+                ),
               ),
             ],
           ),
@@ -270,45 +274,4 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
       child: DrinkGrid(drinks: drinks, updateDrink: _updateDrink),
     );
   }
-
-  Widget _orderMenu() =>
-    Container(
-      height: 40,
-      width: 120,
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text(
-            _orderType.label,
-            style: Theme.of(context).textTheme.caption.copyWith(
-              height: 1,
-            ),
-          ),
-
-          PopupMenuButton(
-            onSelected: _updateOrderType,
-            icon: Icon(
-              Icons.sort,
-              size: 20,
-            ),
-            itemBuilder: (BuildContext context) =>
-              OrderType.values.map((orderType) =>
-                PopupMenuItem(
-                  height: 40,
-                  value: orderType,
-                  child: Text(
-                    orderType.label,
-                    style: Theme.of(context).textTheme.caption,
-                  ),
-                )
-              ).toList(),
-          ),
-          Padding(padding: EdgeInsets.only(right: 8)),
-        ],
-      ),
-    );
 }
