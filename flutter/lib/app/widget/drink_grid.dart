@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:animations/animations.dart';
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entity/entities.dart';
@@ -57,77 +58,65 @@ class GridItem extends StatefulWidget {
 }
 
 class _GridItemState extends State<GridItem> with SingleTickerProviderStateMixin {
-  bool _loaded = false;
-  bool _loadedFirst = false;
   AnimationController _animationController;
-  Animation<double> _tweenAnimation;
 
   @override
   initState() {
     super.initState();
 
-    _setAnimation();
-    setState(() {
-      _loaded = widget.drink.thumbImageUrl != null;
-      _loadedFirst = widget.drink.thumbImageUrl != null;
-    });
-
-    if (widget.drink.thumbImageUrl == null) {
-      widget.drink.init().then((_) async {
-         setState(() {});
-         // サムネぐらいは読み込めてることを信じて0.3秒後に表示
-         await Future.delayed(Duration(milliseconds: 300));
-
-         // 表示しようと思ったら別のページになってたりするので、念のためチェック
-         if (!this.mounted) {
-           return;
-         }
-         setState(() {
-           _loaded = true;
-         });
-
-         await _animationController.forward();
-      });
-    }
-  }
-
-  _setAnimation() async {
+    final loaded = widget.drink.thumbImageUrl != null;
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: loaded ? 0 : 500),
     );
-    final Animation curve = CurvedAnimation(parent: _animationController, curve: Curves.easeInOut);
-    _tweenAnimation = Tween(begin: 0.0, end: 1.0)
-      .animate(curve);
-    _tweenAnimation.addListener(() => setState(() {}));
+    if (loaded) {
+      _animationController.forward();
+      return;
+    }
+
+    widget.drink.init().then((_) async {
+       setState(() {});
+       // サムネぐらいは読み込めてることを信じて0.3秒後に表示
+       await Future.delayed(Duration(milliseconds: 300));
+
+       // 表示しようと思ったら別のページになってたりするので、念のためチェック
+       if (!this.mounted) {
+         return;
+       }
+
+       await _animationController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Transform.scale(
-      scale: _loadedFirst ? 1 : _tweenAnimation.value,
-      child: AnimatedOpacity(
-        opacity: _loaded ? 1.0 : 0.0,
-        duration: Duration(milliseconds: 500),
-        child: GridTile(
-          footer: Material(
-            color: Colors.transparent,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))),
-            clipBehavior: Clip.antiAlias,
-            child: Container(
-              color: Colors.black38,
-              padding: EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.drink.drinkName,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                  Padding(padding: EdgeInsets.only(bottom: 4)),
-                  Row(
-                    children: List.generate(5, (i)=> i).map<Widget>((index) =>
+    return FadeScaleTransition(
+      animation: _animationController,
+      child: GridTile(
+        footer: Material(
+          color: Colors.transparent,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))),
+          clipBehavior: Clip.antiAlias,
+          child: Container(
+            color: Colors.black38,
+            padding: EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.drink.drinkName,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+                Padding(padding: EdgeInsets.only(bottom: 4)),
+                Row(
+                  children: List.generate(5, (i)=> i).map<Widget>((index) =>
                       Padding(
                         padding: EdgeInsets.only(right: 4),
                         child: Icon(
@@ -136,25 +125,24 @@ class _GridItemState extends State<GridItem> with SingleTickerProviderStateMixin
                           color: Colors.orangeAccent,
                         ),
                       )
-                    ).toList(),
-                  ),
-                ],
-              ),
+                  ).toList(),
+                ),
+              ],
             ),
           ),
-          child: Material(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-            clipBehavior: Clip.antiAlias,
-            child: Hero(
-              tag: widget.drink.thumbImagePath,
-              child: widget.drink.thumbImageUrl == null
+        ),
+        child: Material(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          clipBehavior: Clip.antiAlias,
+          child: Hero(
+            tag: widget.drink.thumbImagePath,
+            child: widget.drink.thumbImageUrl == null
                 ? Container()
                 : Image(
-                    image: NetworkImage(
-                      widget.drink.thumbImageUrl,
-                    ),
-                    fit: BoxFit.cover,
-                  ),
+              image: NetworkImage(
+                widget.drink.thumbImageUrl,
+              ),
+              fit: BoxFit.cover,
             ),
           ),
         ),
