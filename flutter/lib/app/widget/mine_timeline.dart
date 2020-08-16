@@ -36,7 +36,7 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
 
     _tabController = TabController(
       vsync: this,
-      length: _postedDrinkTypeEntries.length + 1,
+      length: _postedDrinkTypes.length + 1,
     );
     _tabController.addListener(() {
       // タブを押した時に連続で発生するので最後の物だけ実行
@@ -49,19 +49,17 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
         return;
       }
 
-      final drinkType = _postedDrinkTypeEntries.toList()[_tabController.index - 1].value;
+      final drinkType = _postedDrinkTypes[_tabController.index - 1];
       _updateDrinkType(drinkType);
     });
 
     _updateTimeline();
   }
 
-  Iterable<MapEntry<int, DrinkType>> get _postedDrinkTypeEntries =>
+  List<DrinkType> get _postedDrinkTypes =>
     widget.user.drinkTypesByMany
       .where((drinkType) => _getUploadCount(drinkType) > 0)
-      .toList()
-      .asMap()
-      .entries;
+      .toList();
 
   Future<void> _updateTimeline({ bool isForceUpdate }) async {
     if (
@@ -194,10 +192,10 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
               drinkType: null,
               count: _getUploadCount(null),
             ),
-            ..._postedDrinkTypeEntries.map((entry) =>
+            ..._postedDrinkTypes.map((drinkType) =>
               DrinkTypeTab(
-                drinkType: entry.value,
-                count: _getUploadCount(entry.value),
+                drinkType: drinkType,
+                count: _getUploadCount(drinkType),
               )
             ).toList(),
           ],
@@ -209,8 +207,8 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
                 controller: _tabController,
                 children: [
                   _timeline(null),
-                  ..._postedDrinkTypeEntries
-                    .map((entry) => _timeline(entry.value))
+                  ..._postedDrinkTypes
+                    .map((drinkType) => _timeline(drinkType))
                     .toList()
                 ],
               ),

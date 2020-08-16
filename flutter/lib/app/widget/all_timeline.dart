@@ -38,7 +38,7 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
 
     _tabController = TabController(
       vsync: this,
-      length: _postedDrinkTypeEntries.length + 1,
+      length: _postedDrinkTypes.length + 1,
     );
     _tabController.addListener(() {
       // タブを押した時に連続で発生するので最後の物だけ実行
@@ -51,27 +51,23 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
         return;
       }
 
-      final drinkType = _postedDrinkTypeEntries.toList()[_tabController.index - 1].value;
+      final drinkType = _postedDrinkTypes[_tabController.index - 1];
       _updateDrinkType(drinkType);
     });
 
     _updateTimeline();
   }
 
-  Iterable<MapEntry<int, DrinkType>> get _postedDrinkTypeEntries {
+  List<DrinkType> get _postedDrinkTypes {
     if (widget.user == null) {
       return DrinkType.values
         .where((drinkType) => _getUploadCount(drinkType) > 0)
-        .toList()
-        .asMap()
-        .entries;
+        .toList();
     }
 
     return widget.user.drinkTypesByMany
       .where((drinkType) => _getUploadCount(drinkType) > 0)
-      .toList()
-      .asMap()
-      .entries;
+      .toList();
   }
 
   Future<void> _updateTimeline({ bool isForceUpdate }) async {
@@ -206,10 +202,10 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
               drinkType: null,
               count: _getUploadCount(null),
             ),
-            ..._postedDrinkTypeEntries.map((entry) =>
+            ..._postedDrinkTypes.map((drinkType) =>
               DrinkTypeTab(
-                drinkType: entry.value,
-                count: _getUploadCount(entry.value),
+                drinkType: drinkType,
+                count: _getUploadCount(drinkType),
               )
             ).toList(),
           ],
@@ -221,8 +217,8 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
                 controller: _tabController,
                 children: [
                   _timeline(null),
-                  ..._postedDrinkTypeEntries
-                    .map((entry) => _timeline(entry.value))
+                  ..._postedDrinkTypes
+                    .map((drinkType) => _timeline(drinkType))
                     .toList()
                 ],
               ),
