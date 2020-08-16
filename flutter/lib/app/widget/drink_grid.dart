@@ -6,15 +6,16 @@ import 'package:cellar/domain/entity/entities.dart';
 
 class DrinkGrid extends StatelessWidget {
   final List<Drink> drinks;
-  final updateDrink;
   DrinkGrid({
     @required this.drinks,
-    @required this.updateDrink,
   });
 
   _pop(BuildContext context, int index, Drink drink) async {
-    await Navigator.of(context).pushNamed('/drink', arguments: drink);
-    updateDrink();
+    final isDelete = await Navigator.of(context).pushNamed('/drink', arguments: drink);
+
+    if (isDelete) {
+      Navigator.of(context).pushReplacementNamed('/home');
+    }
   }
 
   @override

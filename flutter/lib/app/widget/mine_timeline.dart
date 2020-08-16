@@ -159,11 +159,6 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
     _updateTimeline();
   }
 
-  _updateDrink() {
-    // editなどによるDrinkの更新を反映させるため
-    setState(() {});
-  }
-
   int _getUploadCount(DrinkType drinkType) {
     if (drinkType == null) {
       return widget.user.uploadCount;
@@ -259,7 +254,7 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
 
     return RefreshIndicator(
       onRefresh: _refresh,
-      child: DrinkGrid(drinks: drinks, updateDrink: _updateDrink),
+      child: DrinkGrid(drinks: drinks),
     );
   }
 }
