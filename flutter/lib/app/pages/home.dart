@@ -248,12 +248,37 @@ class _HomePageState extends State<HomePage> {
               _enableAppleSignIn
                 ? Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child: AppleSignInButton(
+                    child: Container(
+                      width: 240,
+                      height: 40,
+                      child: RaisedButton(
                         onPressed: () => _signIn(AuthType.Apple),
-                        style: AppleButtonStyle.white,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/apple-logo.png',
+                              width: 18,
+                            ),
+                            Padding(padding: EdgeInsets.only(right: 8)),
+                            Text(
+                              'Sign in with Apple',
+                              style: TextStyle(
+                                fontSize: 17,
+                              ),
+                            ),
+                          ],
+                        ),
+                        color: Colors.white,
+                        textColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
+                    ),
                   )
                 : Container(height: 0),
+
               GoogleSignInButton(
                 onPressed: () => _signIn(AuthType.Google),
               ),
