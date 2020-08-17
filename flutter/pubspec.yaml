@@ -28,7 +28,6 @@ dependencies:
   cached_network_image: ^2.2.0+1
   permission_handler: 5.0.1+1
   url_launcher: ^5.5.0
-  flutter_auth_buttons: ^0.8.0
   lottie: ^0.5.1
   animations: ^1.1.2
 
@@ -48,4 +47,6 @@ flutter:
   assets:
     - assets/images/icon.png
     - assets/images/upload-icon.png
+    - assets/images/apple-logo.png
+    - assets/images/google-logo.png
     - assets/lottie/loading.json

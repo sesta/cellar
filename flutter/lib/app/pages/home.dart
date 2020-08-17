@@ -2,7 +2,6 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
@@ -66,6 +65,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _signIn(AuthType authType) async {
+    setState(() {
+      this._loadingSignIn = true;
+    });
     final userId = await AuthRepository().signIn(authType);
     if (userId == null) {
       print('SignInに失敗しました');
@@ -247,15 +249,65 @@ class _HomePageState extends State<HomePage> {
 
               _enableAppleSignIn
                 ? Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: AppleSignInButton(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: Container(
+                      width: 250,
+                      height: 40,
+                      child: RaisedButton(
                         onPressed: () => _signIn(AuthType.Apple),
-                        style: AppleButtonStyle.white,
+                        child: Row(
+                          children: [
+                            Padding(padding: EdgeInsets.only(left: 4)),
+                            Image.asset(
+                              'assets/images/apple-logo.png',
+                              width: 18,
+                            ),
+                            Padding(padding: EdgeInsets.only(right: 24)),
+                            Text(
+                              'Sign in with Apple',
+                              style: TextStyle(
+                                fontSize: 17,
+                              ),
+                            ),
+                          ],
+                        ),
+                        color: Colors.white,
+                        textColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
+                    ),
                   )
                 : Container(height: 0),
-              GoogleSignInButton(
-                onPressed: () => _signIn(AuthType.Google),
+
+              Container(
+                width: 250,
+                height: 40,
+                child: RaisedButton(
+                  onPressed: () => _signIn(AuthType.Google),
+                  child: Row(
+                    children: [
+                      Padding(padding: EdgeInsets.only(left: 4)),
+                      Image.asset(
+                        'assets/images/google-logo.png',
+                        width: 18,
+                      ),
+                      Padding(padding: EdgeInsets.only(right: 24)),
+                      Text(
+                        'Sign in with Google',
+                        style: TextStyle(
+                          fontSize: 17,
+                        ),
+                      ),
+                    ],
+                  ),
+                  color: Colors.white,
+                  textColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
               ),
               Padding(padding: EdgeInsets.only(bottom: 32)),
 
