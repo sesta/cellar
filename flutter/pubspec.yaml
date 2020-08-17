@@ -49,4 +49,5 @@ flutter:
     - assets/images/icon.png
     - assets/images/upload-icon.png
     - assets/images/apple-logo.png
+    - assets/images/google-logo.png
     - assets/lottie/loading.json

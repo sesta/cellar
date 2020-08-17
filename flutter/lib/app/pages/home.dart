@@ -247,20 +247,20 @@ class _HomePageState extends State<HomePage> {
 
               _enableAppleSignIn
                 ? Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
+                    padding: const EdgeInsets.only(bottom: 16.0),
                     child: Container(
-                      width: 240,
+                      width: 250,
                       height: 40,
                       child: RaisedButton(
                         onPressed: () => _signIn(AuthType.Apple),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Padding(padding: EdgeInsets.only(left: 4)),
                             Image.asset(
                               'assets/images/apple-logo.png',
                               width: 18,
                             ),
-                            Padding(padding: EdgeInsets.only(right: 8)),
+                            Padding(padding: EdgeInsets.only(right: 24)),
                             Text(
                               'Sign in with Apple',
                               style: TextStyle(
@@ -279,8 +279,33 @@ class _HomePageState extends State<HomePage> {
                   )
                 : Container(height: 0),
 
-              GoogleSignInButton(
-                onPressed: () => _signIn(AuthType.Google),
+              Container(
+                width: 250,
+                height: 40,
+                child: RaisedButton(
+                  onPressed: () => _signIn(AuthType.Google),
+                  child: Row(
+                    children: [
+                      Padding(padding: EdgeInsets.only(left: 4)),
+                      Image.asset(
+                        'assets/images/google-logo.png',
+                        width: 18,
+                      ),
+                      Padding(padding: EdgeInsets.only(right: 24)),
+                      Text(
+                        'Sign in with Google',
+                        style: TextStyle(
+                          fontSize: 17,
+                        ),
+                      ),
+                    ],
+                  ),
+                  color: Colors.white,
+                  textColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
               ),
               Padding(padding: EdgeInsets.only(bottom: 32)),
 
