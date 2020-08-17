@@ -2,7 +2,6 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
@@ -66,6 +65,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _signIn(AuthType authType) async {
+    setState(() {
+      this._loadingSignIn = true;
+    });
     final userId = await AuthRepository().signIn(authType);
     if (userId == null) {
       print('SignInに失敗しました');
