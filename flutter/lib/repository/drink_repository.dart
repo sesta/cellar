@@ -180,11 +180,11 @@ class DrinkRepository extends DB {
     switch(rawSubDrinkType) {
       case 'SubDrinkType.SakeDaiginjo': return SubDrinkType.SakeDaiginjo;
       case 'SubDrinkType.SakeGinjo': return SubDrinkType.SakeGinjo;
-      case 'SubDrinkType.SakeTokubetuHonzoj': return SubDrinkType.SakeTokubetuHonzojo;
+      case 'SubDrinkType.SakeTokubetuHonzojo': return SubDrinkType.SakeTokubetuHonzojo;
       case 'SubDrinkType.SakeHonzojo': return SubDrinkType.SakeHonzojo;
       case 'SubDrinkType.SakeJunmaiDaiginjo': return SubDrinkType.SakeJunmaiDaiginjo;
       case 'SubDrinkType.SakeJunmaiGinjo': return SubDrinkType.SakeJunmaiGinjo;
-      case 'SubDrinkType.SakeTokubetsuJunma': return SubDrinkType.SakeTokubetsuJunmai;
+      case 'SubDrinkType.SakeTokubetsuJunmai': return SubDrinkType.SakeTokubetsuJunmai;
       case 'SubDrinkType.SakeJunmai': return SubDrinkType.SakeJunmai;
       case 'SubDrinkType.ShochuKome': return SubDrinkType.ShochuKome;
       case 'SubDrinkType.ShochuMugi': return SubDrinkType.ShochuMugi;
