@@ -42,6 +42,7 @@ class _EditPageState extends State<EditPage> {
     _nameController.text = widget.drink.drinkName;
     _memoController.text = widget.drink.memo;
     _placeController.text = widget.drink.place;
+    _originController.text = widget.drink.origin;
     if (widget.drink.price > 0) {
       _priceController.text = widget.drink.price.toString();
     }
@@ -106,6 +107,7 @@ class _EditPageState extends State<EditPage> {
       _memoController.text,
       _priceController.text == '' ? 0 : int.parse(_priceController.text),
       _placeController.text,
+      _originController.text,
     );
     if (_drinkType != oldDrinkType) {
       await widget.user.moveUploadCount(oldDrinkType, _drinkType);

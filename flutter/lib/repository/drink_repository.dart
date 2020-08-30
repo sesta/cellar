@@ -21,6 +21,7 @@ class DrinkRepository extends DB {
         'memo': drink.memo,
         'price': drink.price,
         'place': drink.place,
+        'origin': drink.origin,
         'postTimestamp': drink.postDatetime.millisecondsSinceEpoch,
         'thumbImagePath': drink.thumbImagePath,
         'imagePaths': drink.imagePaths,
@@ -93,6 +94,7 @@ class DrinkRepository extends DB {
         'memo': drink.memo,
         'price': drink.price,
         'place': drink.place,
+        'origin': drink.origin,
       });
   }
 
@@ -139,6 +141,7 @@ class DrinkRepository extends DB {
         data['memo'],
         data['price'],
         data['place'],
+        data['origin'] == null ? '' : data['origin'],
         DateTime.fromMicrosecondsSinceEpoch(data['postTimestamp'] * 1000),
         data['thumbImagePath'],
         data['imagePaths'].cast<String>(),

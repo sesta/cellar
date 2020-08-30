@@ -190,6 +190,7 @@ class _PostPageState extends State<PostPage> {
       _memoController.text,
       _priceController.text == '' ? 0 : int.parse(_priceController.text),
       _placeController.text,
+      _originController.text,
     );
 
     await widget.user.incrementUploadCount(_drinkType);
