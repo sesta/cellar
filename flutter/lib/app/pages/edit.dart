@@ -33,6 +33,7 @@ class _EditPageState extends State<EditPage> {
   final _memoController = TextEditingController();
   final _priceController = TextEditingController();
   final _placeController = TextEditingController();
+  final _originController = TextEditingController();
 
   @override
   initState() {
@@ -41,6 +42,7 @@ class _EditPageState extends State<EditPage> {
     _nameController.text = widget.drink.drinkName;
     _memoController.text = widget.drink.memo;
     _placeController.text = widget.drink.place;
+    _originController.text = widget.drink.origin;
     if (widget.drink.price > 0) {
       _priceController.text = widget.drink.price.toString();
     }
@@ -105,6 +107,7 @@ class _EditPageState extends State<EditPage> {
       _memoController.text,
       _priceController.text == '' ? 0 : int.parse(_priceController.text),
       _placeController.text,
+      _originController.text,
     );
     if (_drinkType != oldDrinkType) {
       await widget.user.moveUploadCount(oldDrinkType, _drinkType);
@@ -199,6 +202,7 @@ class _EditPageState extends State<EditPage> {
                   nameController: _nameController,
                   priceController: _priceController,
                   placeController: _placeController,
+                  originController: _originController,
                   memoController: _memoController,
                   score: _score,
                   drinkType: _drinkType,

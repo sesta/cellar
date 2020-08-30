@@ -17,6 +17,7 @@ Future<void> post(
   String memo,
   int price,
   String place,
+  String origin,
 ) async {
   final nowDatetime = DateTime.now();
   final imageDirectory = '$BASE_IMAGE_PATH/${user.userId}/${nowDatetime.millisecondsSinceEpoch}';
@@ -47,6 +48,7 @@ Future<void> post(
     memo,
     price,
     place,
+    origin,
     nowDatetime,
     thumbImagePath,
     imagePaths,

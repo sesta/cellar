@@ -14,6 +14,7 @@ class Drink {
   String memo;
   int price;
   String place;
+  String origin;
   DateTime postDatetime;
 
   String thumbImagePath;
@@ -34,6 +35,7 @@ class Drink {
     this.memo,
     this.price,
     this.place,
+    this.origin,
     this.postDatetime,
     this.thumbImagePath,
     this.imagePaths,
@@ -78,6 +80,7 @@ class Drink {
     String memo,
     int price,
     String place,
+    String origin,
   ) async{
     if (drinkId == null) {
       throw '更新するためにはdrinkIdが必要です';
@@ -91,6 +94,7 @@ class Drink {
     this.memo = memo;
     this.price = price;
     this.place = place;
+    this.origin = origin;
 
     await DrinkRepository().updateDrink(this);
   }

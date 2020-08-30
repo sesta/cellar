@@ -12,6 +12,7 @@ class DrinkForm extends StatelessWidget {
     @required this.nameController,
     @required this.priceController,
     @required this.placeController,
+    @required this.originController,
     @required this.memoController,
     @required this.score,
     @required this.drinkType,
@@ -28,6 +29,7 @@ class DrinkForm extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController priceController;
   final TextEditingController placeController;
+  final TextEditingController originController;
   final TextEditingController memoController;
   final int score;
   final DrinkType drinkType;
@@ -224,6 +226,28 @@ class DrinkForm extends StatelessWidget {
                       placeController,
                       textStyle: Theme.of(context).textTheme.subtitle1,
                       placeholder: 'Amazon、飲食店、プレゼント',
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 24)),
+
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '原産地',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    TextInput(
+                      originController,
+                      textStyle: Theme.of(context).textTheme.subtitle1,
+                      placeholder: 'イタリア、新潟',
                     ),
                   ],
                 ),

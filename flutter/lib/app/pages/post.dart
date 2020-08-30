@@ -37,6 +37,7 @@ class _PostPageState extends State<PostPage> {
   final _memoController = TextEditingController();
   final _priceController = TextEditingController();
   final _placeController = TextEditingController();
+  final _originController = TextEditingController();
 
   @override
   initState() {
@@ -189,6 +190,7 @@ class _PostPageState extends State<PostPage> {
       _memoController.text,
       _priceController.text == '' ? 0 : int.parse(_priceController.text),
       _placeController.text,
+      _originController.text,
     );
 
     await widget.user.incrementUploadCount(_drinkType);
@@ -233,6 +235,7 @@ class _PostPageState extends State<PostPage> {
                   nameController: _nameController,
                   priceController: _priceController,
                   placeController: _placeController,
+                  originController: _originController,
                   memoController: _memoController,
                   score: _score,
                   drinkType: _drinkType,
