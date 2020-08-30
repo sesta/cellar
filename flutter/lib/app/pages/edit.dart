@@ -33,6 +33,7 @@ class _EditPageState extends State<EditPage> {
   final _memoController = TextEditingController();
   final _priceController = TextEditingController();
   final _placeController = TextEditingController();
+  final _originController = TextEditingController();
 
   @override
   initState() {
@@ -199,6 +200,7 @@ class _EditPageState extends State<EditPage> {
                   nameController: _nameController,
                   priceController: _priceController,
                   placeController: _placeController,
+                  originController: _originController,
                   memoController: _memoController,
                   score: _score,
                   drinkType: _drinkType,
