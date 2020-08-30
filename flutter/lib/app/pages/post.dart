@@ -386,7 +386,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                         height: 28,
                         width: 28,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColorDark,
+                          color: Colors.black,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: SizedBox(
