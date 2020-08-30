@@ -8,11 +8,13 @@ import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/mine_timeline.dart';
 import 'package:cellar/app/widget/all_timeline.dart';
+import 'package:cellar/app/widget/summary.dart';
 import 'package:cellar/app/widget/setting.dart';
 
 enum BottomSelectType {
   TimelineMine,
   TimelineAll,
+  Summary,
   Setting
 }
 
@@ -112,6 +114,10 @@ class _HomePageState extends State<HomePage> {
           user: widget.user,
           status: widget.status,
         );
+      case BottomSelectType.Summary:
+        return Summary(
+          user: widget.user,
+        );
       case BottomSelectType.Setting:
         return Setting(
           user: widget.user,
@@ -190,7 +196,24 @@ class _HomePageState extends State<HomePage> {
               ),
               Expanded(
                 flex: 1,
-                child: Container(height: 0),
+                child: widget.user == null
+                    ? Container(height: 0)
+                    : IconButton(
+                  onPressed: () {
+                    if (_bottomSelectType == BottomSelectType.Summary) {
+                      return;
+                    }
+
+                    _updateBottomSelectType(BottomSelectType.Summary);
+                  },
+                  icon: Icon(
+                    Icons.equalizer,
+                    size: 32,
+                    color: _bottomSelectType == BottomSelectType.Summary
+                        ? Colors.white
+                        : Theme.of(context).disabledColor,
+                  ),
+                ),
               ),
               Expanded(
                 flex: 1,
