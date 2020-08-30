@@ -31,8 +31,8 @@ class _SummaryState extends State<Summary> {
   }
 
   List<charts.Series<_ChartData, int>> get _seriesList {
-    final List<_ChartData> data = widget.user.uploadCounts.entries
-      .map((entry) => _ChartData(entry.key, entry.value))
+    final List<_ChartData> data = widget.user.drinkTypesByMany
+      .map((drinkType) => _ChartData(drinkType, widget.user.uploadCounts[drinkType]))
       .where((chartData) => chartData.uploadCount > 0)
       .toList();
 
@@ -42,25 +42,55 @@ class _SummaryState extends State<Summary> {
         domainFn: (_ChartData chartData, _) => chartData.drinkType.index,
         measureFn: (_ChartData chartData, _) => chartData.uploadCount,
         data: data,
-        labelAccessorFn: (_ChartData chartData, _) => chartData.drinkType.label,
+        labelAccessorFn: (_ChartData chartData, _) {
+          final rate = (chartData.uploadCount/widget.user.uploadCount*100).toStringAsFixed(0);
+          return '${chartData.drinkType.label}\n$rate%';
+        },
+        colorFn: (_ChartData chartData, _) => charts.ColorUtil.fromDartColor(
+          Theme.of(context).backgroundColor,
+        ),
+        outsideLabelStyleAccessorFn: (_ChartData chartData, _) => charts.TextStyleSpec(
+          color: charts.MaterialPalette.white
+        ),
       )
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: charts.PieChart(
-        _seriesList,
-        animate: true,
-        defaultRenderer: charts.ArcRendererConfig(
-          arcRendererDecorators: [
-            charts.ArcLabelDecorator(
-              labelPosition: charts.ArcLabelPosition.inside,
-            )
-          ]
+    return SingleChildScrollView(
+      child: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        padding: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).padding.top + 32,
+          horizontal: 32,
         ),
-      )
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '種類ごとの投稿の割合',
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 8)),
+
+            Container(
+              height: 280,
+              child: charts.PieChart(
+                _seriesList,
+                animate: true,
+                defaultRenderer: charts.ArcRendererConfig(
+                  arcRendererDecorators: [
+                    charts.ArcLabelDecorator()
+                  ],
+                  strokeWidthPx: 1,
+                ),
+              ),
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 400)),
+          ],
+        )
+      ),
     );
   }
 }
