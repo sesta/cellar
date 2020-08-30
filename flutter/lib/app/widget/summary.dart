@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/drink_repository.dart';
@@ -17,40 +18,76 @@ class Summary extends StatefulWidget {
 }
 
 class _SummaryState extends State<Summary> {
-  List<Drink> drinks = [];
+  List<Drink> _drinks = [];
+  Map<DrinkType, double> scoreAverageMap= {};
+
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
 
-    DrinkRepository().getUserAllDrinks(widget.user.userId).then((drinks) {
-      setState(() {
-        this.drinks = drinks;
-      });
+    _calc();
+  }
+
+  Future<void> _calc() async {
+    _drinks = await DrinkRepository().getUserAllDrinks(widget.user.userId);
+
+    _drinks.forEach((drink) {
+      if (scoreAverageMap[drink.drinkType] == null) {
+        scoreAverageMap[drink.drinkType] = 0;
+      }
+
+      scoreAverageMap[drink.drinkType] += drink.score;
+    });
+
+    scoreAverageMap.forEach((key, value) {
+      scoreAverageMap[key] /= widget.user.uploadCounts[key];
+    });
+
+    setState(() {
+      loading = false;
     });
   }
 
-  List<charts.Series<_ChartData, int>> get _seriesList {
-    final List<_ChartData> data = widget.user.drinkTypesByMany
-      .map((drinkType) => _ChartData(drinkType, widget.user.uploadCounts[drinkType]))
-      .where((chartData) => chartData.uploadCount > 0)
+  List<charts.Series<DrinkType, String>> get _postCountRateData {
+    final List<DrinkType> data = widget.user.drinkTypesByMany
+      .where((drinkType) => widget.user.uploadCounts[drinkType] > 0)
       .toList();
 
     return [
-      charts.Series<_ChartData, int>(
+      charts.Series<DrinkType, String>(
         id: 'Drinks',
-        domainFn: (_ChartData chartData, _) => chartData.drinkType.index,
-        measureFn: (_ChartData chartData, _) => chartData.uploadCount,
+        domainFn: (drinkType, _) => drinkType.label,
+        measureFn: (drinkType, _) => widget.user.uploadCounts[drinkType],
         data: data,
-        labelAccessorFn: (_ChartData chartData, _) {
-          final rate = (chartData.uploadCount/widget.user.uploadCount*100).toStringAsFixed(0);
-          return '${chartData.drinkType.label}\n$rate%';
+        labelAccessorFn: (drinkType, _) {
+          final rate = (widget.user.uploadCounts[drinkType]/widget.user.uploadCount*100).toStringAsFixed(0);
+          return '${drinkType.label}\n$rate%';
         },
-        colorFn: (_ChartData chartData, _) => charts.ColorUtil.fromDartColor(
-          Theme.of(context).backgroundColor,
+        colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
+          Theme.of(context).primaryColorDark,
         ),
-        outsideLabelStyleAccessorFn: (_ChartData chartData, _) => charts.TextStyleSpec(
+        outsideLabelStyleAccessorFn: (drinkType, _) => charts.TextStyleSpec(
           color: charts.MaterialPalette.white
+        ),
+      )
+    ];
+  }
+
+  List<charts.Series<DrinkType, String>> get _scoreAverageData {
+    final List<DrinkType> data = widget.user.drinkTypesByMany
+        .where((drinkType) => widget.user.uploadCounts[drinkType] > 0)
+        .toList();
+
+    return [
+      charts.Series<DrinkType, String>(
+        id: 'Drinks',
+        domainFn: (drinkType, _) => '${drinkType.label}\n${scoreAverageMap[drinkType]}',
+        measureFn: (drinkType, _) => scoreAverageMap[drinkType],
+        data: data,
+        colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
+          Theme.of(context).primaryColorDark,
         ),
       )
     ];
@@ -69,15 +106,14 @@ class _SummaryState extends State<Summary> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '種類ごとの投稿の割合',
+              '投稿率',
               style: Theme.of(context).textTheme.subtitle1,
             ),
-            Padding(padding: EdgeInsets.only(bottom: 8)),
-
+            Padding(padding: EdgeInsets.only(bottom: 16)),
             Container(
               height: 280,
               child: charts.PieChart(
-                _seriesList,
+                _postCountRateData,
                 animate: true,
                 defaultRenderer: charts.ArcRendererConfig(
                   arcRendererDecorators: [
@@ -87,22 +123,49 @@ class _SummaryState extends State<Summary> {
                 ),
               ),
             ),
-            Padding(padding: EdgeInsets.only(bottom: 400)),
+            Padding(padding: EdgeInsets.only(bottom: 32)),
+
+            Text(
+              'スコア',
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 16)),
+            Container(
+              height: 200,
+              child: loading
+                ? Center(
+                    child: Lottie.asset(
+                      'assets/lottie/loading.json',
+                      width: 80,
+                      height: 80,
+                    ),
+                  )
+                : charts.BarChart(
+                    _scoreAverageData,
+                    animate: true,
+                    domainAxis: charts.OrdinalAxisSpec(
+                      renderSpec: charts.SmallTickRendererSpec(
+                        labelStyle: charts.TextStyleSpec(
+                          color: charts.MaterialPalette.white
+                        ),
+                      ),
+                    ),
+                    primaryMeasureAxis: charts.NumericAxisSpec(
+                      tickProviderSpec: charts.BasicNumericTickProviderSpec(
+                        desiredTickCount: 6
+                      ),
+                      renderSpec: charts.GridlineRendererSpec(
+                        labelStyle: charts.TextStyleSpec(
+                          color: charts.MaterialPalette.white
+                        ),
+                      ),
+                    ),
+              ),
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 200)),
           ],
         )
       ),
     );
-  }
-}
-
-class _ChartData {
-  final DrinkType drinkType;
-  final int uploadCount;
-
-  _ChartData(this.drinkType, this.uploadCount);
-
-  @override
-  String toString() {
-    return '$drinkType : $uploadCount';
   }
 }
