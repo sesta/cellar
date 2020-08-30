@@ -80,6 +80,16 @@ class DrinkRepository extends DB {
     return _toEntities(snapshot.documents);
   }
 
+  Future<List<Drink>> getUserAllDrinks (
+    String userId,
+  ) async {
+    final snapshot = await db.collection(DRINK_COLLECTION_NAME)
+      .where('userId', isEqualTo: userId)
+      .getDocuments();
+
+    return _toEntities(snapshot.documents);
+  }
+
   Future<void> updateDrink (
     Drink drink,
   ) async {
