@@ -63,7 +63,7 @@ class _SummaryState extends State<Summary> {
         data: data,
         labelAccessorFn: (drinkType, _) {
           final rate = (widget.user.uploadCounts[drinkType]/widget.user.uploadCount*100).toStringAsFixed(0);
-          return '${drinkType.label}\n$rate%';
+          return '$rate%\n${drinkType.label}';
         },
         colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
           Theme.of(context).primaryColorDark,
@@ -83,7 +83,7 @@ class _SummaryState extends State<Summary> {
     return [
       charts.Series<DrinkType, String>(
         id: 'Drinks',
-        domainFn: (drinkType, _) => '${drinkType.label}\n${scoreAverageMap[drinkType].toStringAsFixed(1)}',
+        domainFn: (drinkType, _) => '${scoreAverageMap[drinkType].toStringAsFixed(1)}\n${drinkType.label}',
         measureFn: (drinkType, _) => scoreAverageMap[drinkType],
         data: data,
         colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
