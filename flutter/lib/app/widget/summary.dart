@@ -112,17 +112,25 @@ class _SummaryState extends State<Summary> {
             Padding(padding: EdgeInsets.only(bottom: 16)),
             Container(
               height: 280,
-              child: charts.PieChart(
-                _postCountRateData,
-                animate: true,
-                defaultRenderer: charts.ArcRendererConfig(
-                  arcRendererDecorators: [
-                    charts.ArcLabelDecorator()
-                  ],
-                  strokeWidthPx: 1,
+              child: loading
+                ? Center(
+                    child: Lottie.asset(
+                      'assets/lottie/loading.json',
+                      width: 80,
+                      height: 80,
+                    ),
+                  )
+                : charts.PieChart(
+                    _postCountRateData,
+                    animate: true,
+                    defaultRenderer: charts.ArcRendererConfig(
+                      arcRendererDecorators: [
+                        charts.ArcLabelDecorator()
+                      ],
+                      strokeWidthPx: 1,
+                    ),
+                  ),
                 ),
-              ),
-            ),
             Padding(padding: EdgeInsets.only(bottom: 32)),
 
             Text(
@@ -162,7 +170,7 @@ class _SummaryState extends State<Summary> {
                     ),
               ),
             ),
-            Padding(padding: EdgeInsets.only(bottom: 200)),
+            Padding(padding: EdgeInsets.only(bottom: 100)),
           ],
         )
       ),
