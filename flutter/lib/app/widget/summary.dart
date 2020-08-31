@@ -95,84 +95,86 @@ class _SummaryState extends State<Summary> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        padding: EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).padding.top + 32,
-          horizontal: 32,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '投稿の割合',
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 16)),
-            Container(
-              height: 280,
-              child: loading
-                ? Center(
-                    child: Lottie.asset(
-                      'assets/lottie/loading.json',
-                      width: 80,
-                      height: 80,
-                    ),
-                  )
-                : charts.PieChart(
-                    _postCountRateData,
-                    animate: true,
-                    defaultRenderer: charts.ArcRendererConfig(
-                      arcRendererDecorators: [
-                        charts.ArcLabelDecorator()
-                      ],
-                      strokeWidthPx: 1,
+    return Container(
+      alignment: Alignment.topLeft,
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            vertical: MediaQuery.of(context).padding.top + 32,
+            horizontal: 32,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '投稿の割合',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 16)),
+              Container(
+                height: 280,
+                child: loading
+                  ? Center(
+                      child: Lottie.asset(
+                        'assets/lottie/loading.json',
+                        width: 80,
+                        height: 80,
+                      ),
+                    )
+                  : charts.PieChart(
+                      _postCountRateData,
+                      animate: true,
+                      defaultRenderer: charts.ArcRendererConfig(
+                        arcRendererDecorators: [
+                          charts.ArcLabelDecorator()
+                        ],
+                        strokeWidthPx: 1,
+                      ),
                     ),
                   ),
-                ),
-            Padding(padding: EdgeInsets.only(bottom: 32)),
+              Padding(padding: EdgeInsets.only(bottom: 32)),
 
-            Text(
-              'スコア',
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 16)),
-            Container(
-              height: 200,
-              child: loading
-                ? Center(
-                    child: Lottie.asset(
-                      'assets/lottie/loading.json',
-                      width: 80,
-                      height: 80,
-                    ),
-                  )
-                : charts.BarChart(
-                    _scoreAverageData,
-                    animate: true,
-                    domainAxis: charts.OrdinalAxisSpec(
-                      renderSpec: charts.SmallTickRendererSpec(
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.MaterialPalette.white
-                        ),
-                      ),
-                    ),
-                    primaryMeasureAxis: charts.NumericAxisSpec(
-                      tickProviderSpec: charts.BasicNumericTickProviderSpec(
-                        desiredTickCount: 6
-                      ),
-                      renderSpec: charts.GridlineRendererSpec(
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.MaterialPalette.white
-                        ),
-                      ),
-                    ),
+              Text(
+                'スコア',
+                style: Theme.of(context).textTheme.subtitle1,
               ),
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 100)),
-          ],
-        )
+              Padding(padding: EdgeInsets.only(bottom: 16)),
+              Container(
+                height: 200,
+                child: loading
+                  ? Center(
+                      child: Lottie.asset(
+                        'assets/lottie/loading.json',
+                        width: 80,
+                        height: 80,
+                      ),
+                    )
+                  : charts.BarChart(
+                      _scoreAverageData,
+                      animate: true,
+                      domainAxis: charts.OrdinalAxisSpec(
+                        renderSpec: charts.SmallTickRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                            color: charts.MaterialPalette.white
+                          ),
+                        ),
+                      ),
+                      primaryMeasureAxis: charts.NumericAxisSpec(
+                        tickProviderSpec: charts.BasicNumericTickProviderSpec(
+                          desiredTickCount: 6
+                        ),
+                        renderSpec: charts.GridlineRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                            color: charts.MaterialPalette.white
+                          ),
+                        ),
+                      ),
+                ),
+              ),
+            ],
+          )
+        ),
       ),
     );
   }
