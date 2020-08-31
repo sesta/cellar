@@ -106,7 +106,7 @@ class _SummaryState extends State<Summary> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '投稿率',
+              '投稿の割合',
               style: Theme.of(context).textTheme.subtitle1,
             ),
             Padding(padding: EdgeInsets.only(bottom: 16)),
