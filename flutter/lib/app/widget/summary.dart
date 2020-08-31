@@ -95,6 +95,18 @@ class _SummaryState extends State<Summary> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.user.uploadCount == 0) {
+      return Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: Center(
+          child: Text(
+            '飲んだお酒を投稿してみましょう',
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+        ),
+      );
+    }
+
     return Container(
       alignment: Alignment.topLeft,
       color: Theme.of(context).scaffoldBackgroundColor,
