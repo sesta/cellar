@@ -246,6 +246,7 @@ class _EditPageState extends State<EditPage> {
                     ),
                   ],
                 ),
+                Padding(padding: EdgeInsets.only(bottom: 64)),
               ],
             ),
           ),
