@@ -195,6 +195,28 @@ class DrinkForm extends StatelessWidget {
 
           Row(
             children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '原産地',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    TextInput(
+                      originController,
+                      textStyle: Theme.of(context).textTheme.subtitle1,
+                      placeholder: 'イタリア、新潟',
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 24)),
+
+          Row(
+            children: <Widget>[
               Container(
                 width: 104,
                 child: Column(
@@ -226,28 +248,6 @@ class DrinkForm extends StatelessWidget {
                       placeController,
                       textStyle: Theme.of(context).textTheme.subtitle1,
                       placeholder: 'Amazon、飲食店、プレゼント',
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Padding(padding: EdgeInsets.only(bottom: 24)),
-
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '原産地',
-                      style: Theme.of(context).textTheme.subtitle2,
-                    ),
-                    TextInput(
-                      originController,
-                      textStyle: Theme.of(context).textTheme.subtitle1,
-                      placeholder: 'イタリア、新潟',
                     ),
                   ],
                 ),
