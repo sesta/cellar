@@ -83,7 +83,7 @@ class _SummaryState extends State<Summary> {
     return [
       charts.Series<DrinkType, String>(
         id: 'Drinks',
-        domainFn: (drinkType, _) => '${drinkType.label}\n${scoreAverageMap[drinkType]}',
+        domainFn: (drinkType, _) => '${drinkType.label}\n${scoreAverageMap[drinkType].toStringAsFixed(1)}',
         measureFn: (drinkType, _) => scoreAverageMap[drinkType],
         data: data,
         colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
