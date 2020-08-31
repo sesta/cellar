@@ -63,7 +63,7 @@ class _SummaryState extends State<Summary> {
         data: data,
         labelAccessorFn: (drinkType, _) {
           final rate = (widget.user.uploadCounts[drinkType]/widget.user.uploadCount*100).toStringAsFixed(0);
-          return '${drinkType.label}\n$rate%';
+          return '$rate%\n${drinkType.label}';
         },
         colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
           Theme.of(context).primaryColorDark,
@@ -83,7 +83,7 @@ class _SummaryState extends State<Summary> {
     return [
       charts.Series<DrinkType, String>(
         id: 'Drinks',
-        domainFn: (drinkType, _) => '${drinkType.label}\n${scoreAverageMap[drinkType]}',
+        domainFn: (drinkType, _) => '${scoreAverageMap[drinkType].toStringAsFixed(1)}\n${drinkType.label}',
         measureFn: (drinkType, _) => scoreAverageMap[drinkType],
         data: data,
         colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
@@ -95,76 +95,86 @@ class _SummaryState extends State<Summary> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        padding: EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).padding.top + 32,
-          horizontal: 32,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '投稿率',
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 16)),
-            Container(
-              height: 280,
-              child: charts.PieChart(
-                _postCountRateData,
-                animate: true,
-                defaultRenderer: charts.ArcRendererConfig(
-                  arcRendererDecorators: [
-                    charts.ArcLabelDecorator()
-                  ],
-                  strokeWidthPx: 1,
+    return Container(
+      alignment: Alignment.topLeft,
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            vertical: MediaQuery.of(context).padding.top + 32,
+            horizontal: 32,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '投稿の割合',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 16)),
+              Container(
+                height: 280,
+                child: loading
+                  ? Center(
+                      child: Lottie.asset(
+                        'assets/lottie/loading.json',
+                        width: 80,
+                        height: 80,
+                      ),
+                    )
+                  : charts.PieChart(
+                      _postCountRateData,
+                      animate: true,
+                      defaultRenderer: charts.ArcRendererConfig(
+                        arcRendererDecorators: [
+                          charts.ArcLabelDecorator()
+                        ],
+                        strokeWidthPx: 1,
+                      ),
+                    ),
+                  ),
+              Padding(padding: EdgeInsets.only(bottom: 32)),
+
+              Text(
+                'スコア',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 16)),
+              Container(
+                height: 200,
+                child: loading
+                  ? Center(
+                      child: Lottie.asset(
+                        'assets/lottie/loading.json',
+                        width: 80,
+                        height: 80,
+                      ),
+                    )
+                  : charts.BarChart(
+                      _scoreAverageData,
+                      animate: true,
+                      domainAxis: charts.OrdinalAxisSpec(
+                        renderSpec: charts.SmallTickRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                            color: charts.MaterialPalette.white
+                          ),
+                        ),
+                      ),
+                      primaryMeasureAxis: charts.NumericAxisSpec(
+                        tickProviderSpec: charts.BasicNumericTickProviderSpec(
+                          desiredTickCount: 6
+                        ),
+                        renderSpec: charts.GridlineRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                            color: charts.MaterialPalette.white
+                          ),
+                        ),
+                      ),
                 ),
               ),
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 32)),
-
-            Text(
-              'スコア',
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 16)),
-            Container(
-              height: 200,
-              child: loading
-                ? Center(
-                    child: Lottie.asset(
-                      'assets/lottie/loading.json',
-                      width: 80,
-                      height: 80,
-                    ),
-                  )
-                : charts.BarChart(
-                    _scoreAverageData,
-                    animate: true,
-                    domainAxis: charts.OrdinalAxisSpec(
-                      renderSpec: charts.SmallTickRendererSpec(
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.MaterialPalette.white
-                        ),
-                      ),
-                    ),
-                    primaryMeasureAxis: charts.NumericAxisSpec(
-                      tickProviderSpec: charts.BasicNumericTickProviderSpec(
-                        desiredTickCount: 6
-                      ),
-                      renderSpec: charts.GridlineRendererSpec(
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.MaterialPalette.white
-                        ),
-                      ),
-                    ),
-              ),
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 200)),
-          ],
-        )
+            ],
+          )
+        ),
       ),
     );
   }
