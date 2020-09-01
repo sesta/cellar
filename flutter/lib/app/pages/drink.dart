@@ -269,26 +269,23 @@ class _DrinkPageState extends State<DrinkPage> {
           }
 
           if (index == 0) {
-            content = Hero(
-              tag: widget.drink.thumbImagePath,
-              child: _imageLoaded
-                ? CachedNetworkImage(
-                    placeholder: (context, url) => Image(
-                      image: NetworkImage(
-                        widget.drink.thumbImageUrl,
-                      ),
-                      fit: BoxFit.contain,
-                    ),
-                    imageUrl: widget.drink.imageUrls.first,
-                    fit: BoxFit.contain,
-                  )
-                : Image(
+            content = _imageLoaded
+              ? CachedNetworkImage(
+                  placeholder: (context, url) => Image(
                     image: NetworkImage(
                       widget.drink.thumbImageUrl,
                     ),
                     fit: BoxFit.contain,
                   ),
-            );
+                  imageUrl: widget.drink.imageUrls.first,
+                  fit: BoxFit.contain,
+                )
+              : Image(
+                  image: NetworkImage(
+                    widget.drink.thumbImageUrl,
+                  ),
+                  fit: BoxFit.contain,
+                );
           }
 
           return AspectRatio(
