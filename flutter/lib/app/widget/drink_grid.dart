@@ -135,17 +135,14 @@ class _GridItemState extends State<GridItem> with SingleTickerProviderStateMixin
         child: Material(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           clipBehavior: Clip.antiAlias,
-          child: Hero(
-            tag: widget.drink.thumbImagePath,
-            child: widget.drink.thumbImageUrl == null
-                ? Container()
-                : Image(
+          child: widget.drink.thumbImageUrl == null
+            ? Container()
+            : Image(
               image: NetworkImage(
                 widget.drink.thumbImageUrl,
               ),
               fit: BoxFit.cover,
             ),
-          ),
         ),
       ),
     );
