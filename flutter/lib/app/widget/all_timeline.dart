@@ -184,6 +184,10 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
     return _drinkMap[drinkType];
   }
 
+  _addDrinks() {
+    print('add');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -263,7 +267,10 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
 
     return RefreshIndicator(
       onRefresh: _refresh,
-      child: DrinkGrid(drinks: drinks),
+      child: DrinkGrid(
+        drinks: drinks,
+        addDrinks: _addDrinks,
+      ),
     );
   }
 }
