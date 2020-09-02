@@ -30,6 +30,7 @@ Future<List<Drink>> getTimelineDrinks(
   {
     DrinkType drinkType,
     String userId,
+    Drink lastDrink,
   }
 ) async {
   List<Drink> drinks;
@@ -41,6 +42,7 @@ Future<List<Drink>> getTimelineDrinks(
         drinkType,
         orderType != OrderType.Older,
         orderType == OrderType.Score,
+        lastDrink,
       );
       break;
     case TimelineType.All:
@@ -48,6 +50,7 @@ Future<List<Drink>> getTimelineDrinks(
         drinkType,
         orderType != OrderType.Older,
         orderType == OrderType.Score,
+        lastDrink,
       );
       break;
   }

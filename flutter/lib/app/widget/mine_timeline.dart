@@ -31,6 +31,8 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
 
   TabController _tabController;
 
+  bool _adding = false;
+
   @override
   initState() {
     super.initState();
@@ -175,8 +177,36 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
     return _drinkMap[drinkType];
   }
 
-  _addDrinks() {
-    print('add');
+  Future<void> _addDrinks() async {
+    final targetDrinks = _getTargetDrinks(_drinkType);
+    if (
+      _adding
+      || targetDrinks.length >= _getUploadCount(_drinkType)
+    ) {
+      return;
+    }
+    // 追加のロードは並列で行えないようにする
+    _adding = true;
+
+    // 取得中に他のリストに切り替わることがあるため
+    // 取得開始時のtypeを持っておく
+    final drinkType = _drinkType;
+    final orderType = _orderType;
+
+    final drinks = await getTimelineDrinks(
+      TimelineType.Mine,
+      _orderType,
+      drinkType: _drinkType,
+      userId: widget.user.userId,
+      lastDrink: targetDrinks.last,
+    );
+
+    // 並び順が変わっていたら保存しない
+    if (orderType != _orderType) {
+      return;
+    }
+    _setDrinks([...targetDrinks, ...drinks], drinkType);
+    _adding = false;
   }
 
   @override
