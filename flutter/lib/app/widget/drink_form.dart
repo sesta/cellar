@@ -41,16 +41,23 @@ class DrinkForm extends StatelessWidget {
   final updateScore;
 
   Future<void> _selectDate(BuildContext context) async {
+    final now = DateTime.now();
     final DateTime dateTime = await showDatePicker(
       context: context,
       initialDate: drinkDateTime,
       firstDate: DateTime(2016),
-      lastDate: DateTime.now(),
+      lastDate: now,
       helpText: '飲んだ日を選択してください。',
     );
 
     if (dateTime != null) {
-      updateDrinkDateTime(dateTime);
+      // ソートの関係で同じ値を持ちたくないので、現在時刻をいれる
+      updateDrinkDateTime(dateTime.add(Duration(
+        hours: now.hour,
+        minutes: now.minute,
+        seconds: now.second,
+        milliseconds: now.millisecond,
+      )));
     }
   }
 
