@@ -33,6 +33,8 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
 
   TabController _tabController;
 
+  bool _adding = false;
+
   @override
   initState() {
     super.initState();
@@ -92,11 +94,11 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
     if (orderType != _orderType) {
       return;
     }
-    _setDrinks(drinks, TimelineType.All, drinkType);
+    _setDrinks(drinks, drinkType);
   }
 
   Future<void> _refresh() async {
-    _setDrinks(null, TimelineType.All, _drinkType);
+    _setDrinks(null, _drinkType);
 
     AnalyticsRepository().sendEvent(
       EventType.ReloadTimeline,
@@ -111,7 +113,6 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
 
   _setDrinks(
     List<Drink> drinks,
-    TimelineType timelineType,
     DrinkType drinkType,
   ) {
     if (drinkType == null) {
@@ -182,6 +183,38 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
     }
 
     return _drinkMap[drinkType];
+  }
+
+  Future<void> _addDrinks() async {
+    final targetDrinks = _getTargetDrinks(_drinkType);
+    if (
+      _adding
+      || targetDrinks.length >= _getUploadCount(_drinkType)
+    ) {
+      return;
+    }
+    // 追加のロードは並列で行えないようにする
+    _adding = true;
+
+    // 取得中に他のリストに切り替わることがあるため
+    // 取得開始時のtypeを持っておく
+    final drinkType = _drinkType;
+    final orderType = _orderType;
+
+    final drinks = await getTimelineDrinks(
+      TimelineType.All,
+      _orderType,
+      drinkType: _drinkType,
+      userId: null,
+      lastDrink: targetDrinks.last,
+    );
+
+    // 並び順が変わっていたら保存しない
+    if (orderType != _orderType) {
+      return;
+    }
+    _setDrinks([...targetDrinks, ...drinks], drinkType);
+    _adding = false;
   }
 
   @override
@@ -263,7 +296,10 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
 
     return RefreshIndicator(
       onRefresh: _refresh,
-      child: DrinkGrid(drinks: drinks),
+      child: DrinkGrid(
+        drinks: drinks,
+        addDrinks: _addDrinks,
+      ),
     );
   }
 }

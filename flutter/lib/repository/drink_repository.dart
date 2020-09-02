@@ -34,21 +34,17 @@ class DrinkRepository extends DB {
     DrinkType drinkType,
     bool isDescTimestamp,
     bool isOrderByScore,
+    Drink lastDrink,
   ) async {
     Query query = db.collection(DRINK_COLLECTION_NAME);
 
-    if (drinkType != null) {
-      query = query.where(
-        'drinkType',
-        isEqualTo: drinkType.toString(),
-      );
-    }
-
-    if (isOrderByScore) {
-      query = query.orderBy('score', descending: isDescTimestamp);
-    }
-    query = query.orderBy('drinkTimestamp', descending: isDescTimestamp);
-    query = query.limit(PAGE_LIMIT);
+    query = _buildQuery(
+      query,
+      drinkType,
+      isDescTimestamp,
+      isOrderByScore,
+      lastDrink,
+    );
 
     final snapshot = await query.getDocuments();
     return _toEntities(snapshot.documents);
@@ -59,22 +55,18 @@ class DrinkRepository extends DB {
     DrinkType drinkType,
     bool isDescTimestamp,
     bool isOrderByScore,
+    Drink lastDrink,
   ) async {
     Query query = db.collection(DRINK_COLLECTION_NAME)
       .where('userId', isEqualTo: userId);
 
-    if (drinkType != null) {
-      query = query.where(
-        'drinkType',
-        isEqualTo: drinkType.toString(),
-      );
-    }
-
-    if (isOrderByScore) {
-      query = query.orderBy('score', descending: isDescTimestamp);
-    }
-    query = query.orderBy('drinkTimestamp', descending: isDescTimestamp);
-    query = query.limit(PAGE_LIMIT);
+    query = _buildQuery(
+      query,
+      drinkType,
+      isDescTimestamp,
+      isOrderByScore,
+      lastDrink,
+    );
 
     final snapshot = await query.getDocuments();
     return _toEntities(snapshot.documents);
@@ -130,6 +122,38 @@ class DrinkRepository extends DB {
     await db.collection(DRINK_COLLECTION_NAME)
       .document(drinkId)
       .delete();
+  }
+
+  Query _buildQuery(
+    Query query,
+    DrinkType drinkType,
+    bool isDescTimestamp,
+    bool isOrderByScore,
+    Drink lastDrink,
+  ) {
+    if (drinkType != null) {
+      query = query.where(
+        'drinkType',
+        isEqualTo: drinkType.toString(),
+      );
+    }
+
+    if (isOrderByScore) {
+      query = query.orderBy('score', descending: isDescTimestamp);
+    }
+    query = query.orderBy('drinkTimestamp', descending: isDescTimestamp);
+
+    if (lastDrink != null) {
+      final direction = isDescTimestamp ? -1 : 1;
+      final startValues = isOrderByScore
+        ? [lastDrink.score, lastDrink.drinkDateTime.millisecondsSinceEpoch + direction]
+        : [lastDrink.drinkDateTime.millisecondsSinceEpoch + direction];
+      query = query.startAt(startValues);
+    }
+
+    query = query.limit(PAGE_LIMIT);
+
+    return query;
   }
 
   Future<List<Drink>> _toEntities(List<DocumentSnapshot> rawData) async {
