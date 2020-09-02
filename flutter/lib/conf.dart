@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 const String BASE_IMAGE_PATH =  'post_images';
 
 // Firestore Setting
-const PAGE_LIMIT = 50;
+const PAGE_LIMIT = 20;
 const STATUS_COLLECTION_NAME = 'status';
 const DRINK_COLLECTION_NAME = kReleaseMode ? 'drinks' : 'dev-drinks';
 const USER_COLLECTION_NAME = kReleaseMode ? 'users' : 'dev-users';
