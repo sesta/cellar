@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 
-import 'package:cellar/domain/entity/entities.dart';
-
 class AlertRepository {
-  Future<void> send(Status status, String message) async {
+  static String _slackUrl;
+
+  Future<void> send(String message) async {
     String body = json.encode({
       'text': message,
     });
 
     Response response = await post(
-      status.slackUrl,
+      _slackUrl,
       headers: { 'content-type': 'application/json' },
       body: body,
     );
@@ -19,5 +19,9 @@ class AlertRepository {
       print('アラートの送信に失敗しました: ${response.statusCode}');
       return;
     }
+  }
+
+  set slackUrl(String slackUrl) {
+    _slackUrl = slackUrl;
   }
 }

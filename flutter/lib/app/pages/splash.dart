@@ -1,4 +1,3 @@
-import 'package:cellar/repository/alert_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
@@ -28,6 +27,7 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _fetch() async {
     Status status = await StatusRepository().getStatus();
+    AlertRepository().slackUrl = status.slackUrl;
     widget.setStatus(status);
     if (status.isMaintenance) {
       Navigator.pushReplacementNamed(context, '/maintenance');
