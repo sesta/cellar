@@ -4,9 +4,29 @@ import 'package:http/http.dart';
 class AlertRepository {
   static String _slackUrl;
 
-  Future<void> send(String message) async {
+  Future<void> send(
+    String message,
+    String description,
+  ) async {
     String body = json.encode({
-      'text': message,
+      'blocks': [
+        {
+          'type': 'section',
+          'text': {
+            'type': 'mrkdwn',
+            'text': message,
+          }
+        },
+        {
+          'type': 'context',
+          'elements': [
+            {
+              'type': 'plain_text',
+              'text': description
+            }
+          ]
+        }
+      ],
     });
 
     Response response = await post(
