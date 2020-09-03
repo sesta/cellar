@@ -5,11 +5,13 @@ class Status {
   Map<DrinkType, int> uploadCounts;
   bool isMaintenance;
   String maintenanceMessage;
+  String slackUrl;
 
   Status(
     this.uploadCounts,
     this.isMaintenance,
     this.maintenanceMessage,
+    this.slackUrl,
   );
 
   int get uploadCount {

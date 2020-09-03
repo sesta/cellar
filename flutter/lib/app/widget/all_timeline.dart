@@ -3,7 +3,7 @@ import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/domain/models/timeline.dart';
-import 'package:cellar/repository/analytics_repository.dart';
+import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/drink_type_tab_bar.dart';

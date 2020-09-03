@@ -1,3 +1,4 @@
+export 'alert_repository.dart';
 export 'analytics_repository.dart';
 export 'auth_repository.dart';
 export 'drink_repository.dart';

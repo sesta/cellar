@@ -18,6 +18,7 @@ class Summary extends StatefulWidget {
 }
 
 class _SummaryState extends State<Summary> {
+  List<DrinkType> _drinkTypes;
   List<Drink> _drinks = [];
   Map<DrinkType, double> scoreAverageMap= {};
 
@@ -27,6 +28,9 @@ class _SummaryState extends State<Summary> {
   void initState() {
     super.initState();
 
+    _drinkTypes = widget.user.drinkTypesByMany
+      .where((drinkType) => widget.user.uploadCounts[drinkType] > 0)
+      .toList();
     _calc();
   }
 
@@ -50,17 +54,13 @@ class _SummaryState extends State<Summary> {
     });
   }
 
-  List<charts.Series<DrinkType, String>> get _postCountRateData {
-    final List<DrinkType> data = widget.user.drinkTypesByMany
-      .where((drinkType) => widget.user.uploadCounts[drinkType] > 0)
-      .toList();
-
-    return [
+  List<charts.Series<DrinkType, String>> get _postCountRateData =>
+    [
       charts.Series<DrinkType, String>(
         id: 'Drinks',
         domainFn: (drinkType, _) => drinkType.label,
         measureFn: (drinkType, _) => widget.user.uploadCounts[drinkType],
-        data: data,
+        data: _drinkTypes,
         labelAccessorFn: (drinkType, _) {
           final rate = (widget.user.uploadCounts[drinkType]/widget.user.uploadCount*100).toStringAsFixed(0);
           return '$rate%\n${drinkType.label}';
@@ -73,25 +73,19 @@ class _SummaryState extends State<Summary> {
         ),
       )
     ];
-  }
 
-  List<charts.Series<DrinkType, String>> get _scoreAverageData {
-    final List<DrinkType> data = widget.user.drinkTypesByMany
-        .where((drinkType) => widget.user.uploadCounts[drinkType] > 0)
-        .toList();
-
-    return [
+  List<charts.Series<DrinkType, String>> get _scoreAverageData =>
+    [
       charts.Series<DrinkType, String>(
         id: 'Drinks',
         domainFn: (drinkType, _) => '${scoreAverageMap[drinkType].toStringAsFixed(1)}\n${drinkType.label}',
         measureFn: (drinkType, _) => scoreAverageMap[drinkType],
-        data: data,
+        data: _drinkTypes,
         colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
           Theme.of(context).primaryColorDark,
         ),
       )
     ];
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +147,7 @@ class _SummaryState extends State<Summary> {
               ),
               Padding(padding: EdgeInsets.only(bottom: 16)),
               Container(
-                height: 200,
+                height: 20.0 + 60 * _drinkTypes.length,
                 child: loading
                   ? Center(
                       child: Lottie.asset(
@@ -165,6 +159,7 @@ class _SummaryState extends State<Summary> {
                   : charts.BarChart(
                       _scoreAverageData,
                       animate: true,
+                      vertical: false,
                       domainAxis: charts.OrdinalAxisSpec(
                         renderSpec: charts.SmallTickRendererSpec(
                           labelStyle: charts.TextStyleSpec(
