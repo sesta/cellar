@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entity/entities.dart';
+import 'package:cellar/repository/repositories.dart';
 import 'package:cellar/repository/provider/firestore.dart';
 
 class DrinkRepository extends DB {
@@ -209,7 +210,10 @@ class DrinkRepository extends DB {
 
     // DrinkTypeが定義されている人とされていない人がいる可能性があるので
     // 定義されていないものが来ることを許容する
-    print('不明なTypeです。 $rawDrinkType');
+    AlertRepository().send(
+      'DrinkTypeの変換に失敗しました',
+      rawDrinkType,
+    );
     return null;
   }
 
@@ -272,7 +276,10 @@ class DrinkRepository extends DB {
 
     // DrinkTypeが定義されている人とされていない人がいる可能性があるので
     // 定義されていないものが来ることを許容する
-    print('不明なTypeです。 $rawSubDrinkType');
+    AlertRepository().send(
+      'SubDrinkTypeの変換に失敗しました',
+      rawSubDrinkType,
+    );
     return null;
   }
 }
