@@ -36,8 +36,7 @@ class AlertRepository {
     );
 
     if (response.statusCode != 200) {
-      print('アラートの送信に失敗しました: ${response.statusCode}');
-      return;
+      throw new Exception('アラートの送信に失敗しました: ${response.statusCode}');
     }
   }
 

@@ -74,7 +74,5 @@ Future<void> uploadImage(Asset image, String path, int expectWidthSize) async {
   if (error != null) {
     throw new Exception('アップロードに失敗しました: error: $error');
   }
-
-  print('Upload Success: $path');
 }
 
