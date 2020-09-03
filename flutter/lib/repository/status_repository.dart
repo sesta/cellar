@@ -64,6 +64,7 @@ class StatusRepository extends DB {
       counts,
       statusData['isMaintenance'],
       statusData['maintenanceMessage'],
+      statusData['slackUrl'],
     );
   }
 }
