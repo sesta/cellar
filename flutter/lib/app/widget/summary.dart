@@ -140,7 +140,6 @@ class _SummaryState extends State<Summary> {
                   selectedColor: Theme.of(context).scaffoldBackgroundColor,
                   todayColor: Theme.of(context).scaffoldBackgroundColor,
                   weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent),
-                  markersColor: Theme.of(context).primaryColorDark,
                   outsideDaysVisible: false,
                 ),
                 daysOfWeekStyle: DaysOfWeekStyle(
@@ -157,6 +156,19 @@ class _SummaryState extends State<Summary> {
                     Icons.chevron_right,
                     color: Colors.white,
                   ),
+                ),
+                builders: CalendarBuilders(
+                  markersBuilder: (context, date, events, holidays) => [
+                    Positioned(
+                      left: 0,
+                      bottom: 0,
+                      child: Container(
+                        height: 4,
+                        width: 100,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Padding(padding: EdgeInsets.only(bottom: 40)),
