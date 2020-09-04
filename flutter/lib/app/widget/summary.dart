@@ -145,9 +145,9 @@ class _SummaryState extends State<Summary> {
                 'スコア',
                 style: Theme.of(context).textTheme.subtitle1,
               ),
-              Padding(padding: EdgeInsets.only(bottom: 16)),
+              Padding(padding: EdgeInsets.only(bottom: 8)),
               Container(
-                height: 20.0 + 60 * _drinkTypes.length,
+                height: 20.0 + 48 * _drinkTypes.length,
                 child: loading
                   ? Center(
                       child: Lottie.asset(
@@ -179,6 +179,7 @@ class _SummaryState extends State<Summary> {
                       ),
                 ),
               ),
+              Padding(padding: EdgeInsets.only(bottom: 64)),
             ],
           )
         ),
