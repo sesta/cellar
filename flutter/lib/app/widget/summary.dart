@@ -142,7 +142,7 @@ class _SummaryState extends State<Summary> {
               Padding(padding: EdgeInsets.only(bottom: 32)),
 
               Text(
-                'スコア',
+                'スコアの平均',
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               Padding(padding: EdgeInsets.only(bottom: 8)),
