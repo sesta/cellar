@@ -170,6 +170,13 @@ class _SummaryState extends State<Summary> {
                     ),
                   ],
                 ),
+                onDaySelected: (_, events) {
+                  if (events.length == 0) {
+                    return;
+                  }
+
+                  Navigator.of(context).pushNamed('/drink', arguments: events[0]);
+                },
               ),
               Padding(padding: EdgeInsets.only(bottom: 40)),
 

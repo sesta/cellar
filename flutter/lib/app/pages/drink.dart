@@ -268,7 +268,7 @@ class _DrinkPageState extends State<DrinkPage> {
             );
           }
 
-          if (index == 0) {
+          if (index == 0 && widget.drink.thumbImageUrl != null) {
             content = _imageLoaded
               ? CachedNetworkImage(
                   placeholder: (context, url) => Image(
