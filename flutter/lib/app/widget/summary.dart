@@ -22,6 +22,7 @@ class _SummaryState extends State<Summary> {
   List<DrinkType> _drinkTypes;
   List<Drink> _drinks = [];
   Map<DrinkType, double> scoreAverageMap= {};
+  Map<DateTime, List<Drink>> _postDateTimeMap = {};
 
   CalendarController _calendarController;
   bool loading = true;
@@ -44,8 +45,12 @@ class _SummaryState extends State<Summary> {
       if (scoreAverageMap[drink.drinkType] == null) {
         scoreAverageMap[drink.drinkType] = 0;
       }
-
       scoreAverageMap[drink.drinkType] += drink.score;
+
+      if (_postDateTimeMap[drink.drinkDateTime] == null) {
+        _postDateTimeMap[drink.drinkDateTime] = [];
+      }
+      _postDateTimeMap[drink.drinkDateTime].add(drink);
     });
 
     scoreAverageMap.forEach((key, value) {
@@ -122,6 +127,7 @@ class _SummaryState extends State<Summary> {
               ),
               Padding(padding: EdgeInsets.only(bottom: 8)),
               TableCalendar(
+                events: _postDateTimeMap,
                 calendarController: _calendarController,
                 locale: 'ja_JP',
                 availableCalendarFormats: {
@@ -134,7 +140,7 @@ class _SummaryState extends State<Summary> {
                   selectedColor: Theme.of(context).scaffoldBackgroundColor,
                   todayColor: Theme.of(context).scaffoldBackgroundColor,
                   weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent),
-                  markersColor: Colors.brown[700],
+                  markersColor: Theme.of(context).primaryColorDark,
                   outsideDaysVisible: false,
                 ),
                 daysOfWeekStyle: DaysOfWeekStyle(
