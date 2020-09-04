@@ -143,6 +143,7 @@ class _SummaryState extends State<Summary> {
                   outsideDaysVisible: false,
                 ),
                 daysOfWeekStyle: DaysOfWeekStyle(
+                  weekdayStyle: TextStyle().copyWith(color: Colors.grey),
                   weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent[100]),
                 ),
                 headerStyle: HeaderStyle(
@@ -165,7 +166,7 @@ class _SummaryState extends State<Summary> {
                       child: Container(
                         height: 4,
                         width: 100,
-                        color: Theme.of(context).primaryColorDark,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                   ],
