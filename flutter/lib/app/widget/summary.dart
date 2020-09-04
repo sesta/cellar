@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:lottie/lottie.dart';
 
@@ -21,13 +22,16 @@ class _SummaryState extends State<Summary> {
   List<DrinkType> _drinkTypes;
   List<Drink> _drinks = [];
   Map<DrinkType, double> scoreAverageMap= {};
+  Map<DateTime, List<Drink>> _postDateTimeMap = {};
 
+  CalendarController _calendarController;
   bool loading = true;
 
   @override
   void initState() {
     super.initState();
 
+    _calendarController = CalendarController();
     _drinkTypes = widget.user.drinkTypesByMany
       .where((drinkType) => widget.user.uploadCounts[drinkType] > 0)
       .toList();
@@ -41,8 +45,12 @@ class _SummaryState extends State<Summary> {
       if (scoreAverageMap[drink.drinkType] == null) {
         scoreAverageMap[drink.drinkType] = 0;
       }
-
       scoreAverageMap[drink.drinkType] += drink.score;
+
+      if (_postDateTimeMap[drink.drinkDateTime] == null) {
+        _postDateTimeMap[drink.drinkDateTime] = [];
+      }
+      _postDateTimeMap[drink.drinkDateTime].add(drink);
     });
 
     scoreAverageMap.forEach((key, value) {
@@ -113,6 +121,65 @@ class _SummaryState extends State<Summary> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                '投稿した日',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 8)),
+              TableCalendar(
+                events: _postDateTimeMap,
+                calendarController: _calendarController,
+                locale: 'ja_JP',
+                availableCalendarFormats: {
+                  CalendarFormat.month: 'Month'
+                },
+                endDay: DateTime.now(),
+                startingDayOfWeek: StartingDayOfWeek.monday,
+                availableGestures: AvailableGestures.horizontalSwipe,
+                calendarStyle: CalendarStyle(
+                  selectedColor: Theme.of(context).scaffoldBackgroundColor,
+                  todayColor: Theme.of(context).scaffoldBackgroundColor,
+                  weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent),
+                  outsideDaysVisible: false,
+                ),
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent[100]),
+                ),
+                headerStyle: HeaderStyle(
+                  centerHeaderTitle: true,
+                  formatButtonVisible: false,
+                  leftChevronIcon: Icon(
+                    Icons.chevron_left,
+                    color: Colors.white,
+                  ),
+                  rightChevronIcon: Icon(
+                    Icons.chevron_right,
+                    color: Colors.white,
+                  ),
+                ),
+                builders: CalendarBuilders(
+                  markersBuilder: (context, date, events, holidays) => [
+                    Positioned(
+                      left: 0,
+                      bottom: 0,
+                      child: Container(
+                        height: 4,
+                        width: 100,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                    ),
+                  ],
+                ),
+                onDaySelected: (_, events) {
+                  if (events.length == 0) {
+                    return;
+                  }
+
+                  Navigator.of(context).pushNamed('/drink', arguments: events[0]);
+                },
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 40)),
+
               Text(
                 '投稿の割合',
                 style: Theme.of(context).textTheme.subtitle1,
