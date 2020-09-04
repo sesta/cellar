@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:lottie/lottie.dart';
 
@@ -22,12 +23,14 @@ class _SummaryState extends State<Summary> {
   List<Drink> _drinks = [];
   Map<DrinkType, double> scoreAverageMap= {};
 
+  CalendarController _calendarController;
   bool loading = true;
 
   @override
   void initState() {
     super.initState();
 
+    _calendarController = CalendarController();
     _drinkTypes = widget.user.drinkTypesByMany
       .where((drinkType) => widget.user.uploadCounts[drinkType] > 0)
       .toList();
@@ -113,6 +116,11 @@ class _SummaryState extends State<Summary> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              TableCalendar(
+                calendarController: _calendarController,
+                locale: 'ja_JP',
+              ),
+
               Text(
                 '投稿の割合',
                 style: Theme.of(context).textTheme.subtitle1,
