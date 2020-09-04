@@ -116,10 +116,44 @@ class _SummaryState extends State<Summary> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                '投稿した日',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 8)),
               TableCalendar(
                 calendarController: _calendarController,
                 locale: 'ja_JP',
+                availableCalendarFormats: {
+                  CalendarFormat.month: 'Month'
+                },
+                endDay: DateTime.now(),
+                startingDayOfWeek: StartingDayOfWeek.monday,
+                availableGestures: AvailableGestures.horizontalSwipe,
+                calendarStyle: CalendarStyle(
+                  selectedColor: Theme.of(context).scaffoldBackgroundColor,
+                  todayColor: Theme.of(context).scaffoldBackgroundColor,
+                  weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent),
+                  markersColor: Colors.brown[700],
+                  outsideDaysVisible: false,
+                ),
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent),
+                ),
+                headerStyle: HeaderStyle(
+                  centerHeaderTitle: true,
+                  formatButtonVisible: false,
+                  leftChevronIcon: Icon(
+                    Icons.chevron_left,
+                    color: Colors.white,
+                  ),
+                  rightChevronIcon: Icon(
+                    Icons.chevron_right,
+                    color: Colors.white,
+                  ),
+                ),
               ),
+              Padding(padding: EdgeInsets.only(bottom: 40)),
 
               Text(
                 '投稿の割合',
