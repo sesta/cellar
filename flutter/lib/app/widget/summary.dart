@@ -126,59 +126,7 @@ class _SummaryState extends State<Summary> {
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               Padding(padding: EdgeInsets.only(bottom: 8)),
-              TableCalendar(
-                events: _postDateTimeMap,
-                calendarController: _calendarController,
-                locale: 'ja_JP',
-                availableCalendarFormats: {
-                  CalendarFormat.month: 'Month'
-                },
-                endDay: DateTime.now(),
-                startingDayOfWeek: StartingDayOfWeek.monday,
-                availableGestures: AvailableGestures.horizontalSwipe,
-                calendarStyle: CalendarStyle(
-                  selectedColor: Theme.of(context).scaffoldBackgroundColor,
-                  todayColor: Theme.of(context).scaffoldBackgroundColor,
-                  weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent),
-                  outsideDaysVisible: false,
-                ),
-                daysOfWeekStyle: DaysOfWeekStyle(
-                  weekdayStyle: TextStyle().copyWith(color: Colors.grey),
-                  weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent[100]),
-                ),
-                headerStyle: HeaderStyle(
-                  centerHeaderTitle: true,
-                  formatButtonVisible: false,
-                  leftChevronIcon: Icon(
-                    Icons.chevron_left,
-                    color: Colors.white,
-                  ),
-                  rightChevronIcon: Icon(
-                    Icons.chevron_right,
-                    color: Colors.white,
-                  ),
-                ),
-                builders: CalendarBuilders(
-                  markersBuilder: (context, date, events, holidays) => [
-                    Positioned(
-                      left: 0,
-                      bottom: 0,
-                      child: Container(
-                        height: 4,
-                        width: 100,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  ],
-                ),
-                onDaySelected: (_, events) {
-                  if (events.length == 0) {
-                    return;
-                  }
-
-                  Navigator.of(context).pushNamed('/drink', arguments: events[0]);
-                },
-              ),
+              _postCalendar,
               Padding(padding: EdgeInsets.only(bottom: 40)),
 
               Text(
@@ -186,27 +134,7 @@ class _SummaryState extends State<Summary> {
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               Padding(padding: EdgeInsets.only(bottom: 16)),
-              Container(
-                height: 280,
-                child: loading
-                  ? Center(
-                      child: Lottie.asset(
-                        'assets/lottie/loading.json',
-                        width: 80,
-                        height: 80,
-                      ),
-                    )
-                  : charts.PieChart(
-                      _postCountRateData,
-                      animate: true,
-                      defaultRenderer: charts.ArcRendererConfig(
-                        arcRendererDecorators: [
-                          charts.ArcLabelDecorator()
-                        ],
-                        strokeWidthPx: 1,
-                      ),
-                    ),
-                  ),
+              _postRate,
               Padding(padding: EdgeInsets.only(bottom: 32)),
 
               Text(
@@ -214,39 +142,7 @@ class _SummaryState extends State<Summary> {
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               Padding(padding: EdgeInsets.only(bottom: 8)),
-              Container(
-                height: 20.0 + 48 * _drinkTypes.length,
-                child: loading
-                  ? Center(
-                      child: Lottie.asset(
-                        'assets/lottie/loading.json',
-                        width: 80,
-                        height: 80,
-                      ),
-                    )
-                  : charts.BarChart(
-                      _scoreAverageData,
-                      animate: true,
-                      vertical: false,
-                      domainAxis: charts.OrdinalAxisSpec(
-                        renderSpec: charts.SmallTickRendererSpec(
-                          labelStyle: charts.TextStyleSpec(
-                            color: charts.MaterialPalette.white
-                          ),
-                        ),
-                      ),
-                      primaryMeasureAxis: charts.NumericAxisSpec(
-                        tickProviderSpec: charts.BasicNumericTickProviderSpec(
-                          desiredTickCount: 6
-                        ),
-                        renderSpec: charts.GridlineRendererSpec(
-                          labelStyle: charts.TextStyleSpec(
-                            color: charts.MaterialPalette.white
-                          ),
-                        ),
-                      ),
-                ),
-              ),
+              _scoreAverage,
               Padding(padding: EdgeInsets.only(bottom: 64)),
             ],
           )
@@ -254,4 +150,117 @@ class _SummaryState extends State<Summary> {
       ),
     );
   }
+
+  Widget get _postCalendar =>
+    TableCalendar(
+      events: _postDateTimeMap,
+      calendarController: _calendarController,
+      locale: 'ja_JP',
+      availableCalendarFormats: {
+        CalendarFormat.month: 'Month'
+      },
+      endDay: DateTime.now(),
+      startingDayOfWeek: StartingDayOfWeek.monday,
+      availableGestures: AvailableGestures.horizontalSwipe,
+      calendarStyle: CalendarStyle(
+        selectedColor: Theme.of(context).scaffoldBackgroundColor,
+        todayColor: Theme.of(context).scaffoldBackgroundColor,
+        weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent),
+        outsideDaysVisible: false,
+      ),
+      daysOfWeekStyle: DaysOfWeekStyle(
+        weekdayStyle: TextStyle().copyWith(color: Colors.grey),
+        weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent[100]),
+      ),
+      headerStyle: HeaderStyle(
+        centerHeaderTitle: true,
+        formatButtonVisible: false,
+        leftChevronIcon: Icon(
+          Icons.chevron_left,
+          color: Colors.white,
+        ),
+        rightChevronIcon: Icon(
+          Icons.chevron_right,
+          color: Colors.white,
+        ),
+      ),
+      builders: CalendarBuilders(
+        markersBuilder: (context, date, events, holidays) => [
+          Positioned(
+            left: 0,
+            bottom: 0,
+            child: Container(
+              height: 4,
+              width: 100,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
+      ),
+      onDaySelected: (_, events) {
+        if (events.length == 0) {
+          return;
+        }
+
+        Navigator.of(context).pushNamed('/drink', arguments: events[0]);
+      },
+    );
+
+  Widget get _postRate =>
+    Container(
+      height: 280,
+      child: loading
+        ? Center(
+            child: Lottie.asset(
+              'assets/lottie/loading.json',
+              width: 80,
+              height: 80,
+            ),
+          )
+        : charts.PieChart(
+            _postCountRateData,
+            animate: true,
+            defaultRenderer: charts.ArcRendererConfig(
+              arcRendererDecorators: [
+                charts.ArcLabelDecorator()
+              ],
+              strokeWidthPx: 1,
+            ),
+          ),
+    );
+
+  Widget get _scoreAverage =>
+    Container(
+      height: 20.0 + 48 * _drinkTypes.length,
+      child: loading
+        ? Center(
+            child: Lottie.asset(
+              'assets/lottie/loading.json',
+              width: 80,
+              height: 80,
+            ),
+          )
+        : charts.BarChart(
+            _scoreAverageData,
+            animate: true,
+            vertical: false,
+            domainAxis: charts.OrdinalAxisSpec(
+              renderSpec: charts.SmallTickRendererSpec(
+                labelStyle: charts.TextStyleSpec(
+                  color: charts.MaterialPalette.white
+                ),
+              ),
+            ),
+            primaryMeasureAxis: charts.NumericAxisSpec(
+              tickProviderSpec: charts.BasicNumericTickProviderSpec(
+                desiredTickCount: 6
+              ),
+              renderSpec: charts.GridlineRendererSpec(
+                labelStyle: charts.TextStyleSpec(
+                  color: charts.MaterialPalette.white
+                ),
+              ),
+            ),
+          ),
+    );
 }
