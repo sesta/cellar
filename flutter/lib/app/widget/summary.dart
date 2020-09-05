@@ -21,11 +21,11 @@ class Summary extends StatefulWidget {
 class _SummaryState extends State<Summary> {
   List<DrinkType> _drinkTypes;
   List<Drink> _drinks = [];
-  Map<DrinkType, double> scoreAverageMap= {};
+  Map<DrinkType, double> _scoreAverageMap= {};
   Map<DateTime, List<Drink>> _postDateTimeMap = {};
 
   CalendarController _calendarController;
-  bool loading = true;
+  bool _loading = true;
 
   @override
   void initState() {
@@ -42,10 +42,10 @@ class _SummaryState extends State<Summary> {
     _drinks = await DrinkRepository().getUserAllDrinks(widget.user.userId);
 
     _drinks.forEach((drink) {
-      if (scoreAverageMap[drink.drinkType] == null) {
-        scoreAverageMap[drink.drinkType] = 0;
+      if (_scoreAverageMap[drink.drinkType] == null) {
+        _scoreAverageMap[drink.drinkType] = 0;
       }
-      scoreAverageMap[drink.drinkType] += drink.score;
+      _scoreAverageMap[drink.drinkType] += drink.score;
 
       if (_postDateTimeMap[drink.drinkDateTime] == null) {
         _postDateTimeMap[drink.drinkDateTime] = [];
@@ -53,12 +53,12 @@ class _SummaryState extends State<Summary> {
       _postDateTimeMap[drink.drinkDateTime].add(drink);
     });
 
-    scoreAverageMap.forEach((key, value) {
-      scoreAverageMap[key] /= widget.user.uploadCounts[key];
+    _scoreAverageMap.forEach((key, value) {
+      _scoreAverageMap[key] /= widget.user.uploadCounts[key];
     });
 
     setState(() {
-      loading = false;
+      _loading = false;
     });
   }
 
@@ -86,8 +86,8 @@ class _SummaryState extends State<Summary> {
     [
       charts.Series<DrinkType, String>(
         id: 'Drinks',
-        domainFn: (drinkType, _) => '${scoreAverageMap[drinkType].toStringAsFixed(1)}\n${drinkType.label}',
-        measureFn: (drinkType, _) => scoreAverageMap[drinkType],
+        domainFn: (drinkType, _) => '${_scoreAverageMap[drinkType].toStringAsFixed(1)}\n${drinkType.label}',
+        measureFn: (drinkType, _) => _scoreAverageMap[drinkType],
         data: _drinkTypes,
         colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
           Theme.of(context).primaryColorDark,
@@ -209,7 +209,7 @@ class _SummaryState extends State<Summary> {
   Widget get _postRate =>
     Container(
       height: 280,
-      child: loading
+      child: _loading
         ? Center(
             child: Lottie.asset(
               'assets/lottie/loading.json',
@@ -232,7 +232,7 @@ class _SummaryState extends State<Summary> {
   Widget get _scoreAverage =>
     Container(
       height: 20.0 + 48 * _drinkTypes.length,
-      child: loading
+      child: _loading
         ? Center(
             child: Lottie.asset(
               'assets/lottie/loading.json',
