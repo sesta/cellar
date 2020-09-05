@@ -122,14 +122,6 @@ class _SummaryState extends State<Summary> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '投稿した日',
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-              Padding(padding: EdgeInsets.only(bottom: 8)),
-              _postCalendar,
-              Padding(padding: EdgeInsets.only(bottom: 40)),
-
-              Text(
                 '投稿の割合',
                 style: Theme.of(context).textTheme.subtitle1,
               ),
@@ -143,6 +135,14 @@ class _SummaryState extends State<Summary> {
               ),
               Padding(padding: EdgeInsets.only(bottom: 8)),
               _scoreAverage,
+              Padding(padding: EdgeInsets.only(bottom: 48)),
+
+              Text(
+                '投稿した日',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 8)),
+              _postCalendar,
               Padding(padding: EdgeInsets.only(bottom: 64)),
             ],
           )
