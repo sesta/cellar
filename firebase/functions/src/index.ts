@@ -1,7 +1,8 @@
 import * as functions from 'firebase-functions'
 
-export const helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info("Hello logs!", {structuredData: true})
-  response.send("Hello from Firebase!")
-});
-
+exports.trigger = functions.firestore
+  .document('dev-drinks/{drinkId}')
+  .onCreate((snapshot) => {
+    console.log('お酒が投稿されました')
+    console.log(snapshot)
+  })
