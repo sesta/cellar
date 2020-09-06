@@ -1,8 +1,3 @@
-import * as functions from 'firebase-functions'
+import { postDrinkTrigger } from "./triggers/postDrinkTrigger";
 
-exports.trigger = functions.firestore
-  .document('dev-drinks/{drinkId}')
-  .onCreate((snapshot) => {
-    console.log('お酒が投稿されました')
-    console.log(snapshot)
-  })
+exports.postDrinkTriggerDev = postDrinkTrigger('dev-drinks')
