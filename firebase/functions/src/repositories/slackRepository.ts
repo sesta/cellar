@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 export const sendSlack = async (message: String, detail: string) => {
-  const url = ''
+  // cloud functionsの環境変数で設定
+  const url = process.env.SLACK_URL as string
   const data = {
     text: message,
     blocks: [
