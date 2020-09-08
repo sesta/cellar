@@ -17,7 +17,7 @@ export const sendSlack = async (message: String, detail: string) => {
         type: 'context',
         elements: [
           {
-            type: 'mrkdwn',
+            type: 'plain_text',
             text: detail
           }
         ]
