@@ -57,8 +57,8 @@ class AuthRepository {
       return null;
     }
 
-    final oAuthProvider = OAuthProvider(providerId: 'apple.com');
-    return oAuthProvider.getCredential(
+    final oAuthProvider = OAuthProvider('apple.com');
+    return oAuthProvider.credential(
       idToken: String.fromCharCodes(result.credential.identityToken),
       accessToken: String.fromCharCodes(result.credential.authorizationCode),
     );
@@ -71,7 +71,7 @@ class AuthRepository {
     }
 
     GoogleSignInAuthentication googleAuth = await googleCurrentUser.authentication;
-    return GoogleAuthProvider.getCredential(
+    return GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
