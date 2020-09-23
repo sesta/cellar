@@ -9,7 +9,7 @@ class UserRepository extends DB {
       String userId,
   ) async {
     final snapshot = await db.collection(USER_COLLECTION_NAME)
-      .document(userId)
+      .doc(userId)
       .get();
 
     if (snapshot.data == null) {
@@ -21,8 +21,8 @@ class UserRepository extends DB {
 
   Future<void> createUser(User user) async {
     await db.collection(USER_COLLECTION_NAME)
-      .document(user.userId)
-      .setData({
+      .doc(user.userId)
+      .set({
         'userName': user.userName,
         'uploadCounts': {},
         'isDeveloper': false, // 管理画面からのみtrueにできる
@@ -34,8 +34,8 @@ class UserRepository extends DB {
     String userName,
   ) async {
     await db.collection(USER_COLLECTION_NAME)
-      .document(userId)
-      .updateData({ 'userName': userName });
+      .doc(userId)
+      .update({ 'userName': userName });
   }
 
   Future<void> updateUserUploadCount(
@@ -50,8 +50,8 @@ class UserRepository extends DB {
     });
 
     await db.collection(USER_COLLECTION_NAME)
-      .document(userId)
-      .updateData({ 'uploadCounts': counts });
+      .doc(userId)
+      .update({ 'uploadCounts': counts });
   }
 
   Future<User> _toEntity(
@@ -61,16 +61,16 @@ class UserRepository extends DB {
     Map<DrinkType, int> counts = {};
     DrinkType.values.forEach((drinkType) {
       // 新しいDrinkTypeが追加される可能性があるので、存在しない場合を考慮する
-      counts[drinkType] = rawData['uploadCounts'][drinkType.toString()] != null
-        ? rawData['uploadCounts'][drinkType.toString()]
+      counts[drinkType] = rawData.get('uploadCounts')[drinkType.toString()] != null
+        ? rawData.get('uploadCounts')[drinkType.toString()]
         : 0;
     });
 
     return User(
       userId,
-      rawData['userName'],
+      rawData.get('userName'),
       uploadCounts: counts,
-      isDeveloper: rawData['isDeveloper'] == null ? false : rawData['isDeveloper'],
+      isDeveloper: rawData.get('isDeveloper') == null ? false : rawData.get('isDeveloper'),
     );
   }
 }
