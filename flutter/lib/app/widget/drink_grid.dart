@@ -86,7 +86,6 @@ class _GridItemState extends State<GridItem> with SingleTickerProviderStateMixin
 
     final loaded = widget.drink.thumbImageUrl != null;
     _animationController = AnimationController(
-      vsync: this,
       duration: Duration(milliseconds: loaded ? 0 : 500),
     );
     if (loaded) {
