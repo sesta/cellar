@@ -202,8 +202,6 @@ class _PostPageState extends State<PostPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<SubDrinkType> subDrinkTypes = _drinkType == null ? [SubDrinkType.Empty] : _drinkType.subDrinkTypes;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(

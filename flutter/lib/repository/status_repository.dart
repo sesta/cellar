@@ -11,14 +11,14 @@ class StatusRepository extends DB {
 
   Future<Status> getStatus() async {
     final statusRef = db.collection(STATUS_COLLECTION_NAME)
-      .document(_environment);
+      .doc(_environment);
     final statusData = await statusRef.get();
     final drinkTypesData = await statusRef.collection('uploadCounts')
-      .getDocuments();
+      .get();
 
     return _toEntity(
       statusData,
-      drinkTypesData.documents,
+      drinkTypesData.docs,
     );
   }
 
@@ -26,10 +26,10 @@ class StatusRepository extends DB {
     DrinkType drinkType,
   ) async {
     await db.collection(STATUS_COLLECTION_NAME)
-      .document(_environment)
+      .doc(_environment)
       .collection('uploadCounts')
-      .document(drinkType.toString())
-      .updateData({
+      .doc(drinkType.toString())
+      .update({
         'uploadCount': FieldValue.increment(1),
       });
   }
@@ -38,10 +38,10 @@ class StatusRepository extends DB {
     DrinkType drinkType,
   ) async {
     await db.collection(STATUS_COLLECTION_NAME)
-      .document(_environment)
+      .doc(_environment)
       .collection('uploadCounts')
-      .document(drinkType.toString())
-      .updateData({
+      .doc(drinkType.toString())
+      .update({
         'uploadCount': FieldValue.increment(-1),
       });
   }
@@ -52,19 +52,19 @@ class StatusRepository extends DB {
   ) {
     Map<DrinkType, int> counts = {};
     drinkTypesData.forEach((data) {
-      final drinkType = DrinkRepository().toDrinkType(data.documentID);
+      final drinkType = DrinkRepository().toDrinkType(data.id);
       if (drinkType == null) {
         return;
       }
 
-      counts[drinkType] = data['uploadCount'];
+      counts[drinkType] = data.get('uploadCount');
     });
 
     return Status(
       counts,
-      statusData['isMaintenance'],
-      statusData['maintenanceMessage'],
-      statusData['slackUrl'],
+      statusData.get('isMaintenance'),
+      statusData.get('maintenanceMessage'),
+      statusData.get('slackUrl'),
     );
   }
 }

@@ -9,7 +9,7 @@ import 'package:cellar/repository/alert_repository.dart';
 main() {
   FlutterError.onError = (details) {
     FlutterError.dumpErrorToConsole(details);
-    Crashlytics.instance.recordFlutterError(details);
+    FirebaseCrashlytics.instance.recordFlutterError(details);
 
     AlertRepository().send(
       'アプリがクラッシュしました',

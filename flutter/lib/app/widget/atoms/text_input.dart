@@ -41,7 +41,7 @@ class TextInput extends StatelessWidget {
       keyboardType: keyboardType,
       inputFormatters: inputType == InputType.Number
         ? <TextInputFormatter>[
-            WhitelistingTextInputFormatter.digitsOnly
+            FilteringTextInputFormatter.digitsOnly,
           ]
         : <TextInputFormatter>[],
       decoration: InputDecoration(

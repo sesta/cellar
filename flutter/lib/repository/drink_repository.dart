@@ -10,8 +10,8 @@ class DrinkRepository extends DB {
     Drink drink,
   ) async {
     await db.collection(DRINK_COLLECTION_NAME)
-      .document()
-      .setData({
+      .doc()
+      .set({
         'userId': drink.userId,
         'userName': drink.userName,
         'drinkTimestamp': drink.drinkDateTime.millisecondsSinceEpoch,
@@ -47,8 +47,8 @@ class DrinkRepository extends DB {
       lastDrink,
     );
 
-    final snapshot = await query.getDocuments();
-    return _toEntities(snapshot.documents);
+    final snapshot = await query.get();
+    return _toEntities(snapshot.docs);
   }
 
   Future<List<Drink>> getUserDrinks (
@@ -69,8 +69,8 @@ class DrinkRepository extends DB {
       lastDrink,
     );
 
-    final snapshot = await query.getDocuments();
-    return _toEntities(snapshot.documents);
+    final snapshot = await query.get();
+    return _toEntities(snapshot.docs);
   }
 
   Future<List<Drink>> getUserAllDrinks (
@@ -78,17 +78,17 @@ class DrinkRepository extends DB {
   ) async {
     final snapshot = await db.collection(DRINK_COLLECTION_NAME)
       .where('userId', isEqualTo: userId)
-      .getDocuments();
+      .get();
 
-    return _toEntities(snapshot.documents);
+    return _toEntities(snapshot.docs);
   }
 
   Future<void> updateDrink (
     Drink drink,
   ) async {
     await db.collection(DRINK_COLLECTION_NAME)
-      .document(drink.drinkId)
-      .updateData({
+      .doc(drink.drinkId)
+      .update({
         'drinkTimestamp': drink.drinkDateTime.millisecondsSinceEpoch,
         'drinkName': drink.drinkName,
         'drinkType': drink.drinkType.toString(),
@@ -107,11 +107,11 @@ class DrinkRepository extends DB {
   ) async {
     final snapshot = await db.collection(DRINK_COLLECTION_NAME)
       .where('userId', isEqualTo: userId)
-      .getDocuments();
+      .get();
 
     final batch = db.batch();
-    snapshot.documents.forEach((DocumentSnapshot document) {
-      batch.updateData(document.reference, { 'userName': userName });
+    snapshot.docs.forEach((DocumentSnapshot document) {
+      batch.update(document.reference, { 'userName': userName });
     });
 
     batch.commit();
@@ -121,7 +121,7 @@ class DrinkRepository extends DB {
     String drinkId,
   ) async {
     await db.collection(DRINK_COLLECTION_NAME)
-      .document(drinkId)
+      .doc(drinkId)
       .delete();
   }
 
@@ -159,30 +159,37 @@ class DrinkRepository extends DB {
 
   Future<List<Drink>> _toEntities(List<DocumentSnapshot> rawData) async {
     final drinks = rawData.map((data) {
-      final drinkType = toDrinkType(data['drinkType']);
-      final subDrinkType = _toSubDrinkType(data['subDrinkType']);
+      final drinkType = toDrinkType(data.get('drinkType'));
+      final subDrinkType = _toSubDrinkType(data.get('subDrinkType'));
       if (drinkType == null || subDrinkType == null) {
         return null;
       }
 
+      var origin = '';
+      try {
+        origin = data.get('origin');
+      } catch (e) {
+        // originはkeyが存在しないことがあるので、握り潰す
+      }
+
       return Drink(
-        data['userId'],
-        data['userName'],
-        DateTime.fromMicrosecondsSinceEpoch(data['drinkTimestamp'] * 1000),
-        data['drinkName'],
+        data.get('userId'),
+        data.get('userName'),
+        DateTime.fromMicrosecondsSinceEpoch(data.get('drinkTimestamp') * 1000),
+        data.get('drinkName'),
         drinkType,
         subDrinkType,
-        data['score'],
-        data['memo'],
-        data['price'],
-        data['place'],
-        data['origin'] == null ? '' : data['origin'],
-        DateTime.fromMicrosecondsSinceEpoch(data['postTimestamp'] * 1000),
-        data['thumbImagePath'],
-        data['imagePaths'].cast<String>(),
-        data['firstImageWidth'],
-        data['firstImageHeight'],
-        drinkId: data.documentID,
+        data.get('score'),
+        data.get('memo'),
+        data.get('price'),
+        data.get('place'),
+        origin,
+        DateTime.fromMicrosecondsSinceEpoch(data.get('postTimestamp') * 1000),
+        data.get('thumbImagePath'),
+        data.get('imagePaths').cast<String>(),
+        data.get('firstImageWidth'),
+        data.get('firstImageHeight'),
+        drinkId: data.id,
       );
     }).where((drink) => drink != null).toList();
 
