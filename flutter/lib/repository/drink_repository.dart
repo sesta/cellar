@@ -165,6 +165,13 @@ class DrinkRepository extends DB {
         return null;
       }
 
+      var origin = '';
+      try {
+        origin = data.get('origin');
+      } catch (e) {
+        // originはkeyが存在しないことがあるので、握り潰す
+      }
+
       return Drink(
         data.get('userId'),
         data.get('userName'),
@@ -176,7 +183,7 @@ class DrinkRepository extends DB {
         data.get('memo'),
         data.get('price'),
         data.get('place'),
-        data.get('origin') == null ? '' : data.get('origin'),
+        origin,
         DateTime.fromMicrosecondsSinceEpoch(data.get('postTimestamp') * 1000),
         data.get('thumbImagePath'),
         data.get('imagePaths').cast<String>(),
