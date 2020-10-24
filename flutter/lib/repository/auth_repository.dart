@@ -17,7 +17,6 @@ class AuthRepository {
   }
 
   Future<String> getSignInUserId() async {
-    // TODO: ログインしているユーザーと一致しなかった時に問題ないか確認する
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.get("userId");
   }

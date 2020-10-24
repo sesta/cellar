@@ -51,7 +51,13 @@ class _SplashPageState extends State<SplashPage> {
       return null;
     }
 
-    final user = await UserRepository().getUser(userId);
+    var user;
+    try {
+      user = await UserRepository().getUser(userId);
+    } catch (e) {
+      // SharedPreferencesに保存されているユーザーIDで認証していない時を考慮
+      await AuthRepository().signOut();
+    }
     if (user == null) {
       return null;
     }
