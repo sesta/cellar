@@ -70,12 +70,16 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       this._loadingSignIn = true;
     });
-    final userId = await AuthRepository().signIn(authType);
-    if (userId == null) {
+    var userId;
+    try {
+      userId = await AuthRepository().signIn(authType);
+    } catch (e) {
       AlertRepository().send(
         'SignInに失敗しました',
-        'authType: $authType',
+        'authType: $authType\nError Message:\n$e',
       );
+    }
+    if (userId == null) {
 
       setState(() {
         this._loadingSignIn = false;
