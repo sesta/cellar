@@ -42,6 +42,10 @@ class AuthRepository {
     return firebaseUser.user.uid;
   }
 
+  Future<void> signInNoLoginUser() async {
+    await _auth.signInAnonymously();
+  }
+
   Future<void> signOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.remove("userId");

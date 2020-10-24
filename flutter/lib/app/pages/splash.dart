@@ -47,6 +47,7 @@ class _SplashPageState extends State<SplashPage> {
   Future<User> _checkSignIn() async {
     final userId = await AuthRepository().getSignInUserId();
     if (userId == null) {
+      await AuthRepository().signInNoLoginUser();
       return null;
     }
 
