@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
@@ -26,6 +27,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _fetch() async {
+    await Firebase.initializeApp();
     Status status = await StatusRepository().getStatus();
     AlertRepository().slackUrl = status.slackUrl;
     widget.setStatus(status);
