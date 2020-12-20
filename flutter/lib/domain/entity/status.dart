@@ -3,12 +3,14 @@ import 'package:cellar/repository/repositories.dart';
 
 class Status {
   Map<DrinkType, int> uploadCounts;
+  String requiredVersion;
   bool isMaintenance;
   String maintenanceMessage;
   String slackUrl;
 
   Status(
     this.uploadCounts,
+    this.requiredVersion,
     this.isMaintenance,
     this.maintenanceMessage,
     this.slackUrl,
