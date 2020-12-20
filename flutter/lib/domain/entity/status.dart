@@ -4,14 +4,14 @@ import 'package:cellar/repository/repositories.dart';
 class Status {
   Map<DrinkType, int> uploadCounts;
   String requiredVersion;
-  bool isMaintenance;
+  bool isMaintenanceMode;
   String maintenanceMessage;
   String slackUrl;
 
   Status(
     this.uploadCounts,
     this.requiredVersion,
-    this.isMaintenance,
+    this.isMaintenanceMode,
     this.maintenanceMessage,
     this.slackUrl,
   );
@@ -44,6 +44,6 @@ class Status {
 
   @override
   String toString() {
-    return 'isMaintenance: $isMaintenance, uploadCounts: $uploadCounts';
+    return 'isMaintenanceMode: $isMaintenanceMode, uploadCounts: $uploadCounts';
   }
 }
