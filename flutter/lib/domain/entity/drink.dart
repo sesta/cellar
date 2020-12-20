@@ -6,6 +6,7 @@ class Drink {
   String drinkId;
   String userId;
   String userName;
+  bool isPrivate;
   DateTime drinkDateTime;
   String drinkName;
   DrinkType drinkType;
@@ -27,6 +28,7 @@ class Drink {
   Drink(
     this.userId,
     this.userName,
+    this.isPrivate,
     this.drinkDateTime,
     this.drinkName,
     this.drinkType,
