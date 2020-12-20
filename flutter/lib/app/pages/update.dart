@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 
@@ -28,7 +29,15 @@ class UpdatePage extends StatelessWidget {
             status.maintenanceMessage == ''
               ? 'アプリのバージョンを更新する必要があります。\nアプリストアから更新を行ってください。'
               : status.maintenanceMessage,
-            style: Theme.of(context).textTheme.bodyText1,
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+
+          FlatButton(
+            child: Text(
+              'アプリストアに移動する',
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            onPressed: () => launch('https://apps.apple.com/jp/app/id1523246897?mt=8'),
           ),
         ],
       ),
