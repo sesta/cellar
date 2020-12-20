@@ -167,6 +167,7 @@ class DrinkRepository extends DB {
         return null;
       }
 
+      // TODO: 浸透したらcatchを消す
       var origin = '';
       try {
         origin = data.get('origin');
@@ -174,11 +175,12 @@ class DrinkRepository extends DB {
         // originはkeyが存在しないことがあるので、握り潰す
       }
 
+      // TODO: 浸透したらcatchを消す
       var isPrivate = false;
       try {
         isPrivate = data.get('isPrivate');
       } catch (e) {
-        // isPrivate、握り潰す
+        // isPrivateはkeyが存在しないことがあるので、握り潰す
       }
 
       return Drink(
