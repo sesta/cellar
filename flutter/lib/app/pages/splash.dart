@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
+import 'package:package_info/package_info.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({
@@ -35,6 +37,13 @@ class _SplashPageState extends State<SplashPage> {
       Navigator.pushReplacementNamed(context, '/maintenance');
       return;
     }
+
+    final packageInfo = await PackageInfo.fromPlatform();
+    print(packageInfo.version);
+    final appVersion = Version.parse(packageInfo.version);
+    // TODO: statusのversionを使う
+    final requiredVersion = Version.parse('1.3.2');
+    print(appVersion.compareTo(requiredVersion).isNegative);
 
     User user = await _checkSignIn();
     if (user != null) {
