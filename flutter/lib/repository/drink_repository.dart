@@ -14,6 +14,7 @@ class DrinkRepository extends DB {
       .set({
         'userId': drink.userId,
         'userName': drink.userName,
+        'isPrivate': drink.isPrivate,
         'drinkTimestamp': drink.drinkDateTime.millisecondsSinceEpoch,
         'drinkName': drink.drinkName,
         'drinkType': drink.drinkType.toString(),
@@ -89,6 +90,7 @@ class DrinkRepository extends DB {
     await db.collection(DRINK_COLLECTION_NAME)
       .doc(drink.drinkId)
       .update({
+        'isPrivate': drink.isPrivate,
         'drinkTimestamp': drink.drinkDateTime.millisecondsSinceEpoch,
         'drinkName': drink.drinkName,
         'drinkType': drink.drinkType.toString(),
@@ -172,9 +174,17 @@ class DrinkRepository extends DB {
         // originはkeyが存在しないことがあるので、握り潰す
       }
 
+      var isPrivate = false;
+      try {
+        isPrivate = data.get('isPrivate');
+      } catch (e) {
+        // isPrivate、握り潰す
+      }
+
       return Drink(
         data.get('userId'),
         data.get('userName'),
+        isPrivate,
         DateTime.fromMicrosecondsSinceEpoch(data.get('drinkTimestamp') * 1000),
         data.get('drinkName'),
         drinkType,
