@@ -33,7 +33,7 @@ class _SplashPageState extends State<SplashPage> {
     Status status = await StatusRepository().getStatus();
     AlertRepository().slackUrl = status.slackUrl;
     widget.setStatus(status);
-    if (status.isMaintenance) {
+    if (status.isMaintenanceMode) {
       Navigator.pushReplacementNamed(context, '/maintenance');
       return;
     }
