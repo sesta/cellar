@@ -299,4 +299,24 @@ class DrinkRepository extends DB {
     );
     return null;
   }
+
+  // 新しい変数を一気に追加したりする用
+  // 容赦無く起き変わってしまうので、使うときは要注意
+  //
+  // 使い方
+  // DrinkRepository().updateValue('isPrivate', false);
+  Future<void> updateValue (
+    String key,
+    value,
+  ) async {
+    final snapshot = await db.collection(DRINK_COLLECTION_NAME)
+      .get();
+
+    final batch = db.batch();
+    snapshot.docs.forEach((DocumentSnapshot document) {
+      batch.update(document.reference, { key: value });
+    });
+
+    batch.commit();
+  }
 }
