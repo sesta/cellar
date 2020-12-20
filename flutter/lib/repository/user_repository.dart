@@ -12,7 +12,7 @@ class UserRepository extends DB {
       .doc(userId)
       .get();
 
-    if (snapshot.data == null) {
+    if (snapshot.data() == null) {
       return null;
     }
 
