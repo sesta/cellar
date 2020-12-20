@@ -62,6 +62,7 @@ class StatusRepository extends DB {
 
     return Status(
       counts,
+      statusData.get('requiredVersion'),
       statusData.get('isMaintenance'),
       statusData.get('maintenanceMessage'),
       statusData.get('slackUrl'),

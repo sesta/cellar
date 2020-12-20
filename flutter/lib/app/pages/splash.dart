@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:package_info/package_info.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
@@ -33,6 +35,14 @@ class _SplashPageState extends State<SplashPage> {
     widget.setStatus(status);
     if (status.isMaintenance) {
       Navigator.pushReplacementNamed(context, '/maintenance');
+      return;
+    }
+
+    final packageInfo = await PackageInfo.fromPlatform();
+    final appVersion = Version.parse(packageInfo.version);
+    final requiredVersion = Version.parse(status.requiredVersion);
+    if (appVersion.compareTo(requiredVersion).isNegative) {
+      Navigator.pushReplacementNamed(context, '/update');
       return;
     }
 
