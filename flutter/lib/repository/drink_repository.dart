@@ -255,7 +255,8 @@ class DrinkRepository extends DB {
       case 'SubDrinkType.ShochuPotato': return SubDrinkType.ShochuPotato;
       case 'SubDrinkType.ShochuToumorokoshi': return SubDrinkType.ShochuToumorokoshi;
       case 'SubDrinkType.ShochuAwamori': return SubDrinkType.ShochuAwamori;
-      case 'SubDrinkType.BeerBohemianPilsne': return SubDrinkType.BeerBohemianPilsner;
+      case 'SubDrinkType.BeerBohemianPilsne': return SubDrinkType.BeerBohemianPilsner; // 修正が完了するまで残す
+      case 'SubDrinkType.BeerBohemianPilsner': return SubDrinkType.BeerBohemianPilsner;
       case 'SubDrinkType.BeerGermanPilsner': return SubDrinkType.BeerGermanPilsner;
       case 'SubDrinkType.BeerSchwarz': return SubDrinkType.BeerSchwarz;
       case 'SubDrinkType.BeerDortmunder': return SubDrinkType.BeerDortmunder;
