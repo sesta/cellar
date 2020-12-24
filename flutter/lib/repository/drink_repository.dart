@@ -68,6 +68,7 @@ class DrinkRepository extends DB {
       isDescTimestamp,
       isOrderByScore,
       lastDrink,
+      showPrivate: true,
     );
 
     final snapshot = await query.get();
@@ -133,7 +134,17 @@ class DrinkRepository extends DB {
     bool isDescTimestamp,
     bool isOrderByScore,
     Drink lastDrink,
+    {
+      showPrivate: false,
+    }
   ) {
+    if (!showPrivate) {
+      query = query.where(
+        'isPrivate',
+        isEqualTo: false,
+      );
+    }
+
     if (drinkType != null) {
       query = query.where(
         'drinkType',
