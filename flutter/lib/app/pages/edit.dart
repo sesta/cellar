@@ -24,6 +24,7 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   DateTime _drinkDateTime;
+  bool _isPrivate;
   DrinkType _drinkType;
   SubDrinkType _subDrinkType = SubDrinkType.Empty;
   int _score = 3;
@@ -51,6 +52,7 @@ class _EditPageState extends State<EditPage> {
 
     setState(() {
       _drinkDateTime = widget.drink.drinkDateTime;
+      _isPrivate = widget.drink.isPrivate;
       _drinkType = widget.drink.drinkType;
       _subDrinkType = widget.drink.subDrinkType;
       _score = widget.drink.score;
@@ -65,6 +67,12 @@ class _EditPageState extends State<EditPage> {
   _updateDrinkDateTime(DateTime drinkDateTime) {
     setState(() {
       _drinkDateTime = drinkDateTime;
+    });
+  }
+
+  _updateIsPrivate(bool isPrivate) {
+    setState(() {
+      _isPrivate = isPrivate;
     });
   }
 
@@ -97,9 +105,11 @@ class _EditPageState extends State<EditPage> {
     });
 
     final oldDrinkType = widget.drink.drinkType;
+    final oldIsPrivate = widget.drink.isPrivate;
 
     await widget.drink.update(
       _drinkDateTime,
+      _isPrivate,
       _nameController.text,
       _drinkType,
       _subDrinkType,
@@ -112,6 +122,17 @@ class _EditPageState extends State<EditPage> {
     if (_drinkType != oldDrinkType) {
       await widget.user.moveUploadCount(oldDrinkType, _drinkType);
       await widget.status.moveUploadCount(oldDrinkType, _drinkType);
+    }
+    if (_isPrivate != oldIsPrivate) {
+      if (_isPrivate) {
+        // 非公開になったということなので、古いDrinkTypeを-1する
+        await widget.status.decrementUploadCount(oldDrinkType);
+      }
+
+      if (oldIsPrivate) {
+        // 公開になったということなので、新しいDrinkTypeを+1する
+        await widget.status.incrementUploadCount(oldDrinkType);
+      }
     }
 
     AnalyticsRepository().sendEvent(
@@ -199,6 +220,7 @@ class _EditPageState extends State<EditPage> {
                 DrinkForm(
                   user: widget.user,
                   drinkDateTime: _drinkDateTime,
+                  isPrivate: _isPrivate,
                   nameController: _nameController,
                   priceController: _priceController,
                   placeController: _placeController,
@@ -208,6 +230,7 @@ class _EditPageState extends State<EditPage> {
                   drinkType: _drinkType,
                   subDrinkType: _subDrinkType,
                   updateDrinkDateTime: _updateDrinkDateTime,
+                  updateIsPrivate: _updateIsPrivate,
                   updateDrinkType: _updateDrinkType,
                   updateSubDrinkType: _updateSubDrinkType,
                   updateScore: _updateScore,

@@ -9,6 +9,7 @@ class DrinkForm extends StatelessWidget {
   DrinkForm({
     @required this.user,
     @required this.drinkDateTime,
+    @required this.isPrivate,
     @required this.nameController,
     @required this.priceController,
     @required this.placeController,
@@ -18,6 +19,7 @@ class DrinkForm extends StatelessWidget {
     @required this.drinkType,
     @required this.subDrinkType,
     @required this.updateDrinkDateTime,
+    @required this.updateIsPrivate,
     @required this.updateDrinkType,
     @required this.updateSubDrinkType,
     @required this.updateScore,
@@ -26,6 +28,7 @@ class DrinkForm extends StatelessWidget {
   final User user;
 
   final DateTime drinkDateTime;
+  final bool isPrivate;
   final TextEditingController nameController;
   final TextEditingController priceController;
   final TextEditingController placeController;
@@ -36,6 +39,7 @@ class DrinkForm extends StatelessWidget {
   final SubDrinkType subDrinkType;
 
   final updateDrinkDateTime;
+  final updateIsPrivate;
   final updateDrinkType;
   final updateSubDrinkType;
   final updateScore;
@@ -71,28 +75,87 @@ class DrinkForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            '飲んだ日 *',
-            style: Theme.of(context).textTheme.subtitle2,
-          ),
-          InkWell(
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Text(
-                formatter.format(drinkDateTime),
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Colors.white38,
-                    width: 1,
-                    style: BorderStyle.solid
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '飲んだ日 *',
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
-                ),
+                  InkWell(
+                    child: Container(
+                      width: 104,
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Text(
+                        formatter.format(drinkDateTime),
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.white38,
+                              width: 1,
+                              style: BorderStyle.solid
+                          ),
+                        ),
+                      ),
+                    ),
+                    onTap: () => _selectDate(context),
+                  ),
+                ],
               ),
-            ),
-            onTap: () => _selectDate(context),
+              Padding(padding: EdgeInsets.only(right: 24)),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '公開設定 *',
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                  DropdownButton(
+                    itemHeight: 56,
+                    value: isPrivate,
+                    onChanged: updateIsPrivate,
+                    icon: Icon(Icons.arrow_drop_down),
+                    underline: Container(
+                      padding: EdgeInsets.only(bottom: 100),
+                      height: 1,
+                      color: Colors.white38,
+                    ),
+                    items: [
+                      DropdownMenuItem(
+                        value: false,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: 24,
+                          ),
+                          child: Text(
+                            '公開',
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: true,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: 24,
+                          ),
+                          child: Text(
+                            '非公開',
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
           Padding(padding: EdgeInsets.only(bottom: 24)),
 
@@ -138,6 +201,7 @@ class DrinkForm extends StatelessWidget {
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
                   DropdownButton(
+                    itemHeight: 56,
                     value: drinkType,
                     onChanged: updateDrinkType,
                     icon: Icon(Icons.arrow_drop_down),
@@ -151,6 +215,7 @@ class DrinkForm extends StatelessWidget {
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
                             minWidth: 80,
+                            minHeight: 24,
                           ),
                           child: Text(
                             type.label,
@@ -172,6 +237,7 @@ class DrinkForm extends StatelessWidget {
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
                   DropdownButton(
+                    itemHeight: 56,
                     value: subDrinkType,
                     onChanged: updateSubDrinkType,
                     icon: Icon(Icons.arrow_drop_down),
@@ -185,6 +251,7 @@ class DrinkForm extends StatelessWidget {
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
                             minWidth: 100,
+                            minHeight: 24,
                           ),
                           child: Text(
                             type.label,
