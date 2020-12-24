@@ -71,28 +71,87 @@ class DrinkForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            '飲んだ日 *',
-            style: Theme.of(context).textTheme.subtitle2,
-          ),
-          InkWell(
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Text(
-                formatter.format(drinkDateTime),
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Colors.white38,
-                    width: 1,
-                    style: BorderStyle.solid
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '飲んだ日 *',
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
-                ),
+                  InkWell(
+                    child: Container(
+                      width: 104,
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Text(
+                        formatter.format(drinkDateTime),
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.white38,
+                              width: 1,
+                              style: BorderStyle.solid
+                          ),
+                        ),
+                      ),
+                    ),
+                    onTap: () => _selectDate(context),
+                  ),
+                ],
               ),
-            ),
-            onTap: () => _selectDate(context),
+              Padding(padding: EdgeInsets.only(right: 24)),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '公開設定 *',
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                  DropdownButton(
+                    itemHeight: 56,
+                    value: false,
+                    onChanged: (value) => print(value),
+                    icon: Icon(Icons.arrow_drop_down),
+                    underline: Container(
+                      padding: EdgeInsets.only(bottom: 100),
+                      height: 1,
+                      color: Colors.white38,
+                    ),
+                    items: [
+                      DropdownMenuItem(
+                        value: false,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: 24,
+                          ),
+                          child: Text(
+                            '公開',
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: true,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: 24,
+                          ),
+                          child: Text(
+                            '非公開',
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
           Padding(padding: EdgeInsets.only(bottom: 24)),
 
