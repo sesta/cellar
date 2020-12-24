@@ -204,6 +204,7 @@ class _DrinkPageState extends State<DrinkPage> {
                       alignment: Alignment.centerLeft,
                       child: Wrap(
                         children: <Widget>[
+                          widget.drink.isPrivate ? Label('非公開') : Container(width: 0),
                           Label(widget.drink.drinkType.label),
                           widget.drink.subDrinkType == SubDrinkType.Empty ? Container(width: 0) : Label(widget.drink.subDrinkType.label),
                           widget.drink.origin == '' ? Container(width: 0) : Label(widget.drink.origin),
