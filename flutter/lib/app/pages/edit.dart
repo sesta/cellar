@@ -105,6 +105,7 @@ class _EditPageState extends State<EditPage> {
     });
 
     final oldDrinkType = widget.drink.drinkType;
+    final oldIsPrivate = widget.drink.isPrivate;
 
     await widget.drink.update(
       _drinkDateTime,
@@ -121,6 +122,17 @@ class _EditPageState extends State<EditPage> {
     if (_drinkType != oldDrinkType) {
       await widget.user.moveUploadCount(oldDrinkType, _drinkType);
       await widget.status.moveUploadCount(oldDrinkType, _drinkType);
+    }
+    if (_isPrivate != oldIsPrivate) {
+      if (_isPrivate) {
+        // 非公開になったということなので、古いDrinkTypeを-1する
+        await widget.status.decrementUploadCount(oldDrinkType);
+      }
+
+      if (oldIsPrivate) {
+        // 公開になったということなので、新しいDrinkTypeを+1する
+        await widget.status.incrementUploadCount(oldDrinkType);
+      }
     }
 
     AnalyticsRepository().sendEvent(
