@@ -202,7 +202,9 @@ class _PostPageState extends State<PostPage> {
     );
 
     await widget.user.incrementUploadCount(_drinkType);
-    await widget.status.incrementUploadCount(_drinkType);
+    if (!_isPrivate) {
+      await widget.status.incrementUploadCount(_drinkType);
+    }
 
     AnalyticsRepository().sendEvent(EventType.PostDrink, {});
     Navigator.of(context).pop(true);
