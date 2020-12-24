@@ -197,6 +197,7 @@ class DrinkForm extends StatelessWidget {
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
                   DropdownButton(
+                    itemHeight: 56,
                     value: drinkType,
                     onChanged: updateDrinkType,
                     icon: Icon(Icons.arrow_drop_down),
@@ -210,6 +211,7 @@ class DrinkForm extends StatelessWidget {
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
                             minWidth: 80,
+                            minHeight: 24,
                           ),
                           child: Text(
                             type.label,
@@ -231,6 +233,7 @@ class DrinkForm extends StatelessWidget {
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
                   DropdownButton(
+                    itemHeight: 56,
                     value: subDrinkType,
                     onChanged: updateSubDrinkType,
                     icon: Icon(Icons.arrow_drop_down),
@@ -244,6 +247,7 @@ class DrinkForm extends StatelessWidget {
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
                             minWidth: 100,
+                            minHeight: 24,
                           ),
                           child: Text(
                             type.label,
