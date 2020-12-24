@@ -24,6 +24,7 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   DateTime _drinkDateTime;
+  bool _isPrivate;
   DrinkType _drinkType;
   SubDrinkType _subDrinkType = SubDrinkType.Empty;
   int _score = 3;
@@ -51,6 +52,7 @@ class _EditPageState extends State<EditPage> {
 
     setState(() {
       _drinkDateTime = widget.drink.drinkDateTime;
+      _isPrivate = widget.drink.isPrivate;
       _drinkType = widget.drink.drinkType;
       _subDrinkType = widget.drink.subDrinkType;
       _score = widget.drink.score;
@@ -65,6 +67,12 @@ class _EditPageState extends State<EditPage> {
   _updateDrinkDateTime(DateTime drinkDateTime) {
     setState(() {
       _drinkDateTime = drinkDateTime;
+    });
+  }
+
+  _updateIsPrivate(bool isPrivate) {
+    setState(() {
+      _isPrivate = isPrivate;
     });
   }
 
@@ -100,6 +108,7 @@ class _EditPageState extends State<EditPage> {
 
     await widget.drink.update(
       _drinkDateTime,
+      _isPrivate,
       _nameController.text,
       _drinkType,
       _subDrinkType,
@@ -199,6 +208,7 @@ class _EditPageState extends State<EditPage> {
                 DrinkForm(
                   user: widget.user,
                   drinkDateTime: _drinkDateTime,
+                  isPrivate: _isPrivate,
                   nameController: _nameController,
                   priceController: _priceController,
                   placeController: _placeController,
@@ -208,6 +218,7 @@ class _EditPageState extends State<EditPage> {
                   drinkType: _drinkType,
                   subDrinkType: _subDrinkType,
                   updateDrinkDateTime: _updateDrinkDateTime,
+                  updateIsPrivate: _updateIsPrivate,
                   updateDrinkType: _updateDrinkType,
                   updateSubDrinkType: _updateSubDrinkType,
                   updateScore: _updateScore,

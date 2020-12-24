@@ -9,6 +9,7 @@ class DrinkForm extends StatelessWidget {
   DrinkForm({
     @required this.user,
     @required this.drinkDateTime,
+    @required this.isPrivate,
     @required this.nameController,
     @required this.priceController,
     @required this.placeController,
@@ -18,6 +19,7 @@ class DrinkForm extends StatelessWidget {
     @required this.drinkType,
     @required this.subDrinkType,
     @required this.updateDrinkDateTime,
+    @required this.updateIsPrivate,
     @required this.updateDrinkType,
     @required this.updateSubDrinkType,
     @required this.updateScore,
@@ -26,6 +28,7 @@ class DrinkForm extends StatelessWidget {
   final User user;
 
   final DateTime drinkDateTime;
+  final bool isPrivate;
   final TextEditingController nameController;
   final TextEditingController priceController;
   final TextEditingController placeController;
@@ -36,6 +39,7 @@ class DrinkForm extends StatelessWidget {
   final SubDrinkType subDrinkType;
 
   final updateDrinkDateTime;
+  final updateIsPrivate;
   final updateDrinkType;
   final updateSubDrinkType;
   final updateScore;
@@ -114,8 +118,8 @@ class DrinkForm extends StatelessWidget {
                   ),
                   DropdownButton(
                     itemHeight: 56,
-                    value: false,
-                    onChanged: (value) => print(value),
+                    value: isPrivate,
+                    onChanged: updateIsPrivate,
                     icon: Icon(Icons.arrow_drop_down),
                     underline: Container(
                       padding: EdgeInsets.only(bottom: 100),

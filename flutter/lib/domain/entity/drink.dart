@@ -75,6 +75,7 @@ class Drink {
 
   Future<void> update(
     DateTime drinkDateTime,
+    bool isPrivate,
     String drinkName,
     DrinkType drinkType,
     SubDrinkType subDrinkType,
@@ -89,6 +90,7 @@ class Drink {
     }
 
     this.drinkDateTime = drinkDateTime;
+    this.isPrivate = isPrivate;
     this.drinkName = drinkName;
     this.drinkType = drinkType;
     this.subDrinkType = subDrinkType;
