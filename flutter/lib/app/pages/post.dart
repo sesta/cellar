@@ -28,6 +28,7 @@ class _PostPageState extends State<PostPage> {
   List<Asset> _imageAssets = [];
   List<List<int>> _images = [];
   DateTime _drinkDateTime = DateTime.now();
+  bool _isPrivate = false;
   DrinkType _drinkType;
   SubDrinkType _subDrinkType = SubDrinkType.Empty;
   int _score = 3;
@@ -59,6 +60,12 @@ class _PostPageState extends State<PostPage> {
   _updateDrinkDateTime(DateTime drinkDateTime) {
     setState(() {
       _drinkDateTime = drinkDateTime;
+    });
+  }
+
+  _updateIsPrivate(bool isPrivate) {
+    setState(() {
+      _isPrivate = isPrivate;
     });
   }
 
@@ -183,6 +190,7 @@ class _PostPageState extends State<PostPage> {
       widget.user,
       _imageAssets,
       _drinkDateTime,
+      _isPrivate,
       _nameController.text,
       _drinkType,
       _subDrinkType,
@@ -230,6 +238,7 @@ class _PostPageState extends State<PostPage> {
                 DrinkForm(
                   user: widget.user,
                   drinkDateTime: _drinkDateTime,
+                  isPrivate: _isPrivate,
                   nameController: _nameController,
                   priceController: _priceController,
                   placeController: _placeController,
@@ -239,6 +248,7 @@ class _PostPageState extends State<PostPage> {
                   drinkType: _drinkType,
                   subDrinkType: _subDrinkType,
                   updateDrinkDateTime: _updateDrinkDateTime,
+                  updateIsPrivate: _updateIsPrivate,
                   updateDrinkType: _updateDrinkType,
                   updateSubDrinkType: _updateSubDrinkType,
                   updateScore: _updateScore,

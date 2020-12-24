@@ -10,6 +10,7 @@ Future<void> post(
   User user,
   List<Asset> images,
   DateTime drinkDateTime,
+  bool isPrivate,
   String drinkName,
   DrinkType drinkType,
   SubDrinkType subDrinkType,
@@ -40,7 +41,7 @@ Future<void> post(
   final drink = Drink(
     user.userId,
     user.userName,
-    false, // TODO: 非公開の設定を指定できるようにする
+    isPrivate,
     drinkDateTime,
     drinkName,
     drinkType,
