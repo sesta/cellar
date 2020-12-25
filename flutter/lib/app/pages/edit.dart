@@ -190,8 +190,8 @@ class _EditPageState extends State<EditPage> {
     });
 
     await widget.drink.delete();
-    await widget.user.decrementUploadCount(_drinkType);
-    await widget.status.decrementUploadCount(_drinkType);
+    await widget.user.decrementUploadCount(widget.drink.drinkType);
+    await widget.status.decrementUploadCount(widget.drink.drinkType);
 
     AnalyticsRepository().sendEvent(
       EventType.DeleteDrink,
