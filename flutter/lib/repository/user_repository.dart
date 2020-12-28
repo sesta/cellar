@@ -66,11 +66,19 @@ class UserRepository extends DB {
         : 0;
     });
 
+    // TODO: 浸透したらcatchを消す
+    var isDeveloper = false;
+    try {
+      isDeveloper = rawData.get('isDeveloper');
+    } catch (e) {
+      // isDeveloperはkeyが存在しないことがあるので、握り潰す
+    }
+
     return User(
       userId,
       rawData.get('userName'),
       uploadCounts: counts,
-      isDeveloper: rawData.get('isDeveloper') == null ? false : rawData.get('isDeveloper'),
+      isDeveloper: isDeveloper,
     );
   }
 }
