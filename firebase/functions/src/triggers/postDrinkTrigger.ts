@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions'
-import { sendSlack } from '../repositories/slackRepository';
+import { sendSlack } from '../repositories/slackRepository'
 
 export const postDrinkTrigger = (collectionName: String) =>
   functions.firestore
