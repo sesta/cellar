@@ -1,18 +1,33 @@
+import * as admin from 'firebase-admin'
 import * as functions from 'firebase-functions'
-import { sendSlack } from '../repositories/slackRepository';
+
+import { notifyPost } from '../repositories/slackRepository'
 
 export const postDrinkTrigger = (collectionName: String) =>
   functions.firestore
     .document(`${collectionName}/{drinkId}`)
     .onCreate((snapshot) => {
+      const bucket = admin.storage().bucket()
       const drink = snapshot.data()
-      const detail = `
-userName: ${drink.userName}
-drinkName: ${drink.drinkName}
-drinkType: ${drink.drinkType}
-memo: ${drink.memo}
-      `
-      const dev = collectionName.indexOf('dev') === -1 ? '' : '【開発】'
+      const image = bucket.file(drink.thumbImagePath)
 
-      void sendSlack(`${dev}お酒が投稿されました。`, detail)
+      image.getSignedUrl({
+        action: 'read',
+        // 雑に未来にしておく
+        expires: '2030-01-01',
+      }).then((imageUrls) => {
+        void notifyPost(
+          {
+            drinkName: drink.drinkName,
+            userName: drink.userName,
+            drinkType: drink.drinkType,
+            memo: drink.memo,
+            imageUrl: imageUrls[0],
+            isPrivate: drink.isPrivate,
+          },
+          collectionName.indexOf('dev') === -1,
+        )
+      }).catch((error) => {
+        console.log(error)
+      })
     })
