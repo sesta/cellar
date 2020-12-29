@@ -18,12 +18,12 @@ export const postDrinkTrigger = (collectionName: String) =>
       }).then((imageUrls) => {
         void notifyPost(
           {
-            drinkId: snapshot.id,
             drinkName: drink.drinkName,
             userName: drink.userName,
             drinkType: drink.drinkType,
             memo: drink.memo,
             imageUrl: imageUrls[0],
+            isPrivate: drink.isPrivate,
           },
           collectionName.indexOf('dev') === -1,
         )

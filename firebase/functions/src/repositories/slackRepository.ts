@@ -1,12 +1,12 @@
 import axios from 'axios'
 
 type Drink = {
-  drinkId: string
   drinkName: string
   userName: string
   drinkType: string
   memo: string
   imageUrl: string
+  isPrivate: boolean
 }
 
 export const notifyPost = async (drink: Drink, isProduction: boolean) => {
@@ -28,7 +28,7 @@ export const notifyPost = async (drink: Drink, isProduction: boolean) => {
         elements: [
           {
             type: 'plain_text',
-            text: `${drink.userName} / ${drink.drinkType} / ${drink.drinkId}`,
+            text: `${drink.userName} / ${drink.drinkType} / ${drink.isPrivate ? '非公開' : '公開'}`,
           },
         ],
       },
