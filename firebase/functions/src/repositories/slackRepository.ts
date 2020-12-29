@@ -1,3 +1,4 @@
+import * as functions from 'firebase-functions'
 import axios from 'axios'
 
 type Drink = {
@@ -12,7 +13,7 @@ type Drink = {
 export const notifyPost = async (drink: Drink, isProduction: boolean) => {
   const text = `${isProduction? '' : '【開発】'}お酒が投稿されました。`
   // cloud functionsの環境変数で設定
-  const url = process.env.SLACK_URL as string
+  const url = functions.config().slack.url as string
   const data = {
     text,
     blocks: [
