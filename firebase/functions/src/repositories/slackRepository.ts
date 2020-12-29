@@ -6,6 +6,7 @@ type Drink = {
   userName: string
   drinkType: string
   memo: string
+  imageUrl: string
 }
 
 export const notifyPost = async (drink: Drink, isProduction: boolean) => {
@@ -46,6 +47,11 @@ export const notifyPost = async (drink: Drink, isProduction: boolean) => {
             text: drink.memo === '' ? '-' : drink.memo,
           },
         ],
+      },
+      {
+        type: 'image',
+        image_url: drink.imageUrl,
+        alt_text: 'drinkImage',
       },
     ],
   }
