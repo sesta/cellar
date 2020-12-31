@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entity/entities.dart';
@@ -45,6 +46,12 @@ class _PostPageState extends State<PostPage> {
     super.initState();
 
     _nameController.addListener(() => setState(() {}));
+
+    SharedPreferences.getInstance().then((preferences) =>
+      setState(() {
+        _isPrivate = preferences.get('_isPrivate');
+      })
+    );
 
     // 初期化が終わってからにするために少し遅らせる
     Future.delayed(Duration(milliseconds: 300))
@@ -205,6 +212,9 @@ class _PostPageState extends State<PostPage> {
     if (!_isPrivate) {
       await widget.status.incrementUploadCount(_drinkType);
     }
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setBool('_isPrivate', _isPrivate);
 
     AnalyticsRepository().sendEvent(EventType.PostDrink, {});
     Navigator.of(context).pop(true);
