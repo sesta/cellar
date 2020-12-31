@@ -47,11 +47,15 @@ class _PostPageState extends State<PostPage> {
 
     _nameController.addListener(() => setState(() {}));
 
-    SharedPreferences.getInstance().then((preferences) =>
+    SharedPreferences.getInstance().then((preferences) {
+      final isPrivate = preferences.get('_isPrivate');
+      if (isPrivate == null) {
+        return;
+      }
       setState(() {
         _isPrivate = preferences.get('_isPrivate');
-      })
-    );
+      });
+    });
 
     // 初期化が終わってからにするために少し遅らせる
     Future.delayed(Duration(milliseconds: 300))
