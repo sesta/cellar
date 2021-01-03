@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
@@ -49,10 +50,21 @@ class _HomePageState extends State<HomePage> {
     }));
   }
 
+  _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      backgroundColor:Theme.of(context).primaryColor,
+    );
+  }
+
   _updateBottomSelectType(BottomSelectType bottomSelectType) {
     if (_bottomSelectType == bottomSelectType) {
       return;
     }
+
+    _showToast('トーストが出たよ');
 
     setState(() {
       _bottomSelectType = bottomSelectType;
