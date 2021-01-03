@@ -1,5 +1,4 @@
 import 'package:animations/animations.dart';
-import 'package:cellar/app/widget/atoms/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -54,8 +53,6 @@ class _HomePageState extends State<HomePage> {
     if (_bottomSelectType == bottomSelectType) {
       return;
     }
-
-    showToast(context, 'トーストが出るよ');
 
     setState(() {
       _bottomSelectType = bottomSelectType;
