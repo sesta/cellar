@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
 
+import 'package:cellar/app/widget/atoms/toast.dart';
 import 'package:cellar/app/widget/atoms/text_input.dart';
 
 class Setting extends StatefulWidget {
@@ -45,7 +46,10 @@ class _SettingState extends State<Setting> {
     await widget.user.updateName();
 
     AnalyticsRepository().sendEvent(EventType.EditUserName, {});
-    Navigator.pushReplacementNamed(context, '/home');
+    showToast(context, '名前を更新しました');
+    setState(() {
+      _loading = false;
+    });
   }
 
   get disableSave {
