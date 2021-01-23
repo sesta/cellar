@@ -9,7 +9,15 @@ class AlertRepository {
     String description,
   ) async {
     String body = json.encode({
+      'text': 'エラーが発生しました',
       'blocks': [
+        {
+          'type': 'section',
+          'text': {
+            'type': 'mrkdwn',
+            'text': 'エラーが発生しました',
+          }
+        },
         {
           'type': 'section',
           'text': {
