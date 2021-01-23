@@ -31,8 +31,8 @@ class AlertRepository {
           'type': 'context',
           'elements': [
             {
-              'type': 'plain_text',
-              'text': description
+              'type': 'mrkdwn',
+              'text': '```$description```'
             }
           ]
         }
