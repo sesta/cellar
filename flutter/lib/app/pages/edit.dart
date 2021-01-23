@@ -208,10 +208,28 @@ class _EditPageState extends State<EditPage> {
       _uploading = true;
     });
 
-    await widget.drink.delete();
-    await widget.user.decrementUploadCount(widget.drink.drinkType);
-    if (!widget.drink.isPrivate) {
-      await widget.status.decrementUploadCount(widget.drink.drinkType);
+    try {
+      await widget.drink.delete();
+    } catch (e, stackTrace) {
+      showToast(context, '削除に失敗しました。', isError: true);
+      AlertRepository().send(
+      'お酒の削除に失敗しました。',
+      stackTrace.toString().substring(0, 1000),
+      );
+
+      return;
+    }
+
+    try {
+      await widget.user.decrementUploadCount(widget.drink.drinkType);
+      if (!widget.drink.isPrivate) {
+        await widget.status.decrementUploadCount(widget.drink.drinkType);
+      }
+    } catch (e, stackTrace) {
+      AlertRepository().send(
+      '投稿数の更新に失敗しました',
+      stackTrace.toString().substring(0, 1000),
+      );
     }
 
     AnalyticsRepository().sendEvent(
