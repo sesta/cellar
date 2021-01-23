@@ -60,6 +60,8 @@ class _DrinkPageState extends State<DrinkPage> {
         '詳細ページで画像の読み込みに失敗しました。',
         stackTrace.toString().substring(0, 1000),
       );
+
+      return;
     }
 
     setState(() {
