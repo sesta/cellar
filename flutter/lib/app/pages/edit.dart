@@ -5,6 +5,7 @@ import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/drink_form.dart';
+import 'package:cellar/app/widget/atoms/toast.dart';
 
 class EditPage extends StatefulWidget {
   EditPage({
@@ -107,32 +108,50 @@ class _EditPageState extends State<EditPage> {
     final oldDrinkType = widget.drink.drinkType;
     final oldIsPrivate = widget.drink.isPrivate;
 
-    await widget.drink.update(
-      _drinkDateTime,
-      _isPrivate,
-      _nameController.text,
-      _drinkType,
-      _subDrinkType,
-      _score,
-      _memoController.text,
-      _priceController.text == '' ? 0 : int.parse(_priceController.text),
-      _placeController.text,
-      _originController.text,
-    );
-    if (_drinkType != oldDrinkType) {
-      await widget.user.moveUploadCount(oldDrinkType, _drinkType);
-      await widget.status.moveUploadCount(oldDrinkType, _drinkType);
-    }
-    if (_isPrivate != oldIsPrivate) {
-      if (_isPrivate) {
-        // 非公開になったということなので、古いDrinkTypeを-1する
-        await widget.status.decrementUploadCount(oldDrinkType);
-      }
+    try {
+      await widget.drink.update(
+        _drinkDateTime,
+        _isPrivate,
+        _nameController.text,
+        _drinkType,
+        _subDrinkType,
+        _score,
+        _memoController.text,
+        _priceController.text == '' ? 0 : int.parse(_priceController.text),
+        _placeController.text,
+        _originController.text,
+      );
+    } catch (e, stackTrace) {
+      showToast(context, '更新に失敗しました。', isError: true);
+      AlertRepository().send(
+        'お酒の更新に失敗しました。',
+        stackTrace.toString().substring(0, 1000),
+      );
 
-      if (oldIsPrivate) {
-        // 公開になったということなので、新しいDrinkTypeを+1する
-        await widget.status.incrementUploadCount(oldDrinkType);
+      return;
+    }
+
+    try {
+      if (_drinkType != oldDrinkType) {
+        await widget.user.moveUploadCount(oldDrinkType, _drinkType);
+        await widget.status.moveUploadCount(oldDrinkType, _drinkType);
       }
+      if (_isPrivate != oldIsPrivate) {
+        if (_isPrivate) {
+          // 非公開になったということなので、古いDrinkTypeを-1する
+          await widget.status.decrementUploadCount(oldDrinkType);
+        }
+
+        if (oldIsPrivate) {
+          // 公開になったということなので、新しいDrinkTypeを+1する
+          await widget.status.incrementUploadCount(oldDrinkType);
+        }
+      }
+    } catch (e, stackTrace) {
+      AlertRepository().send(
+        '投稿数の更新に失敗しました',
+        stackTrace.toString().substring(0, 1000),
+      );
     }
 
     AnalyticsRepository().sendEvent(

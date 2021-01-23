@@ -55,7 +55,7 @@ class _DrinkPageState extends State<DrinkPage> {
     try {
       await widget.drink.getImageUrls();
     } catch (e, stackTrace) {
-      showToast(context, '画像の読み込みに失敗しました。');
+      showToast(context, '画像の読み込みに失敗しました。', isError: true);
       AlertRepository().send(
         '詳細ページで画像の読み込みに失敗しました。',
         stackTrace.toString().substring(0, 1000),
