@@ -6,6 +6,8 @@ import 'package:pub_semver/pub_semver.dart';
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
 
+import 'package:cellar/app/widget/atoms/toast.dart';
+
 class SplashPage extends StatefulWidget {
   SplashPage({
     Key key,
@@ -30,7 +32,14 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _fetch() async {
     await Firebase.initializeApp();
-    Status status = await StatusRepository().getStatus();
+    Status status;
+    try {
+      status = await StatusRepository().getStatus();
+    } catch (e) {
+      // statusにSlackのURLを格納しているので、ここで落ちると辛い
+      showToast(context, 'メンテナンス中です。', isError: true);
+    }
+
     AlertRepository().slackUrl = status.slackUrl;
     widget.setStatus(status);
     if (status.isMaintenanceMode) {
@@ -46,7 +55,16 @@ class _SplashPageState extends State<SplashPage> {
       return;
     }
 
-    User user = await _checkSignIn();
+    User user;
+    try {
+      user = await _checkSignIn();
+    } catch (e, stackTrace) {
+      AlertRepository().send(
+        'サインイン中のユーザーの取得に失敗しました',
+        stackTrace.toString().substring(0, 1000),
+      );
+    }
+
     if (user != null) {
       widget.setUser(user);
     }
