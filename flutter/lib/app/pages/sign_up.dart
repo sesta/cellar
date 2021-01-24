@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
+import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/atoms/text_input.dart';
+import 'package:cellar/app/widget/atoms/toast.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({
@@ -32,7 +34,22 @@ class _SignUpState extends State<SignUpPage> {
     });
 
     final user = User(widget.userId, userName);
-    await user.create();
+
+    try {
+      await user.create();
+    } catch (e, stackTrace) {
+      showToast(context, 'ユーザーの登録に失敗しました', isError: true);
+      AlertRepository().send(
+        'ユーザーの作成に失敗しました',
+        stackTrace.toString().substring(0, 1000),
+      );
+
+      setState(() {
+        _loading = false;
+      });
+      return;
+    }
+
     await widget.setUser(user);
     Navigator.of(context).pop();
     // ユーザー情報を渡し直すためreplace
