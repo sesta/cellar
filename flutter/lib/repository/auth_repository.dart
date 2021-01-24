@@ -3,6 +3,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:cellar/repository/repositories.dart';
+
 enum AuthType {
   Google,
   Apple,
@@ -13,7 +15,15 @@ class AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<bool> get enableAppleSignIn async {
-    return await AppleSignIn.isAvailable();
+    try {
+      return await AppleSignIn.isAvailable();
+    } catch (e, stackTrace) {
+      AlertRepository().send(
+        'AppleSignInか使用可能かどうか取得できませんでした',
+        stackTrace.toString().substring(0, 1000),
+      );
+      return false;
+    }
   }
 
   Future<String> getSignInUserId() async {

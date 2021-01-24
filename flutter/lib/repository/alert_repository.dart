@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:flutter/foundation.dart';
 
 class AlertRepository {
   static String _slackUrl;
@@ -8,8 +9,17 @@ class AlertRepository {
     String message,
     String description,
   ) async {
+    String devText = kReleaseMode ? '' : '【開発】';
     String body = json.encode({
+      'text': '$devTextエラーが発生しました',
       'blocks': [
+        {
+          'type': 'section',
+          'text': {
+            'type': 'mrkdwn',
+            'text': '*$devTextエラーが発生しました*',
+          }
+        },
         {
           'type': 'section',
           'text': {
@@ -21,8 +31,8 @@ class AlertRepository {
           'type': 'context',
           'elements': [
             {
-              'type': 'plain_text',
-              'text': description
+              'type': 'mrkdwn',
+              'text': '```$description```'
             }
           ]
         }

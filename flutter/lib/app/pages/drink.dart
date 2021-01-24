@@ -4,8 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
+import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/atoms/label.dart';
+import 'package:cellar/app/widget/atoms/toast.dart';
 
 class DrinkPage extends StatefulWidget {
   DrinkPage({
@@ -50,7 +52,18 @@ class _DrinkPageState extends State<DrinkPage> {
   }
 
   Future<void> _loadImage() async {
-    await widget.drink.getImageUrls();
+    try {
+      await widget.drink.getImageUrls();
+    } catch (e, stackTrace) {
+      showToast(context, '画像の読み込みに失敗しました。', isError: true);
+      AlertRepository().send(
+        '詳細ページで画像の読み込みに失敗しました。',
+        stackTrace.toString().substring(0, 1000),
+      );
+
+      return;
+    }
+
     setState(() {
       _imageLoaded = true;
     });

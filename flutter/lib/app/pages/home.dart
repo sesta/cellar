@@ -10,6 +10,7 @@ import 'package:cellar/app/widget/mine_timeline.dart';
 import 'package:cellar/app/widget/all_timeline.dart';
 import 'package:cellar/app/widget/summary.dart';
 import 'package:cellar/app/widget/setting.dart';
+import 'package:cellar/app/widget/atoms/toast.dart';
 
 enum BottomSelectType {
   TimelineMine,
@@ -73,21 +74,30 @@ class _HomePageState extends State<HomePage> {
     var userId;
     try {
       userId = await AuthRepository().signIn(authType);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      showToast(context, 'サインインに失敗しました。', isError: true);
       AlertRepository().send(
         'SignInに失敗しました',
-        'authType: $authType\nError Message:\n$e',
+        stackTrace.toString().substring(0, 1000),
       );
     }
-    if (userId == null) {
 
+    if (userId == null) {
       setState(() {
         this._loadingSignIn = false;
       });
       return;
     }
 
-    final user = await UserRepository().getUser(userId);
+    User user;
+    try {
+      user = await UserRepository().getUser(userId);
+    } catch (e, stackTrace) {
+      AlertRepository().send(
+        'ユーザーの情報の取得に失敗しました',
+        stackTrace.toString().substring(0, 1000),
+      );
+    }
     setState(() {
       this._loadingSignIn = false;
     });

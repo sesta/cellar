@@ -10,6 +10,7 @@ import 'package:cellar/domain/models/post.dart';
 import 'package:cellar/repository/repositories.dart';
 
 import 'package:cellar/app/widget/drink_form.dart';
+import 'package:cellar/app/widget/atoms/toast.dart';
 
 class PostPage extends StatefulWidget {
   PostPage({
@@ -197,24 +198,44 @@ class _PostPageState extends State<PostPage> {
       _loading = true;
     });
 
-    await post(
-      widget.user,
-      _imageAssets,
-      _drinkDateTime,
-      _isPrivate,
-      _nameController.text,
-      _drinkType,
-      _subDrinkType,
-      _score,
-      _memoController.text,
-      _priceController.text == '' ? 0 : int.parse(_priceController.text),
-      _placeController.text,
-      _originController.text,
-    );
+    try {
+      await post(
+        widget.user,
+        _imageAssets,
+        _drinkDateTime,
+        _isPrivate,
+        _nameController.text,
+        _drinkType,
+        _subDrinkType,
+        _score,
+        _memoController.text,
+        _priceController.text == '' ? 0 : int.parse(_priceController.text),
+        _placeController.text,
+        _originController.text,
+      );
+    } catch (e, stackTrace) {
+      showToast(context, '投稿に失敗しました。', isError: true);
+      AlertRepository().send(
+        '投稿に失敗しました。',
+        stackTrace.toString().substring(0, 1000),
+      );
 
-    await widget.user.incrementUploadCount(_drinkType);
-    if (!_isPrivate) {
-      await widget.status.incrementUploadCount(_drinkType);
+      setState(() {
+        _loading = false;
+      });
+      return;
+    }
+
+    try {
+      await widget.user.incrementUploadCount(_drinkType);
+      if (!_isPrivate) {
+        await widget.status.incrementUploadCount(_drinkType);
+      }
+    } catch (e, stackTrace) {
+      AlertRepository().send(
+        '投稿数の更新に失敗しました',
+        stackTrace.toString().substring(0, 1000),
+      );
     }
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
