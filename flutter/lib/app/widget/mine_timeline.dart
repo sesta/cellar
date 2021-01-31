@@ -3,8 +3,9 @@ import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/domain/models/timeline.dart';
-import 'package:cellar/repository/analytics_repository.dart';
+import 'package:cellar/repository/repositories.dart';
 
+import 'package:cellar/app/widget/atoms/toast.dart';
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/drink_type_tab_bar.dart';
 import 'package:cellar/app/widget/order_menu.dart';
@@ -75,12 +76,23 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
     final drinkType = _drinkType;
     final orderType = _orderType;
 
-    final drinks = await getTimelineDrinks(
-      TimelineType.Mine,
-      _orderType,
-      drinkType: _drinkType,
-      userId: widget.user.userId,
-    );
+    List<Drink> drinks;
+    try {
+      drinks = await getTimelineDrinks(
+        TimelineType.Mine,
+        _orderType,
+        drinkType: _drinkType,
+        userId: widget.user.userId,
+      );
+    } catch (e, stackTrace) {
+      showToast(context, 'お酒の読み込みに失敗しました', isError: true);
+      AlertRepository().send(
+        'タイムラインの読み込みに失敗しました。',
+        stackTrace.toString().substring(0, 1000),
+      );
+
+      return;
+    }
 
     // 並び順が変わっていたら保存しない
     if (orderType != _orderType) {
@@ -193,13 +205,24 @@ class _MineTimelineState extends State<MineTimeline> with SingleTickerProviderSt
     final drinkType = _drinkType;
     final orderType = _orderType;
 
-    final drinks = await getTimelineDrinks(
-      TimelineType.Mine,
-      _orderType,
-      drinkType: _drinkType,
-      userId: widget.user.userId,
-      lastDrink: targetDrinks.last,
-    );
+    List<Drink> drinks;
+    try {
+      drinks = await getTimelineDrinks(
+        TimelineType.Mine,
+        _orderType,
+        drinkType: _drinkType,
+        userId: widget.user.userId,
+        lastDrink: targetDrinks.last,
+      );
+    } catch (e, stackTrace) {
+      showToast(context, 'お酒の読み込みに失敗しました', isError: true);
+      AlertRepository().send(
+        'タイムラインの読み込みに失敗しました。',
+        stackTrace.toString().substring(0, 1000),
+      );
+
+      return;
+    }
 
     // 並び順が変わっていたら保存しない
     if (orderType != _orderType) {

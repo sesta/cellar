@@ -5,6 +5,7 @@ import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/domain/models/timeline.dart';
 import 'package:cellar/repository/repositories.dart';
 
+import 'package:cellar/app/widget/atoms/toast.dart';
 import 'package:cellar/app/widget/drink_grid.dart';
 import 'package:cellar/app/widget/drink_type_tab_bar.dart';
 import 'package:cellar/app/widget/order_menu.dart';
@@ -83,12 +84,23 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
     final drinkType = _drinkType;
     final orderType = _orderType;
 
-    final drinks = await getTimelineDrinks(
-      TimelineType.All,
-      _orderType,
-      drinkType: _drinkType,
-      userId: null,
-    );
+    List<Drink> drinks;
+    try {
+      drinks = await getTimelineDrinks(
+        TimelineType.All,
+        _orderType,
+        drinkType: _drinkType,
+        userId: null,
+      );
+    } catch (e, stackTrace) {
+      showToast(context, 'お酒の読み込みに失敗しました', isError: true);
+      AlertRepository().send(
+        'タイムラインの読み込みに失敗しました。',
+        stackTrace.toString().substring(0, 1000),
+      );
+
+      return;
+    }
 
     // 並び順が変わっていたら保存しない
     if (orderType != _orderType) {
@@ -201,13 +213,24 @@ class _AllTimelineState extends State<AllTimeline> with SingleTickerProviderStat
     final drinkType = _drinkType;
     final orderType = _orderType;
 
-    final drinks = await getTimelineDrinks(
-      TimelineType.All,
-      _orderType,
-      drinkType: _drinkType,
-      userId: null,
-      lastDrink: targetDrinks.last,
-    );
+    List<Drink> drinks;
+    try {
+      drinks = await getTimelineDrinks(
+        TimelineType.All,
+        _orderType,
+        drinkType: _drinkType,
+        userId: null,
+        lastDrink: targetDrinks.last,
+      );
+    } catch (e, stackTrace) {
+      showToast(context, 'お酒の読み込みに失敗しました', isError: true);
+      AlertRepository().send(
+        'タイムラインの読み込みに失敗しました。',
+        stackTrace.toString().substring(0, 1000),
+      );
+
+      return;
+    }
 
     // 並び順が変わっていたら保存しない
     if (orderType != _orderType) {
