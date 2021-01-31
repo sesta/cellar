@@ -160,7 +160,7 @@ class DrinkForm extends StatelessWidget {
           Padding(padding: EdgeInsets.only(bottom: 24)),
 
           Text(
-            '名前 *',
+            'お酒の名前 *',
             style: Theme.of(context).textTheme.subtitle2,
           ),
           TextInput(
