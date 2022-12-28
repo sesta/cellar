@@ -22,8 +22,7 @@ dependencies:
   firebase_crashlytics: ^3.0.8
   cloud_firestore: ^4.3.0
   google_sign_in: ^5.4.2
-  # deprecated
-  apple_sign_in: ^0.1.0
+  sign_in_with_apple: ^4.3.0
   shared_preferences: ^2.0.15
   # update to 0.18
   intl: ^0.17.0

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:cellar/repository/repositories.dart';
@@ -16,7 +16,7 @@ class AuthRepository {
 
   Future<bool> get enableAppleSignIn async {
     try {
-      return await AppleSignIn.isAvailable();
+      return await SignInWithApple.isAvailable();
     } catch (e, stackTrace) {
       AlertRepository().send(
         'AppleSignInか使用可能かどうか取得できませんでした',
@@ -62,19 +62,16 @@ class AuthRepository {
   }
 
   Future<AuthCredential> _getCredentialByApple() async {
-    final result = await AppleSignIn.performRequests([
-      AppleIdRequest(
-        requestedOperation: OpenIdOperation.operationLogin,
-      )
-    ]);
-    if (result.status != AuthorizationStatus.authorized) {
-      return null;
-    }
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: []
+    );
+    // TODO: ログインに失敗していたら return: null; する
+    print(credential);
 
     final oAuthProvider = OAuthProvider('apple.com');
     return oAuthProvider.credential(
-      idToken: String.fromCharCodes(result.credential.identityToken),
-      accessToken: String.fromCharCodes(result.credential.authorizationCode),
+      idToken: credential.identityToken,
+      accessToken: credential.authorizationCode,
     );
   }
 
