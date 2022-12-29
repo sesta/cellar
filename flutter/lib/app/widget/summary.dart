@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
@@ -60,6 +59,7 @@ class _SummaryState extends State<Summary> {
     });
   }
 
+  /*
   List<charts.Series<DrinkType, String>> get _postCountRateData =>
     [
       charts.Series<DrinkType, String>(
@@ -92,6 +92,7 @@ class _SummaryState extends State<Summary> {
         ),
       )
     ];
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +125,7 @@ class _SummaryState extends State<Summary> {
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               Padding(padding: EdgeInsets.only(bottom: 16)),
-              _postRate,
+              // _postRate,
               Padding(padding: EdgeInsets.only(bottom: 32)),
 
               Text(
@@ -132,7 +133,7 @@ class _SummaryState extends State<Summary> {
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               Padding(padding: EdgeInsets.only(bottom: 8)),
-              _scoreAverage,
+              // _scoreAverage,
               Padding(padding: EdgeInsets.only(bottom: 48)),
 
               Text(
@@ -204,62 +205,62 @@ class _SummaryState extends State<Summary> {
         // Navigator.of(context).pushNamed('/drink', arguments: events[0]);
       },
     );
-
-  Widget get _postRate =>
-    Container(
-      height: 280,
-      child: _loading
-        ? Center(
-            child: Lottie.asset(
-              'assets/lottie/loading.json',
-              width: 80,
-              height: 80,
-            ),
-          )
-        : charts.PieChart(
-            _postCountRateData,
-            animate: true,
-            defaultRenderer: charts.ArcRendererConfig(
-              arcRendererDecorators: [
-                charts.ArcLabelDecorator()
-              ],
-              strokeWidthPx: 1,
-            ),
-          ),
-    );
-
-  Widget get _scoreAverage =>
-    Container(
-      height: 20.0 + 48 * _drinkTypes.length,
-      child: _loading
-        ? Center(
-            child: Lottie.asset(
-              'assets/lottie/loading.json',
-              width: 80,
-              height: 80,
-            ),
-          )
-        : charts.BarChart(
-            _scoreAverageData,
-            animate: true,
-            vertical: false,
-            domainAxis: charts.OrdinalAxisSpec(
-              renderSpec: charts.SmallTickRendererSpec(
-                labelStyle: charts.TextStyleSpec(
-                  color: charts.MaterialPalette.white
-                ),
-              ),
-            ),
-            primaryMeasureAxis: charts.NumericAxisSpec(
-              tickProviderSpec: charts.BasicNumericTickProviderSpec(
-                desiredTickCount: 6
-              ),
-              renderSpec: charts.GridlineRendererSpec(
-                labelStyle: charts.TextStyleSpec(
-                  color: charts.MaterialPalette.white
-                ),
-              ),
-            ),
-          ),
-    );
+  //
+  // Widget get _postRate =>
+  //   Container(
+  //     height: 280,
+  //     child: _loading
+  //       ? Center(
+  //           child: Lottie.asset(
+  //             'assets/lottie/loading.json',
+  //             width: 80,
+  //             height: 80,
+  //           ),
+  //         )
+  //       : charts.PieChart(
+  //           _postCountRateData,
+  //           animate: true,
+  //           defaultRenderer: charts.ArcRendererConfig(
+  //             arcRendererDecorators: [
+  //               charts.ArcLabelDecorator()
+  //             ],
+  //             strokeWidthPx: 1,
+  //           ),
+  //         ),
+  //   );
+  //
+  // Widget get _scoreAverage =>
+  //   Container(
+  //     height: 20.0 + 48 * _drinkTypes.length,
+  //     child: _loading
+  //       ? Center(
+  //           child: Lottie.asset(
+  //             'assets/lottie/loading.json',
+  //             width: 80,
+  //             height: 80,
+  //           ),
+  //         )
+  //       : charts.BarChart(
+  //           _scoreAverageData,
+  //           animate: true,
+  //           vertical: false,
+  //           domainAxis: charts.OrdinalAxisSpec(
+  //             renderSpec: charts.SmallTickRendererSpec(
+  //               labelStyle: charts.TextStyleSpec(
+  //                 color: charts.MaterialPalette.white
+  //               ),
+  //             ),
+  //           ),
+  //           primaryMeasureAxis: charts.NumericAxisSpec(
+  //             tickProviderSpec: charts.BasicNumericTickProviderSpec(
+  //               desiredTickCount: 6
+  //             ),
+  //             renderSpec: charts.GridlineRendererSpec(
+  //               labelStyle: charts.TextStyleSpec(
+  //                 color: charts.MaterialPalette.white
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //   );
 }

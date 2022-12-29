@@ -1,5 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,8 +29,7 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
-  List<Asset> _imageAssets = [];
-  List<List<int>> _images = [];
+  List<ImageData> _imageDataList = [];
   DateTime _drinkDateTime = DateTime.now();
   bool _isPrivate = false;
   DrinkType _drinkType;
@@ -64,7 +65,7 @@ class _PostPageState extends State<PostPage> {
   }
 
   get disablePost {
-    return _images.length == 0
+    return _imageDataList.length == 0
       || _nameController.text == ''
       || _drinkType == null;
   }
@@ -150,12 +151,10 @@ class _PostPageState extends State<PostPage> {
       return;
     }
 
-    List<Asset> resultList;
+    List<XFile> resultList;
+    final ImagePicker _picker = ImagePicker();
     try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 5 - _images.length,
-        enableCamera: true,
-      );
+      resultList = await _picker.pickMultiImage();
     } catch (e) {
       return;
     }
@@ -168,15 +167,18 @@ class _PostPageState extends State<PostPage> {
       _loading = true;
     });
 
-    List<List<int>> images = _images;
-    await Future.forEach(resultList, (Asset result) async {
-      final data = await result.getByteData();
-      images.add(data.buffer.asUint8List());
+    List<ImageData> imageDataList = _imageDataList;
+    await Future.forEach(resultList, (XFile result) async {
+      final image = Image.file(File(result.path));
+      imageDataList.add(new ImageData(
+        await result.readAsBytes(),
+        image.width,
+        image.height,
+      ));
     });
 
     setState(() {
-      _imageAssets = _imageAssets + resultList;
-      _images = images;
+      _imageDataList = imageDataList;
       _loading = false;
     });
   }
@@ -184,8 +186,7 @@ class _PostPageState extends State<PostPage> {
 
   _removeImage(int index) {
     setState(() {
-      _imageAssets.removeAt(index);
-      _images.removeAt(index);
+      _imageDataList.removeAt(index);
     });
   }
 
@@ -201,7 +202,7 @@ class _PostPageState extends State<PostPage> {
     try {
       await post(
         widget.user,
-        _imageAssets,
+        _imageDataList,
         _drinkDateTime,
         _isPrivate,
         _nameController.text,
@@ -266,7 +267,7 @@ class _PostPageState extends State<PostPage> {
             child: Column(
               children: [
                 ImagePreview(
-                  images: _images,
+                  imageDataList: _imageDataList,
                   addImage: _getImageList,
                   removeImage: _removeImage,
                 ),
@@ -335,12 +336,12 @@ class _PostPageState extends State<PostPage> {
 class ImagePreview extends StatefulWidget {
   ImagePreview({
     Key key,
-    this.images,
+    this.imageDataList,
     this.addImage,
     this.removeImage,
   }) : super(key: key);
 
-  final List<List<int>> images;
+  final List<ImageData> imageDataList;
   final addImage;
   final removeImage;
 
@@ -349,7 +350,7 @@ class ImagePreview extends StatefulWidget {
 }
 
 class _ImagePreviewState extends State<ImagePreview> {
-  List<int> _bigImage;
+  ImageData _bigImage;
 
   _updateIndex(image) {
     setState(() {
@@ -361,15 +362,15 @@ class _ImagePreviewState extends State<ImagePreview> {
     widget.removeImage(index);
 
     setState(() {
-      _bigImage = widget.images.length == 0 ? null : widget.images[0];
+      _bigImage = widget.imageDataList.length == 0 ? null : widget.imageDataList[0];
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_bigImage == null && widget.images.length > 0) {
+    if (_bigImage == null && widget.imageDataList.length > 0) {
       setState(() {
-        _bigImage = widget.images[0];
+        _bigImage = widget.imageDataList[0];
       });
     }
 
@@ -394,7 +395,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 clipBehavior: Clip.antiAlias,
                 child: Image(
-                  image: MemoryImage(_bigImage),
+                  image: MemoryImage(_bigImage.data),
                   fit: BoxFit.cover,
                 ),
               )
@@ -406,7 +407,7 @@ class _ImagePreviewState extends State<ImagePreview> {
           child: Row(
             children: List.generate(5, (i)=> i).map<Widget>((index) {
               Widget content = Material();
-              if (index < widget.images.length) {
+              if (index < widget.imageDataList.length) {
                 content = Stack(
                   children: <Widget>[
                     GestureDetector(
@@ -416,14 +417,14 @@ class _ImagePreviewState extends State<ImagePreview> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                           clipBehavior: Clip.antiAlias,
                           child: Image(
-                            image: MemoryImage(widget.images[index]),
+                            image: MemoryImage(widget.imageDataList[index].data),
                             fit: BoxFit.cover,
-                            color: Color.fromRGBO(255, 255, 255, widget.images[index] == _bigImage ? 1 : 0.3),
+                            color: Color.fromRGBO(255, 255, 255, widget.imageDataList[index] == _bigImage ? 1 : 0.3),
                             colorBlendMode: BlendMode.modulate,
                           ),
                         ),
                       ),
-                      onTap: () => _updateIndex(widget.images[index]),
+                      onTap: () => _updateIndex(widget.imageDataList[index]),
                     ),
                     Positioned(
                       top: -8,
@@ -456,7 +457,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                 );
               }
 
-              if (index == widget.images.length) {
+              if (index == widget.imageDataList.length) {
                 content = GestureDetector(
                   child: AspectRatio(
                     aspectRatio: IMAGE_ASPECT_RATIO,

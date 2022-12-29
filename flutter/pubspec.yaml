@@ -13,8 +13,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  # deprecated
-  multi_image_picker: ^4.7.14
+  image_picker: ^0.8.6
   firebase_core: ^2.4.0
   firebase_analytics: ^10.0.8
   firebase_storage: ^11.0.9
@@ -24,7 +23,6 @@ dependencies:
   google_sign_in: ^5.4.2
   sign_in_with_apple: ^4.3.0
   shared_preferences: ^2.0.15
-  # update to 0.18
   intl: ^0.17.0
   carousel_slider: ^4.2.1
   cached_network_image: ^3.2.3
@@ -33,10 +31,8 @@ dependencies:
   lottie: ^2.1.0
   animations: ^2.0.7
   table_calendar: ^3.0.8
-  # deprecated
-  charts_flutter: ^0.12.0
-  # deprecated
-  package_info: ^2.0.2
+  fl_chart: ^0.55.2
+  package_info_plus: ^3.0.2
   pub_semver: ^2.1.3
   fluttertoast: ^8.1.2
 

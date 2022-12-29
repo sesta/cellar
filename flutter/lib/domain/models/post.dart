@@ -1,14 +1,24 @@
 import 'dart:math';
-import 'dart:typed_data';
-import 'package:multi_image_picker/multi_image_picker.dart';
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
 
+class ImageData {
+  List<int> data;
+  double width;
+  double height;
+
+  ImageData(
+    this.data,
+    this.width,
+    this.height,
+  );
+}
+
 Future<void> post(
   User user,
-  List<Asset> images,
+  List<ImageData> imageDataList,
   DateTime drinkDateTime,
   bool isPrivate,
   String drinkName,
@@ -25,18 +35,18 @@ Future<void> post(
 
   // TODO: 識別子にタイムスタンプ以外も追加する
   final String thumbImagePath = '$imageDirectory/thumb';
-  await uploadImage(images.first, thumbImagePath, THUMB_WIDTH_SIZE);
+  await uploadImage(imageDataList.first, thumbImagePath, THUMB_WIDTH_SIZE);
 
   final List<String> imagePaths = [];
-  for (int index = 0 ; index < images.length ; index++) {
+  for (int index = 0 ; index < imageDataList.length ; index++) {
     final String originalImagePath = '$imageDirectory/original-$index';
-    await uploadImage(images[index], originalImagePath, ORIGINAL_WIDTH_SIZE);
+    await uploadImage(imageDataList[index], originalImagePath, ORIGINAL_WIDTH_SIZE);
     imagePaths.add(originalImagePath);
   }
 
-  final resizeRate = min(ORIGINAL_WIDTH_SIZE / images.first.originalWidth, 1);
-  final firstImageWidth = (images.first.originalWidth * resizeRate).round();
-  final firstImageHeight = (images.first.originalHeight * resizeRate).round();
+  final resizeRate = min(ORIGINAL_WIDTH_SIZE / imageDataList.first.width, 1);
+  final firstImageWidth = (imageDataList.first.width * resizeRate).round();
+  final firstImageHeight = (imageDataList.first.height * resizeRate).round();
 
   final drink = Drink(
     user.userId,
@@ -60,16 +70,12 @@ Future<void> post(
   await drink.create();
 }
 
-Future<void> uploadImage(Asset image, String path, int expectWidthSize) async {
-  double resizeRate = min(expectWidthSize / image.originalWidth, 1);
-  ByteData byteData = await image.getThumbByteData(
-    (image.originalWidth * resizeRate).round(),
-    (image.originalHeight * resizeRate).round(),
-  );
-  List<int> imageData = byteData.buffer.asUint8List();
+Future<void> uploadImage(ImageData imageData, String path, int expectWidthSize) async {
+  double resizeRate = min(expectWidthSize / imageData.width, 1);
+  // TODO: サイズを変更する処理を入れる
   final int error = await StorageRepository().uploadData(
     path,
-    imageData,
+    imageData.data,
     'image/jpeg',
   );
 
