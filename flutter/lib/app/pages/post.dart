@@ -115,7 +115,7 @@ class _PostPageState extends State<PostPage> {
           ),
           actions: <Widget>[
             // ボタン領域
-            FlatButton(
+            TextButton(
               child: Text(
                 'やめる',
                 style: TextStyle(
@@ -125,7 +125,7 @@ class _PostPageState extends State<PostPage> {
               ),
               onPressed: () => Navigator.pop(context),
             ),
-            FlatButton(
+            TextButton(
               child: Text(
                 '設定をひらく',
                 style: TextStyle(
@@ -296,17 +296,19 @@ class _PostPageState extends State<PostPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SizedBox(
                     width: double.infinity,
-                    child: RaisedButton(
-                      padding: EdgeInsets.all(16),
+                    // padding: EdgeInsets.all(16) を入れる
+                    child: ElevatedButton(
                       onPressed: disablePost ? null : _postDrink,
                       child: Text(
                         '投稿する',
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
-                      color: Theme.of(context).primaryColor,
-                      textColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Theme.of(context).primaryColor,
+                        textStyle: TextStyle(color: Colors.white),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                     ),
                   ),
@@ -406,7 +408,6 @@ class _ImagePreviewState extends State<ImagePreview> {
               Widget content = Material();
               if (index < widget.images.length) {
                 content = Stack(
-                  overflow: Overflow.visible,
                   children: <Widget>[
                     GestureDetector(
                       child: AspectRatio(

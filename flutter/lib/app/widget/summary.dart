@@ -24,14 +24,12 @@ class _SummaryState extends State<Summary> {
   Map<DrinkType, double> _scoreAverageMap= {};
   Map<DateTime, List<Drink>> _postDateTimeMap = {};
 
-  CalendarController _calendarController;
   bool _loading = true;
 
   @override
   void initState() {
     super.initState();
 
-    _calendarController = CalendarController();
     _drinkTypes = widget.user.drinkTypesByMany
       .where((drinkType) => widget.user.uploadCounts[drinkType] > 0)
       .toList();
@@ -153,19 +151,22 @@ class _SummaryState extends State<Summary> {
 
   Widget get _postCalendar =>
     TableCalendar(
-      events: _postDateTimeMap,
-      calendarController: _calendarController,
+      // TODO: 投稿した日を表示する
       locale: 'ja_JP',
       availableCalendarFormats: {
         CalendarFormat.month: 'Month'
       },
-      endDay: DateTime.now(),
+      focusedDay: DateTime.now(),
       startingDayOfWeek: StartingDayOfWeek.monday,
       availableGestures: AvailableGestures.horizontalSwipe,
       calendarStyle: CalendarStyle(
-        selectedColor: Theme.of(context).scaffoldBackgroundColor,
-        todayColor: Theme.of(context).scaffoldBackgroundColor,
-        weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent),
+        selectedDecoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+        ),
+        todayDecoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+        ),
+        weekendTextStyle: TextStyle().copyWith(color: Colors.orangeAccent),
         outsideDaysVisible: false,
       ),
       daysOfWeekStyle: DaysOfWeekStyle(
@@ -173,7 +174,6 @@ class _SummaryState extends State<Summary> {
         weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent[100]),
       ),
       headerStyle: HeaderStyle(
-        centerHeaderTitle: true,
         formatButtonVisible: false,
         leftChevronIcon: Icon(
           Icons.chevron_left,
@@ -184,25 +184,24 @@ class _SummaryState extends State<Summary> {
           color: Colors.white,
         ),
       ),
-      builders: CalendarBuilders(
-        markersBuilder: (context, date, events, holidays) => [
-          Positioned(
+      calendarBuilders: CalendarBuilders(
+        markerBuilder: (context, date, events) {
+          return Positioned(
             left: 0,
             bottom: 0,
             child: Container(
               height: 4,
               width: 100,
-              color: Theme.of(context).primaryColor,
+              color: Theme
+                .of(context)
+                .primaryColor,
             ),
-          ),
-        ],
+          );
+        },
       ),
-      onDaySelected: (_, events) {
-        if (events.length == 0) {
-          return;
-        }
-
-        Navigator.of(context).pushNamed('/drink', arguments: events[0]);
+      onDaySelected: (selectedDay, _) {
+        print(selectedDay);
+        // Navigator.of(context).pushNamed('/drink', arguments: events[0]);
       },
     );
 

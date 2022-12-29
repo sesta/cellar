@@ -32,7 +32,7 @@ class UpdatePage extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyText2,
           ),
 
-          FlatButton(
+          TextButton(
             child: Text(
               'アプリストアに移動する',
               style: Theme.of(context).textTheme.bodyText1,

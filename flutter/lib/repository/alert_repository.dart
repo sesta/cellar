@@ -3,7 +3,7 @@ import 'package:http/http.dart';
 import 'package:flutter/foundation.dart';
 
 class AlertRepository {
-  static String _slackUrl;
+  static Uri _slackUrl;
 
   Future<void> send(
     String message,
@@ -50,7 +50,7 @@ class AlertRepository {
     }
   }
 
-  set slackUrl(String slackUrl) {
+  set slackUrl(Uri slackUrl) {
     _slackUrl = slackUrl;
   }
 }

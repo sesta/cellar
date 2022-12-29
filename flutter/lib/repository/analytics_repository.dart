@@ -34,13 +34,13 @@ extension EventTypeExtension on EventType {
 }
 
 class AnalyticsRepository {
-  static final FirebaseAnalytics _analytics = FirebaseAnalytics();
+  static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
   static final FirebaseAnalyticsObserver _observer = FirebaseAnalyticsObserver(
     analytics: _analytics,
   );
 
   Future<void> setUser(User user) async {
-    await _analytics.setUserId(user.userId);
+    await _analytics.setUserId(id: user.userId);
     await _analytics.setUserProperty(name: 'user_id', value: user.userId);
     await _analytics.setUserProperty(name: 'is_developer', value: user.isDeveloper.toString());
   }

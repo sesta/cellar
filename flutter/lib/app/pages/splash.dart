@@ -40,7 +40,7 @@ class _SplashPageState extends State<SplashPage> {
       showToast(context, 'メンテナンス中です。', isError: true);
     }
 
-    AlertRepository().slackUrl = status.slackUrl;
+    AlertRepository().slackUrl = Uri.parse(status.slackUrl);
     widget.setStatus(status);
     if (status.isMaintenanceMode) {
       Navigator.pushReplacementNamed(context, '/maintenance');
