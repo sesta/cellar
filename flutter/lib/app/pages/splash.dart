@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pub_semver/pub_semver.dart';
 
@@ -31,7 +30,6 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _fetch() async {
-    await Firebase.initializeApp();
     Status status;
     try {
       status = await StatusRepository().getStatus();
