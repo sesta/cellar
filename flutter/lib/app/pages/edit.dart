@@ -279,7 +279,6 @@ class _EditPageState extends State<EditPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    // EdgeInsets.symmetric(vertical: 16, horizontal: 32) を入れる
                     ElevatedButton(
                       onPressed: _confirmDelete,
                       child: Text(
@@ -287,7 +286,7 @@ class _EditPageState extends State<EditPage> {
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Theme.of(context).errorColor,
+                        backgroundColor: Theme.of(context).errorColor,
                         textStyle: TextStyle(color: Colors.white),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
@@ -295,7 +294,6 @@ class _EditPageState extends State<EditPage> {
                       ),
                     ),
                     Padding(padding: EdgeInsets.only(right: 32)),
-                    // EdgeInsets.symmetric(vertical: 16, horizontal: 32) を入れる
                     ElevatedButton(
                       onPressed: _disablePost ? null : _updateDrink,
                       child: Text(
@@ -303,7 +301,7 @@ class _EditPageState extends State<EditPage> {
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: Theme.of(context).primaryColor,
                         textStyle: TextStyle(color: Colors.white),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),

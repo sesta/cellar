@@ -297,7 +297,6 @@ class _PostPageState extends State<PostPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SizedBox(
                     width: double.infinity,
-                    // padding: EdgeInsets.all(16) を入れる
                     child: ElevatedButton(
                       onPressed: disablePost ? null : _postDrink,
                       child: Text(
@@ -305,7 +304,7 @@ class _PostPageState extends State<PostPage> {
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: Theme.of(context).primaryColor,
                         textStyle: TextStyle(color: Colors.white),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),

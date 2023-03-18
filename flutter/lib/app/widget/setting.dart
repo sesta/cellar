@@ -135,7 +135,6 @@ class _SettingState extends State<Setting> {
                     ),
                     Padding(padding: EdgeInsets.only(right: 24)),
 
-                    // padding: EdgeInsets.all(12) を入れる
                     ElevatedButton(
                       onPressed: disableSave ? null : _saveUser,
                       child: Text(
@@ -145,7 +144,7 @@ class _SettingState extends State<Setting> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: Theme.of(context).primaryColor,
                         textStyle: TextStyle(color: Colors.white),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),

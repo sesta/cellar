@@ -123,7 +123,6 @@ class _UserFormState extends State<UserForm> {
 
           SizedBox(
             width: double.infinity,
-            // padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32) を入れる
             child: ElevatedButton(
               onPressed: _nameController.text == ''
                 ? null
@@ -133,7 +132,7 @@ class _UserFormState extends State<UserForm> {
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               style: ElevatedButton.styleFrom(
-                foregroundColor: Theme.of(context).primaryColor,
+                backgroundColor: Theme.of(context).primaryColor,
                 textStyle: TextStyle(color: Colors.white),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4),

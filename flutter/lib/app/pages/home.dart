@@ -307,13 +307,13 @@ class _HomePageState extends State<HomePage> {
                               'Sign in with Apple',
                               style: TextStyle(
                                 fontSize: 17,
+                                color: Colors.black
                               ),
                             ),
                           ],
                         ),
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          textStyle: TextStyle(color: Colors.black),
+                          backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
                           ),
@@ -340,13 +340,13 @@ class _HomePageState extends State<HomePage> {
                         'Sign in with Google',
                         style: TextStyle(
                           fontSize: 17,
+                          color: Colors.black,
                         ),
                       ),
                     ],
                   ),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    textStyle: TextStyle(color: Colors.black),
+                    backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),
                     ),
