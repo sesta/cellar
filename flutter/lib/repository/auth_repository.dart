@@ -62,17 +62,21 @@ class AuthRepository {
   }
 
   Future<AuthCredential> _getCredentialByApple() async {
-    final credential = await SignInWithApple.getAppleIDCredential(
-      scopes: []
-    );
-    // TODO: ログインに失敗していたら return: null; する
-    print(credential);
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+          scopes: []
+      );
+      // TODO: ログインに失敗していたら return: null; する
+      print(credential);
 
-    final oAuthProvider = OAuthProvider('apple.com');
-    return oAuthProvider.credential(
-      idToken: credential.identityToken,
-      accessToken: credential.authorizationCode,
-    );
+      final oAuthProvider = OAuthProvider('apple.com');
+      return oAuthProvider.credential(
+        idToken: credential.identityToken,
+        accessToken: credential.authorizationCode,
+      );
+    } catch (e, stackTrace) {
+      return e;
+    }
   }
 
   Future<AuthCredential> _getCredentialByGoogle() async {
