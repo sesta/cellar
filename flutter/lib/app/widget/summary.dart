@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:lottie/lottie.dart';
 
@@ -21,7 +22,7 @@ class _SummaryState extends State<Summary> {
   List<DrinkType> _drinkTypes;
   List<Drink> _drinks = [];
   Map<DrinkType, double> _scoreAverageMap= {};
-  Map<DateTime, List<Drink>> _postDateTimeMap = {};
+  Map<String, List<Drink>> _postDateTimeMap = {};
 
   bool _loading = true;
 
@@ -35,19 +36,26 @@ class _SummaryState extends State<Summary> {
     _calc();
   }
 
+  String _formatDateTime(DateTime dateTime) {
+    DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+    return dateFormat.format(dateTime);
+  }
+
   Future<void> _calc() async {
     _drinks = await DrinkRepository().getUserAllDrinks(widget.user.userId);
 
     _drinks.forEach((drink) {
+      final datetimeString = _formatDateTime(drink.drinkDateTime);
+
       if (_scoreAverageMap[drink.drinkType] == null) {
         _scoreAverageMap[drink.drinkType] = 0;
       }
       _scoreAverageMap[drink.drinkType] += drink.score;
 
-      if (_postDateTimeMap[drink.drinkDateTime] == null) {
-        _postDateTimeMap[drink.drinkDateTime] = [];
+      if (_postDateTimeMap[datetimeString] == null) {
+        _postDateTimeMap[datetimeString] = [];
       }
-      _postDateTimeMap[drink.drinkDateTime].add(drink);
+      _postDateTimeMap[datetimeString].add(drink);
     });
 
     _scoreAverageMap.forEach((key, value) {
@@ -153,6 +161,8 @@ class _SummaryState extends State<Summary> {
   Widget get _postCalendar =>
     TableCalendar(
       // TODO: 投稿した日を表示する
+      firstDay: DateTime.utc(1920, 10, 16),
+      lastDay: DateTime.utc(2030, 12, 31),
       locale: 'ja_JP',
       availableCalendarFormats: {
         CalendarFormat.month: 'Month'
@@ -185,8 +195,15 @@ class _SummaryState extends State<Summary> {
           color: Colors.white,
         ),
       ),
+      eventLoader: (DateTime day) {
+        DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+        return _postDateTimeMap[dateFormat.format(day)] ?? [];
+      },
       calendarBuilders: CalendarBuilders(
         markerBuilder: (context, date, events) {
+          if (events.isEmpty) {
+            return Container();
+          }
           return Positioned(
             left: 0,
             bottom: 0,
@@ -201,8 +218,13 @@ class _SummaryState extends State<Summary> {
         },
       ),
       onDaySelected: (selectedDay, _) {
-        print(selectedDay);
-        // Navigator.of(context).pushNamed('/drink', arguments: events[0]);
+        DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+        final drinks = _postDateTimeMap[dateFormat.format(selectedDay)];
+        if (drinks == null) {
+          return;
+        }
+
+        Navigator.of(context).pushNamed('/drink', arguments: drinks[0]);
       },
     );
   //
