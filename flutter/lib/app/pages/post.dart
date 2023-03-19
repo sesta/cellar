@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher_icons/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:lottie/lottie.dart';
@@ -169,9 +171,10 @@ class _PostPageState extends State<PostPage> {
 
     List<ImageData> imageDataList = _imageDataList;
     await Future.forEach(resultList, (XFile result) async {
-      final image = Image.file(File(result.path));
+      final bytes = await result.readAsBytes();
+      final image = decodeImageFile(result.path);
       imageDataList.add(new ImageData(
-        await result.readAsBytes(),
+        bytes,
         image.width,
         image.height,
       ));
@@ -218,7 +221,7 @@ class _PostPageState extends State<PostPage> {
       showToast(context, '投稿に失敗しました。', isError: true);
       AlertRepository().send(
         '投稿に失敗しました。',
-        stackTrace.toString().substring(0, 1000),
+        stackTrace.toString(),
       );
 
       setState(() {

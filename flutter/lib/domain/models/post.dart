@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:developer' as dev;
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entity/entities.dart';
@@ -6,8 +7,8 @@ import 'package:cellar/repository/repositories.dart';
 
 class ImageData {
   List<int> data;
-  double width;
-  double height;
+  int width;
+  int height;
 
   ImageData(
     this.data,
@@ -36,6 +37,7 @@ Future<void> post(
   // TODO: 識別子にタイムスタンプ以外も追加する
   final String thumbImagePath = '$imageDirectory/thumb';
   await uploadImage(imageDataList.first, thumbImagePath, THUMB_WIDTH_SIZE);
+
 
   final List<String> imagePaths = [];
   for (int index = 0 ; index < imageDataList.length ; index++) {
@@ -72,8 +74,9 @@ Future<void> post(
 
 Future<void> uploadImage(ImageData imageData, String path, int expectWidthSize) async {
   double resizeRate = min(expectWidthSize / imageData.width, 1);
+
   // TODO: サイズを変更する処理を入れる
-  final int error = await StorageRepository().uploadData(
+  final error = await StorageRepository().uploadData(
     path,
     imageData.data,
     'image/jpeg',
