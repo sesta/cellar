@@ -145,7 +145,7 @@ class _PostPageState extends State<PostPage> {
   }
 
   Future<void> _getImageList() async {
-    final status = await Permission.photos.status;
+    final status = await Permission.photos.request();
     if (status == PermissionStatus.denied) {
       _confirmOpenSetting();
       return;
