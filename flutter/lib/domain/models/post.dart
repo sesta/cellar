@@ -1,25 +1,13 @@
 import 'dart:math';
-import 'dart:developer' as dev;
 
 import 'package:cellar/conf.dart';
 import 'package:cellar/domain/entity/entities.dart';
 import 'package:cellar/repository/repositories.dart';
-
-class ImageData {
-  List<int> data;
-  int width;
-  int height;
-
-  ImageData(
-    this.data,
-    this.width,
-    this.height,
-  );
-}
+import 'package:image/image.dart';
 
 Future<void> post(
   User user,
-  List<ImageData> imageDataList,
+  List<List<int>> imageDataList,
   DateTime drinkDateTime,
   bool isPrivate,
   String drinkName,
@@ -38,7 +26,6 @@ Future<void> post(
   final String thumbImagePath = '$imageDirectory/thumb';
   await uploadImage(imageDataList.first, thumbImagePath, THUMB_WIDTH_SIZE);
 
-
   final List<String> imagePaths = [];
   for (int index = 0 ; index < imageDataList.length ; index++) {
     final String originalImagePath = '$imageDirectory/original-$index';
@@ -46,9 +33,10 @@ Future<void> post(
     imagePaths.add(originalImagePath);
   }
 
-  final resizeRate = min(ORIGINAL_WIDTH_SIZE / imageDataList.first.width, 1);
-  final firstImageWidth = (imageDataList.first.width * resizeRate).round();
-  final firstImageHeight = (imageDataList.first.height * resizeRate).round();
+  final firstImage = decodeImage(imageDataList.first);
+  final resizeRate = min(ORIGINAL_WIDTH_SIZE / firstImage.width, 1);
+  final firstImageWidth = (firstImage.width * resizeRate).round();
+  final firstImageHeight = (firstImage.height * resizeRate).round();
 
   final drink = Drink(
     user.userId,
@@ -72,13 +60,17 @@ Future<void> post(
   await drink.create();
 }
 
-Future<void> uploadImage(ImageData imageData, String path, int expectWidthSize) async {
-  double resizeRate = min(expectWidthSize / imageData.width, 1);
+Future<void> uploadImage(List<int> imageData, String path, int expectWidthSize) async {
+  final image = decodeImage(imageData);
+  final double resizeRate = min(expectWidthSize / image.width, 1);
+  final resizedImage = copyResize(image,
+    width: (image.width * resizeRate).round(),
+    height: (image.height * resizeRate).round(),
+  );
 
-  // TODO: サイズを変更する処理を入れる
   final error = await StorageRepository().uploadData(
     path,
-    imageData.data,
+    encodePng(resizedImage),
     'image/jpeg',
   );
 

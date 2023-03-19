@@ -1,8 +1,4 @@
-import 'dart:io';
-import 'dart:developer' as dev;
-
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher_icons/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:lottie/lottie.dart';
@@ -31,7 +27,7 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
-  List<ImageData> _imageDataList = [];
+  List<List<int>> _imageDataList = [];
   DateTime _drinkDateTime = DateTime.now();
   bool _isPrivate = false;
   DrinkType _drinkType;
@@ -169,15 +165,10 @@ class _PostPageState extends State<PostPage> {
       _loading = true;
     });
 
-    List<ImageData> imageDataList = _imageDataList;
+    List<List<int>> imageDataList = _imageDataList;
     await Future.forEach(resultList, (XFile result) async {
       final bytes = await result.readAsBytes();
-      final image = decodeImageFile(result.path);
-      imageDataList.add(new ImageData(
-        bytes,
-        image.width,
-        image.height,
-      ));
+      imageDataList.add(bytes);
     });
 
     setState(() {
@@ -343,7 +334,7 @@ class ImagePreview extends StatefulWidget {
     this.removeImage,
   }) : super(key: key);
 
-  final List<ImageData> imageDataList;
+  final List<List<int>> imageDataList;
   final addImage;
   final removeImage;
 
@@ -352,7 +343,7 @@ class ImagePreview extends StatefulWidget {
 }
 
 class _ImagePreviewState extends State<ImagePreview> {
-  ImageData _bigImage;
+  List<int> _bigImage;
 
   _updateIndex(image) {
     setState(() {
@@ -397,7 +388,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 clipBehavior: Clip.antiAlias,
                 child: Image(
-                  image: MemoryImage(_bigImage.data),
+                  image: MemoryImage(_bigImage),
                   fit: BoxFit.cover,
                 ),
               )
@@ -419,7 +410,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                           clipBehavior: Clip.antiAlias,
                           child: Image(
-                            image: MemoryImage(widget.imageDataList[index].data),
+                            image: MemoryImage(widget.imageDataList[index]),
                             fit: BoxFit.cover,
                             color: Color.fromRGBO(255, 255, 255, widget.imageDataList[index] == _bigImage ? 1 : 0.3),
                             colorBlendMode: BlendMode.modulate,
