@@ -177,7 +177,7 @@ class _EditPageState extends State<EditPage> {
             ),
             actions: <Widget>[
               // ボタン領域
-              FlatButton(
+              TextButton(
                 child: Text(
                   'やめる',
                   style: Theme.of(context).textTheme.subtitle1.copyWith(
@@ -186,7 +186,7 @@ class _EditPageState extends State<EditPage> {
                 ),
                 onPressed: () => Navigator.of(context).pop(),
               ),
-              FlatButton(
+              TextButton(
                 child: Text(
                   '削除する',
                   style: Theme.of(context).textTheme.subtitle1.copyWith(
@@ -279,31 +279,33 @@ class _EditPageState extends State<EditPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    RaisedButton(
-                      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                    ElevatedButton(
                       onPressed: _confirmDelete,
                       child: Text(
                         '削除する',
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
-                      color: Theme.of(context).errorColor,
-                      textColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).errorColor,
+                        textStyle: TextStyle(color: Colors.white),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                     ),
                     Padding(padding: EdgeInsets.only(right: 32)),
-                    RaisedButton(
-                      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                    ElevatedButton(
                       onPressed: _disablePost ? null : _updateDrink,
                       child: Text(
                         '更新する',
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
-                      textColor: Colors.white,
-                      color: Theme.of(context).primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        textStyle: TextStyle(color: Colors.white),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                     ),
                   ],

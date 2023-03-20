@@ -123,8 +123,7 @@ class _UserFormState extends State<UserForm> {
 
           SizedBox(
             width: double.infinity,
-            child: RaisedButton(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+            child: ElevatedButton(
               onPressed: _nameController.text == ''
                 ? null
                 : () => widget.createUser(_nameController.text),
@@ -132,10 +131,12 @@ class _UserFormState extends State<UserForm> {
                 '登録を完了する',
                 style: Theme.of(context).textTheme.subtitle1,
               ),
-              color: Theme.of(context).primaryColor,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                textStyle: TextStyle(color: Colors.white),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
+                ),
               ),
             ),
           ),

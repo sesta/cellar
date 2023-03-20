@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,8 +27,7 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
-  List<Asset> _imageAssets = [];
-  List<List<int>> _images = [];
+  List<List<int>> _imageDataList = [];
   DateTime _drinkDateTime = DateTime.now();
   bool _isPrivate = false;
   DrinkType _drinkType;
@@ -64,7 +63,7 @@ class _PostPageState extends State<PostPage> {
   }
 
   get disablePost {
-    return _images.length == 0
+    return _imageDataList.length == 0
       || _nameController.text == ''
       || _drinkType == null;
   }
@@ -115,7 +114,7 @@ class _PostPageState extends State<PostPage> {
           ),
           actions: <Widget>[
             // ボタン領域
-            FlatButton(
+            TextButton(
               child: Text(
                 'やめる',
                 style: TextStyle(
@@ -125,7 +124,7 @@ class _PostPageState extends State<PostPage> {
               ),
               onPressed: () => Navigator.pop(context),
             ),
-            FlatButton(
+            TextButton(
               child: Text(
                 '設定をひらく',
                 style: TextStyle(
@@ -144,18 +143,16 @@ class _PostPageState extends State<PostPage> {
   }
 
   Future<void> _getImageList() async {
-    final status = await Permission.photos.status;
+    final status = await Permission.photos.request();
     if (status == PermissionStatus.denied) {
       _confirmOpenSetting();
       return;
     }
 
-    List<Asset> resultList;
+    List<XFile> resultList;
+    final ImagePicker _picker = ImagePicker();
     try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 5 - _images.length,
-        enableCamera: true,
-      );
+      resultList = await _picker.pickMultiImage();
     } catch (e) {
       return;
     }
@@ -168,15 +165,14 @@ class _PostPageState extends State<PostPage> {
       _loading = true;
     });
 
-    List<List<int>> images = _images;
-    await Future.forEach(resultList, (Asset result) async {
-      final data = await result.getByteData();
-      images.add(data.buffer.asUint8List());
+    List<List<int>> imageDataList = _imageDataList;
+    await Future.forEach(resultList, (XFile result) async {
+      final bytes = await result.readAsBytes();
+      imageDataList.add(bytes);
     });
 
     setState(() {
-      _imageAssets = _imageAssets + resultList;
-      _images = images;
+      _imageDataList = imageDataList;
       _loading = false;
     });
   }
@@ -184,8 +180,7 @@ class _PostPageState extends State<PostPage> {
 
   _removeImage(int index) {
     setState(() {
-      _imageAssets.removeAt(index);
-      _images.removeAt(index);
+      _imageDataList.removeAt(index);
     });
   }
 
@@ -201,7 +196,7 @@ class _PostPageState extends State<PostPage> {
     try {
       await post(
         widget.user,
-        _imageAssets,
+        _imageDataList,
         _drinkDateTime,
         _isPrivate,
         _nameController.text,
@@ -217,7 +212,7 @@ class _PostPageState extends State<PostPage> {
       showToast(context, '投稿に失敗しました。', isError: true);
       AlertRepository().send(
         '投稿に失敗しました。',
-        stackTrace.toString().substring(0, 1000),
+        stackTrace.toString(),
       );
 
       setState(() {
@@ -266,7 +261,7 @@ class _PostPageState extends State<PostPage> {
             child: Column(
               children: [
                 ImagePreview(
-                  images: _images,
+                  imageDataList: _imageDataList,
                   addImage: _getImageList,
                   removeImage: _removeImage,
                 ),
@@ -296,17 +291,18 @@ class _PostPageState extends State<PostPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SizedBox(
                     width: double.infinity,
-                    child: RaisedButton(
-                      padding: EdgeInsets.all(16),
+                    child: ElevatedButton(
                       onPressed: disablePost ? null : _postDrink,
                       child: Text(
                         '投稿する',
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
-                      color: Theme.of(context).primaryColor,
-                      textColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        textStyle: TextStyle(color: Colors.white),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                     ),
                   ),
@@ -333,12 +329,12 @@ class _PostPageState extends State<PostPage> {
 class ImagePreview extends StatefulWidget {
   ImagePreview({
     Key key,
-    this.images,
+    this.imageDataList,
     this.addImage,
     this.removeImage,
   }) : super(key: key);
 
-  final List<List<int>> images;
+  final List<List<int>> imageDataList;
   final addImage;
   final removeImage;
 
@@ -359,15 +355,15 @@ class _ImagePreviewState extends State<ImagePreview> {
     widget.removeImage(index);
 
     setState(() {
-      _bigImage = widget.images.length == 0 ? null : widget.images[0];
+      _bigImage = widget.imageDataList.length == 0 ? null : widget.imageDataList[0];
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_bigImage == null && widget.images.length > 0) {
+    if (_bigImage == null && widget.imageDataList.length > 0) {
       setState(() {
-        _bigImage = widget.images[0];
+        _bigImage = widget.imageDataList[0];
       });
     }
 
@@ -404,9 +400,8 @@ class _ImagePreviewState extends State<ImagePreview> {
           child: Row(
             children: List.generate(5, (i)=> i).map<Widget>((index) {
               Widget content = Material();
-              if (index < widget.images.length) {
+              if (index < widget.imageDataList.length) {
                 content = Stack(
-                  overflow: Overflow.visible,
                   children: <Widget>[
                     GestureDetector(
                       child: AspectRatio(
@@ -415,14 +410,14 @@ class _ImagePreviewState extends State<ImagePreview> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                           clipBehavior: Clip.antiAlias,
                           child: Image(
-                            image: MemoryImage(widget.images[index]),
+                            image: MemoryImage(widget.imageDataList[index]),
                             fit: BoxFit.cover,
-                            color: Color.fromRGBO(255, 255, 255, widget.images[index] == _bigImage ? 1 : 0.3),
+                            color: Color.fromRGBO(255, 255, 255, widget.imageDataList[index] == _bigImage ? 1 : 0.3),
                             colorBlendMode: BlendMode.modulate,
                           ),
                         ),
                       ),
-                      onTap: () => _updateIndex(widget.images[index]),
+                      onTap: () => _updateIndex(widget.imageDataList[index]),
                     ),
                     Positioned(
                       top: -8,
@@ -455,7 +450,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                 );
               }
 
-              if (index == widget.images.length) {
+              if (index == widget.imageDataList.length) {
                 content = GestureDetector(
                   child: AspectRatio(
                     aspectRatio: IMAGE_ASPECT_RATIO,

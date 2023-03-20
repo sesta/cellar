@@ -293,7 +293,7 @@ class _HomePageState extends State<HomePage> {
                     child: Container(
                       width: 250,
                       height: 40,
-                      child: RaisedButton(
+                      child: ElevatedButton(
                         onPressed: () => _signIn(AuthType.Apple),
                         child: Row(
                           children: [
@@ -307,14 +307,16 @@ class _HomePageState extends State<HomePage> {
                               'Sign in with Apple',
                               style: TextStyle(
                                 fontSize: 17,
+                                color: Colors.black
                               ),
                             ),
                           ],
                         ),
-                        color: Colors.white,
-                        textColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                         ),
                       ),
                     ),
@@ -324,7 +326,7 @@ class _HomePageState extends State<HomePage> {
               Container(
                 width: 250,
                 height: 40,
-                child: RaisedButton(
+                child: ElevatedButton(
                   onPressed: () => _signIn(AuthType.Google),
                   child: Row(
                     children: [
@@ -338,14 +340,16 @@ class _HomePageState extends State<HomePage> {
                         'Sign in with Google',
                         style: TextStyle(
                           fontSize: 17,
+                          color: Colors.black,
                         ),
                       ),
                     ],
                   ),
-                  color: Colors.white,
-                  textColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                   ),
                 ),
               ),
@@ -368,7 +372,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Padding(padding: EdgeInsets.only(bottom: 8)),
 
-              FlatButton(
+              TextButton(
                 child: Text(
                   'プライバシーポリシーを見る',
                   style: Theme.of(context).textTheme.caption.copyWith(

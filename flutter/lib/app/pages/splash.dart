@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
@@ -31,7 +30,6 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _fetch() async {
-    await Firebase.initializeApp();
     Status status;
     try {
       status = await StatusRepository().getStatus();
@@ -40,7 +38,7 @@ class _SplashPageState extends State<SplashPage> {
       showToast(context, 'メンテナンス中です。', isError: true);
     }
 
-    AlertRepository().slackUrl = status.slackUrl;
+    AlertRepository().slackUrl = Uri.parse(status.slackUrl);
     widget.setStatus(status);
     if (status.isMaintenanceMode) {
       Navigator.pushReplacementNamed(context, '/maintenance');

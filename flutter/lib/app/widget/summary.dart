@@ -1,6 +1,7 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:lottie/lottie.dart';
 
 import 'package:cellar/domain/entity/entities.dart';
@@ -22,35 +23,40 @@ class _SummaryState extends State<Summary> {
   List<DrinkType> _drinkTypes;
   List<Drink> _drinks = [];
   Map<DrinkType, double> _scoreAverageMap= {};
-  Map<DateTime, List<Drink>> _postDateTimeMap = {};
+  Map<String, List<Drink>> _postDateTimeMap = {};
 
-  CalendarController _calendarController;
   bool _loading = true;
 
   @override
   void initState() {
     super.initState();
 
-    _calendarController = CalendarController();
     _drinkTypes = widget.user.drinkTypesByMany
       .where((drinkType) => widget.user.uploadCounts[drinkType] > 0)
       .toList();
     _calc();
   }
 
+  String _formatDateTime(DateTime dateTime) {
+    DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+    return dateFormat.format(dateTime);
+  }
+
   Future<void> _calc() async {
     _drinks = await DrinkRepository().getUserAllDrinks(widget.user.userId);
 
     _drinks.forEach((drink) {
+      final datetimeString = _formatDateTime(drink.drinkDateTime);
+
       if (_scoreAverageMap[drink.drinkType] == null) {
         _scoreAverageMap[drink.drinkType] = 0;
       }
       _scoreAverageMap[drink.drinkType] += drink.score;
 
-      if (_postDateTimeMap[drink.drinkDateTime] == null) {
-        _postDateTimeMap[drink.drinkDateTime] = [];
+      if (_postDateTimeMap[datetimeString] == null) {
+        _postDateTimeMap[datetimeString] = [];
       }
-      _postDateTimeMap[drink.drinkDateTime].add(drink);
+      _postDateTimeMap[datetimeString].add(drink);
     });
 
     _scoreAverageMap.forEach((key, value) {
@@ -61,39 +67,6 @@ class _SummaryState extends State<Summary> {
       _loading = false;
     });
   }
-
-  List<charts.Series<DrinkType, String>> get _postCountRateData =>
-    [
-      charts.Series<DrinkType, String>(
-        id: 'Drinks',
-        domainFn: (drinkType, _) => drinkType.label,
-        measureFn: (drinkType, _) => widget.user.uploadCounts[drinkType],
-        data: _drinkTypes,
-        labelAccessorFn: (drinkType, _) {
-          final rate = (widget.user.uploadCounts[drinkType]/widget.user.uploadCount*100).toStringAsFixed(0);
-          return '$rate%\n${drinkType.label}';
-        },
-        colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
-          Theme.of(context).primaryColorDark,
-        ),
-        outsideLabelStyleAccessorFn: (drinkType, _) => charts.TextStyleSpec(
-          color: charts.MaterialPalette.white
-        ),
-      )
-    ];
-
-  List<charts.Series<DrinkType, String>> get _scoreAverageData =>
-    [
-      charts.Series<DrinkType, String>(
-        id: 'Drinks',
-        domainFn: (drinkType, _) => '${_scoreAverageMap[drinkType].toStringAsFixed(1)}\n${drinkType.label}',
-        measureFn: (drinkType, _) => _scoreAverageMap[drinkType],
-        data: _drinkTypes,
-        colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
-          Theme.of(context).primaryColorDark,
-        ),
-      )
-    ];
 
   @override
   Widget build(BuildContext context) {
@@ -153,19 +126,24 @@ class _SummaryState extends State<Summary> {
 
   Widget get _postCalendar =>
     TableCalendar(
-      events: _postDateTimeMap,
-      calendarController: _calendarController,
+      // TODO: 投稿した日を表示する
+      firstDay: DateTime.utc(1920, 10, 16),
+      lastDay: DateTime.utc(2030, 12, 31),
       locale: 'ja_JP',
       availableCalendarFormats: {
         CalendarFormat.month: 'Month'
       },
-      endDay: DateTime.now(),
+      focusedDay: DateTime.now(),
       startingDayOfWeek: StartingDayOfWeek.monday,
       availableGestures: AvailableGestures.horizontalSwipe,
       calendarStyle: CalendarStyle(
-        selectedColor: Theme.of(context).scaffoldBackgroundColor,
-        todayColor: Theme.of(context).scaffoldBackgroundColor,
-        weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent),
+        selectedDecoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+        ),
+        todayDecoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+        ),
+        weekendTextStyle: TextStyle().copyWith(color: Colors.orangeAccent),
         outsideDaysVisible: false,
       ),
       daysOfWeekStyle: DaysOfWeekStyle(
@@ -173,7 +151,6 @@ class _SummaryState extends State<Summary> {
         weekendStyle: TextStyle().copyWith(color: Colors.orangeAccent[100]),
       ),
       headerStyle: HeaderStyle(
-        centerHeaderTitle: true,
         formatButtonVisible: false,
         leftChevronIcon: Icon(
           Icons.chevron_left,
@@ -184,25 +161,36 @@ class _SummaryState extends State<Summary> {
           color: Colors.white,
         ),
       ),
-      builders: CalendarBuilders(
-        markersBuilder: (context, date, events, holidays) => [
-          Positioned(
+      eventLoader: (DateTime day) {
+        DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+        return _postDateTimeMap[dateFormat.format(day)] ?? [];
+      },
+      calendarBuilders: CalendarBuilders(
+        markerBuilder: (context, date, events) {
+          if (events.isEmpty) {
+            return Container();
+          }
+          return Positioned(
             left: 0,
             bottom: 0,
             child: Container(
               height: 4,
               width: 100,
-              color: Theme.of(context).primaryColor,
+              color: Theme
+                .of(context)
+                .primaryColor,
             ),
-          ),
-        ],
+          );
+        },
       ),
-      onDaySelected: (_, events) {
-        if (events.length == 0) {
+      onDaySelected: (selectedDay, _) {
+        DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+        final drinks = _postDateTimeMap[dateFormat.format(selectedDay)];
+        if (drinks == null) {
           return;
         }
 
-        Navigator.of(context).pushNamed('/drink', arguments: events[0]);
+        Navigator.of(context).pushNamed('/drink', arguments: drinks[0]);
       },
     );
 
@@ -217,21 +205,24 @@ class _SummaryState extends State<Summary> {
               height: 80,
             ),
           )
-        : charts.PieChart(
-            _postCountRateData,
-            animate: true,
-            defaultRenderer: charts.ArcRendererConfig(
-              arcRendererDecorators: [
-                charts.ArcLabelDecorator()
-              ],
-              strokeWidthPx: 1,
-            ),
-          ),
+        : PieChart(
+            PieChartData(
+              sections: _drinkTypes.map((drinkType) =>
+                PieChartSectionData(
+                  title: '${(widget.user.uploadCounts[drinkType]/widget.user.uploadCount*100).round()}%\n${drinkType.label}',
+                  value: widget.user.uploadCounts[drinkType].toDouble(),
+                  color: Theme.of(context).primaryColorDark,
+                  radius: 140,
+                  titlePositionPercentageOffset: 0.7,
+                )
+              ).toList(),
+            )
+          )
     );
 
   Widget get _scoreAverage =>
     Container(
-      height: 20.0 + 48 * _drinkTypes.length,
+      height: 20.0 + 44 * _drinkTypes.length,
       child: _loading
         ? Center(
             child: Lottie.asset(
@@ -240,27 +231,55 @@ class _SummaryState extends State<Summary> {
               height: 80,
             ),
           )
-        : charts.BarChart(
-            _scoreAverageData,
-            animate: true,
-            vertical: false,
-            domainAxis: charts.OrdinalAxisSpec(
-              renderSpec: charts.SmallTickRendererSpec(
-                labelStyle: charts.TextStyleSpec(
-                  color: charts.MaterialPalette.white
+        : RotatedBox(
+            quarterTurns: 1,
+            child: BarChart(
+              BarChartData(
+                maxY: 5,
+                titlesData: FlTitlesData(
+                  show: true,
+                  topTitles: AxisTitles(),
+                  leftTitles: AxisTitles(),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 80,
+                      getTitlesWidget: (x, _) {
+                        return RotatedBox(
+                          quarterTurns: 3,
+                          child: Text(_drinkTypes[x.toInt()].label),
+                        );
+                      },
+                    )
+                  ),
+                  rightTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      interval: 1,
+                      getTitlesWidget: (x, _) {
+                        return RotatedBox(
+                          quarterTurns: 3,
+                          child: Text(x.toInt().toString()),
+                        );
+                      },
+                    )
+                  )
                 ),
-              ),
-            ),
-            primaryMeasureAxis: charts.NumericAxisSpec(
-              tickProviderSpec: charts.BasicNumericTickProviderSpec(
-                desiredTickCount: 6
-              ),
-              renderSpec: charts.GridlineRendererSpec(
-                labelStyle: charts.TextStyleSpec(
-                  color: charts.MaterialPalette.white
+                gridData: FlGridData(
+                  show: true,
+                  horizontalInterval: 1,
                 ),
-              ),
+                barGroups: _drinkTypes.asMap().entries.map((entry) =>
+                  BarChartGroupData(
+                    x: entry.key,
+                    barRods: [BarChartRodData(
+                      toY: _scoreAverageMap[entry.value],
+                      color: Theme.of(context).primaryColorDark
+                    )],
+                  ),
+                ).toList()
+              )
             ),
-          ),
+        )
     );
 }

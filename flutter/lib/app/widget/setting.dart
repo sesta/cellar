@@ -67,7 +67,7 @@ class _SettingState extends State<Setting> {
           ),
           actions: <Widget>[
             // ボタン領域
-            FlatButton(
+            TextButton(
               child: Text(
                 'やめる',
                 style: Theme.of(context).textTheme.subtitle1.copyWith(
@@ -76,7 +76,7 @@ class _SettingState extends State<Setting> {
               ),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            FlatButton(
+            TextButton(
               child: Text(
                 'ログアウトする',
                 style: Theme.of(context).textTheme.subtitle1.copyWith(
@@ -135,8 +135,7 @@ class _SettingState extends State<Setting> {
                     ),
                     Padding(padding: EdgeInsets.only(right: 24)),
 
-                    RaisedButton(
-                      padding: EdgeInsets.all(12),
+                    ElevatedButton(
                       onPressed: disableSave ? null : _saveUser,
                       child: Text(
                         '更新',
@@ -144,10 +143,12 @@ class _SettingState extends State<Setting> {
                           fontSize: 14,
                         ),
                       ),
-                      color: Theme.of(context).primaryColor,
-                      textColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        textStyle: TextStyle(color: Colors.white),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                     ),
                     Padding(padding: EdgeInsets.only(right: 40)),
@@ -155,7 +156,7 @@ class _SettingState extends State<Setting> {
                 ),
                 Padding(padding: EdgeInsets.only(bottom: 64)),
 
-                FlatButton(
+                TextButton(
                   child: Text(
                     'プライバシーポリシー',
                     style: Theme.of(context).textTheme.subtitle1.copyWith(
@@ -166,7 +167,7 @@ class _SettingState extends State<Setting> {
                 ),
                 Padding(padding: EdgeInsets.only(bottom: 16)),
 
-                FlatButton(
+                TextButton(
                   child: Text(
                     '問い合わせ',
                     style: Theme.of(context).textTheme.subtitle1.copyWith(
@@ -177,7 +178,7 @@ class _SettingState extends State<Setting> {
                 ),
                 Padding(padding: EdgeInsets.only(bottom: 16)),
 
-                FlatButton(
+                TextButton(
                   child: Text(
                     'ログアウト',
                     style: Theme.of(context).textTheme.subtitle1.copyWith(
