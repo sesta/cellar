@@ -49,7 +49,12 @@ class _EditPageState extends State<EditPage> {
       _priceController.text = widget.drink.price.toString();
     }
 
+    // 内容が変わった時にボタンの状態が変わるようにする
     _nameController.addListener(() => setState(() {}));
+    _memoController.addListener(() => setState(() {}));
+    _priceController.addListener(() => setState(() {}));
+    _placeController.addListener(() => setState(() {}));
+    _originController.addListener(() => setState(() {}));
 
     setState(() {
       _drinkDateTime = widget.drink.drinkDateTime;
@@ -62,7 +67,12 @@ class _EditPageState extends State<EditPage> {
 
   get _disablePost {
     return _nameController.text == ''
-      || _drinkType == null;
+      || _nameController.text.length > 200
+      || _drinkType == null
+      || _originController.text.length > 100
+      || _priceController.text.length > 30
+      || _placeController.text.length > 100
+      || _memoController.text.length > 1000;
   }
 
   _updateDrinkDateTime(DateTime drinkDateTime) {
