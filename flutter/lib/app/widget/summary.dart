@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -67,41 +68,6 @@ class _SummaryState extends State<Summary> {
     });
   }
 
-  /*
-  List<charts.Series<DrinkType, String>> get _postCountRateData =>
-    [
-      charts.Series<DrinkType, String>(
-        id: 'Drinks',
-        domainFn: (drinkType, _) => drinkType.label,
-        measureFn: (drinkType, _) => widget.user.uploadCounts[drinkType],
-        data: _drinkTypes,
-        labelAccessorFn: (drinkType, _) {
-          final rate = (widget.user.uploadCounts[drinkType]/widget.user.uploadCount*100).toStringAsFixed(0);
-          return '$rate%\n${drinkType.label}';
-        },
-        colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
-          Theme.of(context).primaryColorDark,
-        ),
-        outsideLabelStyleAccessorFn: (drinkType, _) => charts.TextStyleSpec(
-          color: charts.MaterialPalette.white
-        ),
-      )
-    ];
-
-  List<charts.Series<DrinkType, String>> get _scoreAverageData =>
-    [
-      charts.Series<DrinkType, String>(
-        id: 'Drinks',
-        domainFn: (drinkType, _) => '${_scoreAverageMap[drinkType].toStringAsFixed(1)}\n${drinkType.label}',
-        measureFn: (drinkType, _) => _scoreAverageMap[drinkType],
-        data: _drinkTypes,
-        colorFn: (drinkType, _) => charts.ColorUtil.fromDartColor(
-          Theme.of(context).primaryColorDark,
-        ),
-      )
-    ];
-  */
-
   @override
   Widget build(BuildContext context) {
     if (widget.user.uploadCount == 0) {
@@ -133,7 +99,7 @@ class _SummaryState extends State<Summary> {
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               Padding(padding: EdgeInsets.only(bottom: 16)),
-              // _postRate,
+              _postRate,
               Padding(padding: EdgeInsets.only(bottom: 32)),
 
               Text(
@@ -141,7 +107,7 @@ class _SummaryState extends State<Summary> {
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               Padding(padding: EdgeInsets.only(bottom: 8)),
-              // _scoreAverage,
+              _scoreAverage,
               Padding(padding: EdgeInsets.only(bottom: 48)),
 
               Text(
@@ -227,62 +193,93 @@ class _SummaryState extends State<Summary> {
         Navigator.of(context).pushNamed('/drink', arguments: drinks[0]);
       },
     );
-  //
-  // Widget get _postRate =>
-  //   Container(
-  //     height: 280,
-  //     child: _loading
-  //       ? Center(
-  //           child: Lottie.asset(
-  //             'assets/lottie/loading.json',
-  //             width: 80,
-  //             height: 80,
-  //           ),
-  //         )
-  //       : charts.PieChart(
-  //           _postCountRateData,
-  //           animate: true,
-  //           defaultRenderer: charts.ArcRendererConfig(
-  //             arcRendererDecorators: [
-  //               charts.ArcLabelDecorator()
-  //             ],
-  //             strokeWidthPx: 1,
-  //           ),
-  //         ),
-  //   );
-  //
-  // Widget get _scoreAverage =>
-  //   Container(
-  //     height: 20.0 + 48 * _drinkTypes.length,
-  //     child: _loading
-  //       ? Center(
-  //           child: Lottie.asset(
-  //             'assets/lottie/loading.json',
-  //             width: 80,
-  //             height: 80,
-  //           ),
-  //         )
-  //       : charts.BarChart(
-  //           _scoreAverageData,
-  //           animate: true,
-  //           vertical: false,
-  //           domainAxis: charts.OrdinalAxisSpec(
-  //             renderSpec: charts.SmallTickRendererSpec(
-  //               labelStyle: charts.TextStyleSpec(
-  //                 color: charts.MaterialPalette.white
-  //               ),
-  //             ),
-  //           ),
-  //           primaryMeasureAxis: charts.NumericAxisSpec(
-  //             tickProviderSpec: charts.BasicNumericTickProviderSpec(
-  //               desiredTickCount: 6
-  //             ),
-  //             renderSpec: charts.GridlineRendererSpec(
-  //               labelStyle: charts.TextStyleSpec(
-  //                 color: charts.MaterialPalette.white
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //   );
+
+  Widget get _postRate =>
+    Container(
+      height: 280,
+      child: _loading
+        ? Center(
+            child: Lottie.asset(
+              'assets/lottie/loading.json',
+              width: 80,
+              height: 80,
+            ),
+          )
+        : PieChart(
+            PieChartData(
+              sections: _drinkTypes.map((drinkType) =>
+                PieChartSectionData(
+                  title: '${(widget.user.uploadCounts[drinkType]/widget.user.uploadCount*100).round()}%\n${drinkType.label}',
+                  value: widget.user.uploadCounts[drinkType].toDouble(),
+                  color: Theme.of(context).primaryColorDark,
+                  radius: 140,
+                  titlePositionPercentageOffset: 0.7,
+                )
+              ).toList(),
+            )
+          )
+    );
+
+  Widget get _scoreAverage =>
+    Container(
+      height: 20.0 + 44 * _drinkTypes.length,
+      child: _loading
+        ? Center(
+            child: Lottie.asset(
+              'assets/lottie/loading.json',
+              width: 80,
+              height: 80,
+            ),
+          )
+        : RotatedBox(
+            quarterTurns: 1,
+            child: BarChart(
+              BarChartData(
+                maxY: 5,
+                titlesData: FlTitlesData(
+                  show: true,
+                  topTitles: AxisTitles(),
+                  leftTitles: AxisTitles(),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 80,
+                      getTitlesWidget: (x, _) {
+                        return RotatedBox(
+                          quarterTurns: 3,
+                          child: Text(_drinkTypes[x.toInt()].label),
+                        );
+                      },
+                    )
+                  ),
+                  rightTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      interval: 1,
+                      getTitlesWidget: (x, _) {
+                        return RotatedBox(
+                          quarterTurns: 3,
+                          child: Text(x.toInt().toString()),
+                        );
+                      },
+                    )
+                  )
+                ),
+                gridData: FlGridData(
+                  show: true,
+                  horizontalInterval: 1,
+                ),
+                barGroups: _drinkTypes.asMap().entries.map((entry) =>
+                  BarChartGroupData(
+                    x: entry.key,
+                    barRods: [BarChartRodData(
+                      toY: _scoreAverageMap[entry.value],
+                      color: Theme.of(context).primaryColorDark
+                    )],
+                  ),
+                ).toList()
+              )
+            ),
+        )
+    );
 }
