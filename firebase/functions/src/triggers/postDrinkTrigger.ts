@@ -3,7 +3,7 @@ import * as functions from 'firebase-functions'
 
 import { notifyPost } from '../repositories/slackRepository'
 
-export const postDrinkTrigger = (collectionName: String) =>
+export const postDrinkTrigger = (collectionName: string) =>
   functions.firestore
     .document(`${collectionName}/{drinkId}`)
     .onCreate((snapshot) => {
