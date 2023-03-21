@@ -207,6 +207,7 @@ class _SummaryState extends State<Summary> {
           )
         : PieChart(
             PieChartData(
+              startDegreeOffset: -90,
               sections: _drinkTypes.map((drinkType) =>
                 PieChartSectionData(
                   title: '${(widget.user.uploadCounts[drinkType]/widget.user.uploadCount*100).round()}%\n${drinkType.label}',
