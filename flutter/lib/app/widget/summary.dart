@@ -170,16 +170,12 @@ class _SummaryState extends State<Summary> {
           if (events.isEmpty) {
             return Container();
           }
-          return Positioned(
-            left: 0,
-            bottom: 0,
-            child: Container(
-              height: 4,
-              width: 100,
-              color: Theme
-                .of(context)
-                .primaryColor,
-            ),
+          return Container(
+            height: 4,
+            width: double.infinity,
+            color: Theme
+              .of(context)
+              .primaryColor,
           );
         },
       ),
